@@ -22,7 +22,7 @@ pred_na <- function(x) {
 
 #' Obtain a credible set using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008)).
 #'
-#' @rdname credset
+#'
 #' @title credset
 #' @param pp Vector of posterior probabilities
 #' @param CV Index of CV
@@ -33,9 +33,14 @@ credset <- function(pp, CV = iCV, thr) {
   cumpp <- cumsum(pp[o])  # cum sums of ordered pps
   wh <- which(cumpp > thr)[1]  # how many needed to exceed thr
   size <- cumpp[wh]
-  contained <- as.numeric(CV %in% o[1:wh])
-  data.frame(claimed.cov = size, covered = contained, nvar = wh)
+  if(missing(CV)) {
+    data.frame(claimed.cov = size, nvar = wh)
+  } else{
+    contained=as.numeric(CV %in% o[1:wh])
+    data.frame(claimed.cov = size, covered = contained, nvar = wh)
+  }
 }
+
 
 #' Provide a corrected coverage estimate of the causal variant in the credible set
 #'
@@ -47,8 +52,9 @@ credset <- function(pp, CV = iCV, thr) {
 #' @param V Variance of the estimated effect size (can be obtained using var.beta.cc function)
 #' @param Sigma SNP correlation matrix
 #' @param pp0 Posterior probabilities of system of interest
+#' @param thresh Minimum threshold for fine-mapping experiment
 #' @return Corrected coverage estimate
-corrected_cov <- function(mu, nsnps = 200, V, Sigma, pp0) {
+corrected_cov <- function(mu, nsnps = 200, V, Sigma, pp0, thresh) {
   temp <- diag(x = mu, nrow = nsnps, ncol = nsnps)
   zj <- do.call(c, apply(temp, 1, list))  # nsnp zj vectors for each snp considered causal
 
@@ -123,8 +129,9 @@ mu_est <- function(X) {
 #' @param N0 Number of controls
 #' @param N1 Number of cases
 #' @param Sigma SNP correlation matrix
+#' @param thr Minimum threshold for fine-mapping experiment
 #' @return Corrected coverage estimate
-corrcov <- function(z0, f, N0, N1, Sigma) {
+corrcov <- function(z0, f, N0, N1, Sigma, thr) {
   ph0.tmp <- z0_pp(z0)
   ph0 <- ph0.tmp[1]  # prob of the null
   pp0dash <- ph0.tmp[-1]  # pps including the null
@@ -134,5 +141,5 @@ corrcov <- function(z0, f, N0, N1, Sigma) {
   varbeta <- coloc::Var.data.cc(f, N = N0 + N1, N1/(N0 + N1))  # variance of beta
 
   muhat.gam <- mu_est(sum(abs(z0) * pp0))  # estimate for true effect at CV
-  corr.func(mu = muhat.gam, varbeta = varbeta, Sigma = LD, pp0 = pp0)
+  corrected_cov(mu = muhat.gam, varbeta = varbeta, Sigma = LD, pp0 = pp0, thresh=thr)
 }

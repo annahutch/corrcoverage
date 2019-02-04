@@ -1,0 +1,26 @@
+Package: corrcoverage
+Type: Package
+Title: Provides corrected coverage value for the causal variant in a credible set
+Version: 0.1.0
+Author: Anna Hutchinson <anna.hutchinson@mrc-bsu.cam.ac.uk>
+Maintainer: Anna Hutchinson <anna.hutchinson@mrc-bsu.cam.ac.uk>
+Description: A package to obtain an accurate coverage estimate of the causal variant in a credible set obtained using the Bayesian approach to fine-mapping
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+    coloc,
+    data.table,
+    dplyr,
+    knitr,
+    magrittr,
+    mgcv,
+    mvtnorm,
+    Rcpp,
+    rmarkdown,
+    simGWAS,
+    testthat
+VignetteBuilder: knitr
+RoxygenNote: 6.1.1
+LinkingTo: 
+    Rcpp

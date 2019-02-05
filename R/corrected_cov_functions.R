@@ -1,28 +1,6 @@
-#' Build and predict corrected coverage using logistic GAM
-#'
-#' @rdname pred_logit
-#' @title pred_logit
-#' @param x data.frame with column for 'covered' and 'logit.claim'
-#' @return Predicted probability of covered
-pred_logit <- function(x) {
-  m <- mgcv::gam(covered ~ s(logit.claim), data = x, family = "binomial")
-  invlogit(predict(m, newdata = data.frame(logit.claim = logit(claim0))))
-}
-
-#' Prediction for corrected coverage if gam cannot be fitted
-#'
-#' @rdname pred_na
-#' @title pred_na
-#' @param x data.frame with a binary 'covered' column
-#' @return Predicted coverage
-#' @author Anna Hutchinson
-pred_na <- function(x) {
-  mean(x$covered)
-}
-
 #' Obtain a credible set using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008)).
 #'
-#'
+#' If the CV parameter is supplied, the output includes a binary indicator of whether the CV is contained in the set
 #' @title credset
 #' @param pp Vector of posterior probabilities
 #' @param CV Index of CV
@@ -67,7 +45,7 @@ corrected_cov <- function(mu, nsnps = 200, V, Sigma, pp0, thresh) {
 
   # obtain credible set for each simulation
   d5 <- lapply(1:n_pps, function(x) {
-    apply(pps[[x]], 1, credset, args[x]) %>% rbindlist()
+    apply(pps[[x]], 1, credset, args[x], thr = thresh) %>% data.table:::rbindlist()
   })
 
   invlogit <- function(x) exp(x)/(1 + exp(x))
@@ -107,17 +85,6 @@ corrected_cov <- function(mu, nsnps = 200, V, Sigma, pp0, thresh) {
   sum(final1 * pp0)
 }
 
-#' Estimate for true effect at CV
-#'
-#' @rdname mu.est
-#' @title mu_est
-#' @return Estimate of true effect at CV
-mu_est <- function(X) {
-  y = seq(0, 20, 0.005)
-  x <- sapply(y, function(m) mean(abs(rnorm(50000, mean = m))))
-  approx(x, y, xout = X)$y
-}
-
 
 #' Obtain corrected coverage estimate
 #'
@@ -132,14 +99,14 @@ mu_est <- function(X) {
 #' @param thr Minimum threshold for fine-mapping experiment
 #' @return Corrected coverage estimate
 corrcov <- function(z0, f, N0, N1, Sigma, thr) {
-  ph0.tmp <- z0_pp(z0)
+  ph0.tmp <- z0_pp(z0, f, type = "cc", N = N0+N1, s = N1/(N0+N1), W = 0.2)
   ph0 <- ph0.tmp[1]  # prob of the null
   pp0dash <- ph0.tmp[-1]  # pps including the null
 
-  pp0 <- ppfunc(z0)  # posterior probs of system
+  varbeta <- Var.data.cc(f, N0+N1, N1/(N0+N1))  # variance of beta
 
-  varbeta <- Var.data.cc(f, N = N0 + N1, N1/(N0 + N1))  # variance of beta
+  pp0 <- ppfunc(z0, V = varbeta)  # posterior probs of system
 
   muhat.gam <- mu_est(sum(abs(z0) * pp0))  # estimate for true effect at CV
-  corrected_cov(mu = muhat.gam, varbeta = varbeta, Sigma = LD, pp0 = pp0, thresh=thr)
+
 }

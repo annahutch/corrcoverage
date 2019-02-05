@@ -23,7 +23,7 @@ approx.bf.p <- function (p, f, type, N, s, W) {
 #' Quick posterior probabilities from p-values with prior SD as a parameter
 #'
 #' This function converts p-values to posterior probabilities, including the null model of no genetic effects
-#' @title p.vals_pp
+#' @title pvals_pp
 #' @param pvals p-values of SNPs
 #' @param f Minor allele frequencies
 #' @param type Type of experiment ("quant" or "cc")
@@ -32,7 +32,7 @@ approx.bf.p <- function (p, f, type, N, s, W) {
 #' @param W Prior for the standard deviation of the effect size parameter $\beta$
 #' @return Posterior probabilities of null model (no genetic effect) and causality for each SNP
 #' @author Anna Hutchinson
-p.vals_pp <- function(pvals, f, type, N, s, W=0.2){
+pvals_pp <- function(pvals, f, type, N, s, W=0.2){
   tmp <- approx.bf.p(p = pvals, f = f, type = "cc", N = N, s = 0.5, W = W)[,"lABF"]
   p1 <- 1e-04 # hard coded - bad code
   nsnps <- length(tmp)
@@ -94,7 +94,7 @@ ppfunc <- function(z, V, W=0.2) {
 #' @return Vector of posterior probabilities
 #' @author Chris Wallace
 ppfunc.mat <- function(zstar, V, W=0.2){
-  r <- matrix(omega^2/(omega^2 + V), nrow=nrow(zstar), ncol=ncol(zstar), byrow=TRUE) # see wakefield paper
+  r <- matrix(W^2/(W^2 + V), nrow=nrow(zstar), ncol=ncol(zstar), byrow=TRUE) # see wakefield paper
   bf = 0.5 * (log(1 - r) + (r * zstar^2))
   denom <- apply(bf, 1, coloc:::logsum) # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
   pp.tmp <- exp(bf - matrix(denom, nrow=nrow(bf),ncol=ncol(bf))) # convert back from log scale

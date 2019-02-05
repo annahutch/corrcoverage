@@ -138,7 +138,7 @@ corrcov <- function(z0, f, N0, N1, Sigma, thr) {
 
   pp0 <- ppfunc(z0)  # posterior probs of system
 
-  varbeta <- coloc::Var.data.cc(f, N = N0 + N1, N1/(N0 + N1))  # variance of beta
+  varbeta <- Var.data.cc(f, N = N0 + N1, N1/(N0 + N1))  # variance of beta
 
   muhat.gam <- mu_est(sum(abs(z0) * pp0))  # estimate for true effect at CV
   corrected_cov(mu = muhat.gam, varbeta = varbeta, Sigma = LD, pp0 = pp0, thresh=thr)

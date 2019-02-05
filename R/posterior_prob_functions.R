@@ -7,12 +7,13 @@
 #' @param type Type of experiment ("quant" or "cc")
 #' @param N Total sample size
 #' @param s Proportion of cases (N1/N0+N1), ignored if type=="quant"
-#' @param W Prior for the standard deviation of the effect size parameter $\beta$
+#' @param W Prior for the standard deviation of the effect size parameter \beta
 #' @return data.frame containing lABF and intermediate calculations
+#' @export
 #' @author Chris Wallace
 approx.bf.p <- function (p, f, type, N, s, W) {
   sd.prior <- W
-  V <- Var.data.cc(f, N, s)
+  V <- coloc:::Var.data.cc(f, N, s)
   z <- qnorm(0.5 * p, lower.tail = FALSE)
   r <- sd.prior^2/(sd.prior^2 + V)
   lABF = 0.5 * (log(1 - r) + (r * z^2))
@@ -29,8 +30,9 @@ approx.bf.p <- function (p, f, type, N, s, W) {
 #' @param type Type of experiment ("quant" or "cc")
 #' @param N Total sample size
 #' @param s Proportion of cases (N1/N0+N1), ignored if type=="quant"
-#' @param W Prior for the standard deviation of the effect size parameter $\beta$
+#' @param W Prior for the standard deviation of the effect size parameter \beta
 #' @return Posterior probabilities of null model (no genetic effect) and causality for each SNP
+#' @export
 #' @author Anna Hutchinson
 pvals_pp <- function(pvals, f, type, N, s, W=0.2){
   tmp <- approx.bf.p(p = pvals, f = f, type = "cc", N = N, s = 0.5, W = W)[,"lABF"]
@@ -52,8 +54,9 @@ pvals_pp <- function(pvals, f, type, N, s, W=0.2){
 #' @param type Type of experiment ("quant" or "cc")
 #' @param N Total sample size
 #' @param s Proportion of cases (N1/N0+N1), ignored if type=="quant"
-#' @param W Prior for the standard deviation of the effect size parameter $\beta$
+#' @param W Prior for the standard deviation of the effect size parameter \beta
 #' @return Posterior probabilities of null model (no genetic effect) and causality for each SNP
+#' @export
 #' @author Anna Hutchinson
 z0_pp <- function(z0, f, type, N, s, W = 0.2){
   pvals <- pnorm(abs(z0),lower.tail = FALSE)*2 # convert z-scores to p-values
@@ -71,10 +74,11 @@ z0_pp <- function(z0, f, type, N, s, W = 0.2){
 #' Quick posterior probabilities for each SNP causal from marginal z-scores
 #'
 #' This function converts z-scores to posterior probabilities, not including the null model of no genetic effects, so that the sum of the posterior probabilities is 1
-#' @title Posterior probabilities for vectors
+#' @title ppfunc
 #' @param z Vector of marginal z-scores
 #' @param V Variance of the estimated effect size (can be obtained using var.beta.cc function)
-#' @param W Prior for the standard deviation of the effect size parameter $\beta$
+#' @param W Prior for the standard deviation of the effect size parameter \beta
+#' @export
 #' @return Vector of posterior probabilities
 ppfunc <- function(z, V, W=0.2) {
   r <- W^2/(W^2 + V)
@@ -87,11 +91,12 @@ ppfunc <- function(z, V, W=0.2) {
 #' Obtain posterior probabilities for each SNP causal from multiple marginal z-scores simulations
 #'
 #' This function converts a matrix of z-scores (one row per simulation) to posterior probabilities, not including the null model of no genetic effects, so that the sum of the posterior probabilities for each simulation (each row) is 1.
-#' @title Posterior probabilities for matrices
+#' @title ppfunc.mat
 #' @param zstar Matrix of marginal z-scores, one replicate per row
 #' @param V Variance of the estimated effect size (can be obtained using var.beta.cc function), one element per column of zstar
-#' @param W Prior for the standard deviation of the effect size parameter $\beta$
+#' @param W Prior for the standard deviation of the effect size parameter \beta
 #' @return Vector of posterior probabilities
+#' @export
 #' @author Chris Wallace
 ppfunc.mat <- function(zstar, V, W=0.2){
   r <- matrix(W^2/(W^2 + V), nrow=nrow(zstar), ncol=ncol(zstar), byrow=TRUE) # see wakefield paper

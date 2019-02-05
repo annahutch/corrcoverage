@@ -4,6 +4,7 @@
 #' @param Zj Vector of joint z-scores (0s except at CV)
 #' @param Sigma SNP correlation matrix
 #' @param nrep Number of simulated z-scores
+#' @export
 #' @return Matrix of simulated z-scores, one simulation per row
 z_sim <- function(Zj, Sigma, nrep) {
     exp.zm = Zj %*% Sigma  # find E(X_m) (of for each SNP being causal)
@@ -19,6 +20,7 @@ z_sim <- function(Zj, Sigma, nrep) {
 #' @param nrep Number of marginal z-scores to simulate
 #' @param W Prior for the standard deviation of the effect size parameter $\beta$
 #' @param Sigma SNP correlation matrix
+#' @export
 #' @return Matrix of simulated posterior probabilties, one simulation per row
 zj_pp <- function(Zj, V, nrep = 5000, W = 0.2, Sigma) {
     exp.zm = Zj %*% Sigma  # find E(Z_m)

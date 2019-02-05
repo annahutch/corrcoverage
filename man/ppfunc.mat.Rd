@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{ppfunc.mat}
 \alias{ppfunc.mat}
-\title{Posterior probabilities for matrices}
+\title{ppfunc.mat}
 \usage{
 ppfunc.mat(zstar, V, W = 0.2)
 }
@@ -11,7 +11,7 @@ ppfunc.mat(zstar, V, W = 0.2)
 
 \item{V}{Variance of the estimated effect size (can be obtained using var.beta.cc function), one element per column of zstar}
 
-\item{W}{Prior for the standard deviation of the effect size parameter $\beta$}
+\item{W}{Prior for the standard deviation of the effect size parameter \beta}
 }
 \value{
 Vector of posterior probabilities
@@ -20,7 +20,7 @@ Vector of posterior probabilities
 Obtain posterior probabilities for each SNP causal from multiple marginal z-scores simulations
 }
 \details{
-Each row should be a simulation and each column a SNP
+This function converts a matrix of z-scores (one row per simulation) to posterior probabilities, not including the null model of no genetic effects, so that the sum of the posterior probabilities for each simulation (each row) is 1.
 }
 \author{
 Chris Wallace

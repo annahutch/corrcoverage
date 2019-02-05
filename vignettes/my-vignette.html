@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Anna Hutchinson" />
+
+<meta name="date" content="2019-02-05" />
+
+<title>Obtaining Accurate Coverage Estimate for Credible Sets</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Obtaining Accurate Coverage Estimate for Credible Sets</h1>
+<h4 class="author"><em>Anna Hutchinson</em></h4>
+<h4 class="date"><em>2019-02-05</em></h4>
+
+
+
+<hr />
+<p>This guide will show readers how to use the <code>corrcoverage</code> package for fine-mapping analyses, including obtaining an accurate coverage estimate for the causal variant in a credible set. This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. <a href="https://www.ncbi.nlm.nih.gov/pubmed/23104008">here</a>.</p>
+<p><code>corrcoverage</code> takes GWAS summary statistics (minor allele frequencies, z-scores (or p-values), sample sizes, reference LD matrix) and provides an accurate estimate of the probability that the true causal variant is contained within a credible set derived for a given threshold.</p>
+<hr />
+<p>Load the library.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2</span>)
+<span class="kw">library</span>(corrcoverage)</code></pre></div>
+<hr />
+<div id="simulate-gwas-summary-statistics" class="section level2">
+<h2>Simulate GWAS summary statistics</h2>
+<hr />
+<p>To show the utility of this function, we use the <a href="https://github.com/chr1swallace/simGWAS">simGWAS</a> package to simulate GWAS data. Please refer to the walkthrough guide <a href="https://chr1swallace.github.io/simGWAS/articles/intro.html">here</a>, from which the following is based. Start by loading this package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(simGWAS)</code></pre></div>
+<p>Next, simulate some reference haplotypes - “The final format is a <code>data.frame</code> with n columns of 0s and 1s indicating alleles at each of n SNPs, and collections of alleles in a row being a haplotype. A final column, named”Probability“, contains the fractional frequency of each haplotype. Note that haplotypes need not be unique, you can have one row per haplotype in a sample, and Probability set to 1/[number of haplotypes] = 1/(2*[number of samples]). The object we are creating will be called <code>freq</code>“.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nsnps &lt;-<span class="st"> </span><span class="dv">200</span>
+nhaps &lt;-<span class="st"> </span><span class="dv">1000</span>
+lag &lt;-<span class="st"> </span><span class="dv">5</span> <span class="co"># genotypes are correlated between neighbouring variants</span>
+maf &lt;-<span class="st"> </span><span class="kw">runif</span>(nsnps<span class="op">+</span>lag,<span class="fl">0.05</span>,<span class="fl">0.5</span>) <span class="co"># common SNPs</span>
+laghaps &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&quot;cbind&quot;</span>, <span class="kw">lapply</span>(maf, <span class="cf">function</span>(f) <span class="kw">rbinom</span>(nhaps,<span class="dv">1</span>,f)))
+haps &lt;-<span class="st"> </span>laghaps[,<span class="dv">1</span><span class="op">:</span>nsnps]
+<span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>lag) 
+    haps &lt;-<span class="st"> </span>haps <span class="op">+</span><span class="st"> </span>laghaps[,(<span class="dv">1</span><span class="op">:</span>nsnps)<span class="op">+</span>j]
+haps &lt;-<span class="st"> </span><span class="kw">round</span>(haps<span class="op">/</span><span class="kw">matrix</span>(<span class="kw">apply</span>(haps,<span class="dv">2</span>,max),nhaps,nsnps,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
+snps &lt;-<span class="st"> </span><span class="kw">colnames</span>(haps) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;s&quot;</span>,<span class="dv">1</span><span class="op">:</span>nsnps)
+freq &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(haps<span class="op">+</span><span class="dv">1</span>)
+freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="kw">nrow</span>(freq)
+<span class="kw">sum</span>(freq<span class="op">$</span>Probability)</code></pre></div>
+<pre><code>## [1] 1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MAF &lt;-<span class="st"> </span><span class="kw">colMeans</span>(freq[,snps]<span class="op">-</span><span class="dv">1</span>)</code></pre></div>
+<p>Next, we need to specify the causal variant and its effect on disease, as odds ratio. We only choose one CV as this is a key assumption underlying the Bayesian approach for fine-mapping. We choose a CV from the column names in <code>freq</code> and a value for the odds ratio.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CV &lt;-<span class="st"> </span><span class="kw">sample</span>(snps[<span class="kw">which</span>(<span class="kw">colMeans</span>(haps)<span class="op">&gt;</span><span class="fl">0.1</span>)],<span class="dv">1</span>)
+iCV &lt;-<span class="st"> </span><span class="kw">sub</span>(<span class="st">&quot;s&quot;</span>,<span class="st">&quot;&quot;</span>,CV) <span class="co"># index of cv</span>
+g1 &lt;-<span class="st"> </span><span class="fl">1.1</span></code></pre></div>
+<p>We then simulate marginal z-scores. Here, we consider a GWAS with 5000 cases and 5000 controls.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z0 &lt;-<span class="st"> </span><span class="kw">simulated_z_score</span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span>
+              <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span>
+              <span class="dt">snps=</span>snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span>
+              <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span>
+              <span class="dt">gamma.W=</span><span class="kw">log</span>(g1), <span class="co"># log odds ratios</span>
+              <span class="dt">freq=</span>freq <span class="co"># reference haplotypes</span>
+              )</code></pre></div>
+<hr />
+</div>
+<div id="obtain-credible-set" class="section level2">
+<h2>Obtain credible set</h2>
+<hr />
+<p>We now use the <code>credsets</code> function in the <code>corrcoverage</code> package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows these steps: 1. Order variants in descending order or posterior probabilities. 2. Cumulatively sum these variants until the user specific threshold is exceeded. 3. The required variants form the ‘credible set’.</p>
+<p>The function requires posterior probabilities as input and so we use the <code>ppfunc</code> function to convert the marginal z-scores to posterior probabilties. This function requires a value for <span class="math inline">\(V\)</span>, the variance of the estimate effect size, which can be easily calculated using the <code>Var.data.cc</code> function in the <code>coloc</code> package. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with default 0.2</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N0 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of controls</span>
+N1 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of cases</span>
+
+var &lt;-<span class="st"> </span>coloc<span class="op">:::</span><span class="kw">Var.data.cc</span>(<span class="dt">f =</span> MAF, <span class="dt">N =</span> N1<span class="op">+</span>N0, <span class="dt">s =</span> N1<span class="op">/</span>(N0<span class="op">+</span>N1)) <span class="co"># variance of estimated effect size</span>
+
+postprobs &lt;-<span class="st"> </span><span class="kw">ppfunc</span>(<span class="dt">z =</span> z0, <span class="dt">V =</span> var)
+
+<span class="kw">plot</span>(postprobs, <span class="dt">main =</span> <span class="st">&quot;Posterior probabilities of variants&quot;</span>)
+<span class="kw">abline</span>(<span class="dt">v =</span> iCV, <span class="dt">col =</span> <span class="dv">2</span>)</code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAYAAAAEgCAYAAAC926RRAAAEGWlDQ1BrQ0dDb2xvclNwYWNlR2VuZXJpY1JHQgAAOI2NVV1oHFUUPrtzZyMkzlNsNIV0qD8NJQ2TVjShtLp/3d02bpZJNtoi6GT27s6Yyc44M7v9oU9FUHwx6psUxL+3gCAo9Q/bPrQvlQol2tQgKD60+INQ6Ium65k7M5lpurHeZe58853vnnvuuWfvBei5qliWkRQBFpquLRcy4nOHj4g9K5CEh6AXBqFXUR0rXalMAjZPC3e1W99Dwntf2dXd/p+tt0YdFSBxH2Kz5qgLiI8B8KdVy3YBevqRHz/qWh72Yui3MUDEL3q44WPXw3M+fo1pZuQs4tOIBVVTaoiXEI/MxfhGDPsxsNZfoE1q66ro5aJim3XdoLFw72H+n23BaIXzbcOnz5mfPoTvYVz7KzUl5+FRxEuqkp9G/Ajia219thzg25abkRE/BpDc3pqvphHvRFys2weqvp+krbWKIX7nhDbzLOItiM8358pTwdirqpPFnMF2xLc1WvLyOwTAibpbmvHHcvttU57y5+XqNZrLe3lE/Pq8eUj2fXKfOe3pfOjzhJYtB/yll5SDFcSDiH+hRkH25+L+sdxKEAMZahrlSX8ukqMOWy/jXW2m6M9LDBc31B9LFuv6gVKg/0Szi3KAr1kGq1GMjU/aLbnq6/lRxc4XfJ98hTargX++DbMJBSiYMIe9Ck1YAxFkKEAG3xbYaKmDDgYyFK0UGYpfoWYXG+fAPPI6tJnNwb7ClP7IyF+D+bjOtCpkhz6CFrIa/I6sFtNl8auFXGMTP34sNwI/JhkgEtmDz14ySfaRcTIBInmKPE32kxyyE2Tv+thKbEVePDfW/byMM1Kmm0XdObS7oGD/MypMXFPXrCwOtoYjyyn7BV29/MZfsVzpLDdRtuIZnbpXzvlf+ev8MvYr/Gqk4H/kV/G3csdazLuyTMPsbFhzd1UabQbjFvDRmcWJxR3zcfHkVw9GfpbJmeev9F08WW8uDkaslwX6avlWGU6NRKz0g/SHtCy9J30o/ca9zX3Kfc19zn3BXQKRO8ud477hLnAfc1/G9mrzGlrfexZ5GLdn6ZZrrEohI2wVHhZywjbhUWEy8icMCGNCUdiBlq3r+xafL549HQ5jH+an+1y+LlYBifuxAvRN/lVVVOlwlCkdVm9NOL5BE4wkQ2SMlDZU97hX86EilU/lUmkQUztTE6mx1EEPh7OmdqBtAvv8HdWpbrJS6tJj3n0CWdM6busNzRV3S9KTYhqvNiqWmuroiKgYhshMjmhTh9ptWhsF7970j/SbMrsPE1suR5z7DMC+P/Hs+y7ijrQAlhyAgccjbhjPygfeBTjzhNqy28EdkUh8C+DU9+z2v/oyeH791OncxHOs5y2AtTc7nb/f73TWPkD/qwBnjX8BoJ98VQNcC+8AAEAASURBVHgB7Z0HuBRF1oYLBTFjRDBHzGtAFDNizphWV1gz6uqaw5pzjpiz/qY1KyZWzDmsYs5iwIBgQDFiwP7Pe3art2fu3Dtz4c4wc/ur55np7urqqnO+Cqfq1KmqDom5ICcEhIAQEAK5Q2Cy3HEshoWAEBACQsARkABQQRACQkAI5BQBCYCcZrzYFgJCQAhIAKgMCAEhIARyioAEQE4zXmwLASEgBCQAVAaEgBAQAjlFQAIgpxkvtoWAEBACEgAqA0JACAiBnCIgAZDTjBfbQkAICAEJAJUBISAEhEBOEZAAyGnGi20hIASEgASAyoAQEAJCIKcISADkNOPFthAQAkJAAkBlQAgIASGQUwQkAHKa8WJbCAgBISABoDIgBISAEMgpAhIAOc14sS0EhIAQkABQGRACQkAI5BQBCYCcZrzYFgJCQAhIAKgMCAEhIARyioAEQE4zXmwLASEgBCQAVAaEgBAQAjlFQAIgpxkvtoWAEBACEgAqA0JACAiBnCIgAZDTjBfbQkAICAEJAJUBISAEhEBOEZAAyGnGi20hIASEgASAyoAQEAJCIKcISADkNOPFthAQAkJAAkBlQAgIASGQUwQkAHKa8WJbCAgBISABoDIgBISAEMgpArkSAGeddVbo27dvwW+dddYJG220Udhpp53CvffeW/Ni8OGHH4axY8e2ebqjR49O+bzqqqvaPP56jPD1119Peb7nnnvalMSDDjrI495qq63Kxtsc9qeddlpK3x9//OHxlPKLCRDm1VdfjY9lwxcErJMHeDjssMPCUkstFWaeeeawwgorhAcffLBOqAuhJfyrSWS16n2raU5y5AYOHJgYQC3+dtxxx+Snn36qOio//PBDcvjhhydTTjll8t5777V5eh999FHK5xFHHNHm8ddjhE8++WTK8yWXXNKmJK611loed/fu3cvG2xz2O+ywQ0rf77//7vGU8uPFU089lfTs2TPp379/QXrNhS8IVEcPJ5xwQspzrHtPPPFE3VBYazyrXe9bC2zHVkuMdvLBNttsE2aaaabw22+/Bauw4YEHHnDO6C2vv/76oZKe3sRAccYZZ4QTTzxxYqJo8dupp546bLLJJh5m0UUXbTGsXrYtAq3BfplllgljxoxxAjp06JASsvLKK/v9Iosskvpx01z4gkB19PDss886NR07dgwvvPBCmGGGGcLss89eNxTWGs9q1/vWAptbAWC94rD44ouneF1//fVhwIAB/oz6oJQAGD9+fPj444/D3HPPHSaffPL021I3qHVGjRoVZpxxxjDLLLOEySZrvbbNpHkYMWJE6Nq1a6BRKedIk3Smm266MOuss4Y777yz3Cfhyy+/9G8YnlfiPv300zDnnHNWEjQNA258B27ZRi4NkLnJ8pDx9tvW4B+//eWXXzwfWkqbeFHbfPfdd55fs802W/y8xetnn30WunTpEqaddtqCcJViz0d77723/woiaOGhXPhKy4yNQAL0w3u3bt0qKl+lyCpXfkgD16NHD1cDlYpjYvwmJO+yZawcnt9//334/PPPQ6dOnRynqaaaqiy55AHthI0WwxRTTFE2fHGAtmg7iuNs9rm1Q4ZGDp9VAZm+uICVcePGJdao+3B1gQUWKHj3r3/9K1lvvfUSa1j9fefOnRNUAu+8805BOB5uuOGGZP755y8Y9lqDkpxzzjlp2M033zyxApWGsUKVWCVM30PLvvvum6ZnjXpiOtTk6aefTsNwY3MXyTTTTJNsttlmiekynX7itZFFYgXQ3/H+uOOOK/gOFddee+2VWO8ypWGOOeZIzjzzzMQqVBqW9PienwnFxCqxh59rrrmSr7/+Og2XvXnppZfSb2xUley2227J9NNP799Z7y8ZNGhQNniLPMSAleKfVQHZfE/y17/+NbEKmKYNf6aTjtH6FWygyypI+pt33nmThx56qCBcVgV0//33JyZQPDx5s+qqqybDhw9PwzeHfSl1A/hEjFELWS/ZnyM91nP25/POO8/jLw4fE620zFinxHEh3piGCWUvz9Bdiauk/Jie3+kGH9LhCp+rrbZaySRefPFFf08YmzMoCPPrr78mlDnerbvuuum7SvOupXrSHJ5vvfVWYqOwFCN4oCxtv/32yc8//5zS8P77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/sTbr18/FwpHHXVUWySjOIRAQyEgAdBQ2SViJxSBN998Myy//PKhe/fuTaLYYostwrBhw5r4y0MItHcEJADaew6LP0dgqqmmcp1/KTh++OGHMPXUU5d6JT8h0K4RkABo19kr5iICiy66aPj666/DnXfeGb3S6wYbbBD69u2bPutGCOQFAQmAvOR0zvns3LlzuPXWW13nf8opp4QxY8aEESNGhAEDBoRXX301YB0kJwTyhoAEQN5yPMf8rrTSSuGtt94KjzzySFhggQXCqquuGiabbDIfGWCzLScE8oaAzEDzluM553eRRRYJQ4cOzTkKYl8I/AcBjQBUEoSAEBACOUVAAiCnGS+2hYAQEAJSARWVgRdeeCHccsstRb5NH7Erf+2118KKK67Y9KV8hIAQEAINgIAEQFEmMRk488wzF/k2fRw3blxgdamcEBACQqBREZAAKMq5JZZYIvAr544//vgwwwwzlAum90JACAiBukVAcwB1mzUiTAgIASFQXQQkAKqLr2IXAkJACNQtAhIAdZs1IkwICAEhUF0EJACqi69iFwJCQAjULQISAHWbNSJMCAgBIVBdBCQAqouvYhcCQkAI1C0CEgB1mzUiTAgIASFQXQQqFgDZs+O/+OIL31f9888/ry51il0ICAEhIASqhkBFAuDCCy8Miy22mBPx/vvvh4UXXtj3VZ9rrrnCfffdVzXiFLEQEAJCQAhUD4GyAuDdd98N++yzT1h99dUDo4DTTz89dOzYMTz99NNhzz33DAMHDqwedYpZCAgBISAEqoZAWQHw3HPP+eEZF198cejQoUO4++67w+abb+6boB1yyCHh008/DaNGjaoagYpYCAgBISAEqoNAWQHAOaqzzjqrp87ReSNHjgzrrruuP//yyy8+GtCB2tXJHMUqBISAEKgmAmUFwFJLLRXYIvmxxx4LZ555ZphqqqnC2muvHb777rtw4oknhhVWWCFMP/301aRRcQsBISAEhEAVECi7G+gaa6wRNtpoo9CnTx9P/rzzzgvTTTdd2GmnnVwddOmll1aBLEUpBISAEBAC1UagrACAgJtvvjlwAEqXLl3CnHPO6TQxATxo0CD1/qudQxb/e++9Fx599NHwxx9/+EHm0SKrBkkrCSEgBNoxAmVVQPDO5O/iiy/uPf8XX3wxfPDBB2HppZeui8Yfy6Qvv/wyjBkzpl1m08EHH+yNPpPxYE8+7Lbbbu2SVzElBIRAbRGoSABgCrr++uv7ASg9e/Z0q6AZZ5zR5wB+//332lJsqX322WfhH//4R5h33nnDFFNMEbp27eqneDFCYc7igAMOCD/88EPN6WrrBBlhXX311YG1F5dffnm45JJLws8//xxQux155JFtnZziEwJCIGcIlFUBff/992GDDTYIHJV4xRVXhIUWWigMHz7cF4CdfPLJfiziaaedVjPYRowYEVZZZRUflWy11VZh/vnnDzPNNJM/Mwr48MMPw6233hpuu+228NBDD7mwqhlxbZjQ+PHjA/g+8cQTYZpppkljJh8wveXUMoQAAlBOCAgBITAhCJQVAA8++GCg0X3nnXe8sSWRVVddNey4447hnnvu8TUBHI/YuXPnCUm/1d+wEI2eP3Q1l+ZJJ53kI5ZrrrkmHHvssa1Oox4+QPAyuurRo0cTcuaYYw6fj2ErjnnmmafJe3kIASEgBCpBoKwKiEZm5ZVXThv/bKRrrrlm+O2332q6EOzll18O2223XbONP/R16tQp7LDDDg29TcW0004bWGfx448/ZiH3+19//TWMHj3aRz5NXspDCAgBIVAhAmUFAOafr732muuhi+O84447vDdey17oSiutFJ566qliUpo8P/zww4GecqO6ySef3Ecxm222WRMWmIdZZpllClRDTQLJQwgIASFQBoGSKiAWfmF2GB1qiCWXXDKwJmC99dbzxWBYpDAxedBBB8VgNbluu+22ASFAD7h///6u45955pnDZJNN5pZAH330Ubj++uvDkCFDXE1UE6KqkAiWV1dddZVbXs0333yBrTjgEcxff/31MG7cOH+uQtKKUggIgZwgUFIAsNFbse6cHunjjz/uv4gNOvhzzz3XrYGiX7WvmJ+yJQWmkNtvv73bxhenudZaa4X777/fN7ArftdIz1ENdMYZZ/gqbGhnAvzbb79tUQXWSDyKViEgBCYdAiUFwN577x341atbcMEF3cIHXfjHH38c6PUzFzH77LP7QjVGBO3FYeVz2GGH+a+98CQ+hIAQqA8ESgqA5kj75JNP3AS0e/fubp2CSmJSOhpHhAE/OSEgBISAEGgdAhW14Kz87du3b5h77rn9uuiii7puev/99/czAlqXpEILASEgBIRAPSBQdgSAmqVfv36+spbVtxtuuKFvAc18AAuV6IWfcsop9cCLaBACQkAICIFWIFBWALDgCjNQfqw+jW7FFVf01bdsEV1LAbDccsv5xnSRjpauHFxz3XXXtRRE74SAEBACuUWgrABgHyAa3WzjH9FisRWjArZfwFSxFu7ss88OW2yxRWBkcsQRR7RoCllqFW0taFQaQkAICIFGQKCsAGAxFatvmQDmEPisYysIzEO7deuW9a7qPdtQPPnkk74bKfvlHHjggW2aHvsHYdpazrEpG2sR5ISAEBACjYpAWQHA8Y+YVe68886BTd+YAGaLAjYpY60AK1U5JayWjp49+w8dc8wxYZdddnH62ip94obXco51BtjpywkBISAEGhWBsgKA4x7Z8mHAgAG+/QArVNmDH8eCqwsvvHCS8L7vvvuGZZddNjAKaEvHKKd4pFMq/o4dO2orhlLAyE8ICIGGQaCsAGDVKQut2B7ilVdeCW+//bZvDc2pVMsvv/wkYxTVE1tTyAkBISAEhMCEIVBWANx7773e+2cOoI9tDMevERzbKdNLr7V6qhGwEY1CQAgIARAouxBslllmcaTGjh3bUIixaI29guSEgBAQAkKgNAJlRwBsvsYOnKuttppP+C6wwAJNNiJjRXC9ub322stPL6s3ukSPEBACQqBeECgrAF566aUwePBgp/eGG24oSXc9CoDjjjuuJK3yFAJCQAgIgf8gUFYAsP9/qVOp6gVALJK++uorX4/A2cBytUMAwwDmiJhv4byIrbfe2g0EakeBUhICQmBiECg7B5CNHPt/RgRMCE9K99lnn/kKZM4GZi+irl27+lqALl26hKWWWioccMABvnfRpKSxvad92WWX+eFArMhmsSBrRJhwb7S5ovaeT+JPCLSEQNkRAB9/+eWXPqH6wAMP+EHl+M0666zh0EMPDfvttx+PNXMcUM+hKKxH2GqrrfysYnr+PI8ZM8a3pbj11lvDbbfd5mcGMGch17YIgO+uu+4avvjiCy8HxE45YFEg50Q/88wzfi5z26aq2ISAEGhrBMoKAHp4vXr18qE9PWsWf9HYcmoYK3FpdFmVWyt3+umnh3mt588mdZxIVsqddNJJfp7uNddc0+Rks1Lh5dc6BFj8d9NNN6WNf/yaBYOsDxk2bFjo3bt39NZVCAiBOkWgrABgywf2vHn//ff9xK3IBz296aabzo+DZEuIWh0Ow75EmHc21/hDX6dOnQIb1Z133nkSADHD2vCKCo5D6Us5rMZYOCgBUAod+QmB+kKg7BwAu4HS6+e4xWK3zTbb+ATsp59+Wvyqas8cCP/UU0+Vjf/hhx923XTZgArQagQoC++9917J755//vmKttIo+bE8hYAQqCkCZUcA2P8fddRRgVPB5p9//gLirrzySlfHsOiqVo41CQgBRiX9+/cP6PjZrI4RCOooep/XX399GDJkiKuJakVXntJhBMbBQFiHTT311CnrO+64ox8Z2rNnz9RPN0JACNQvAmUFABOsTLouvvjivhgMs1B2wXzuuefCtddeGzh0BQuQ6GgEmCCulkPF8Oqrr4bddtvNVUF//PFHk6QYsbBb5+qrr97knTwmHgHUa4wApplmmnDGGWcEVotjIHDnnXeGb775RqagEw+xYhACNUGgrACgsUWdgrnls88+679I2ZRTTuk9bXrb0dEzrKYAIB0OgWfffiaoP/74Y+/1//bbb66mmnPOOdt0e+jIl66FCJx44okuYFkHwGlx7Mx6zjnnhBlmmKEwoJ6EgBCoWwTKCgBUQOwA2r179yZMcCjKv//970nW00YoIQz4ydUegXXWWSfwkxMCQqAxESg7CUzvf+ONNy7JHStB2R0U3bucEBACQkAINBYCJUcA48aNC9ttt52vpmUR2PDhw8MGG2xQwBlbMDAy4MCYGWecseCdHoSAEBACQqD+ESg5AkC3z2QvKhb21GfhF/fZH2GYHGbFLe/lhIAQEAJCoLEQKDkCgIWddtrJf+j4r7vuuooOSm8s1kWtEBACQiDfCDQrACIsHPvID5VP7OmzBwz7veBfanI4fqurEBACQkAI1C8CJVVAxeSy9wt7vODYEmLhhRcO/fr18xWf9913X3FwPQsBISAEhEADIFBWALAVxD777OOmnowC2IyNeQE2g9tzzz3DwIEDG4BNkSgEhIAQEALFCJQVAKz4ZbuFiy++2FVAd999t6/+XXHFFcMhhxwS2Ado1KhRxfHqWQgIASEgBOocgbIC4Ouvv05X9rIqeOTIkWHdddd1tjgghtFAdj+YOudX5AkBISAEhMB/ESgrADhhiwVfjz32WDjzzDP91Ke11147fPfdd74V9AorrOBrAYSoEBACQkAINBYCZa2A1lhjjbDRRhv5il9YY499zgHATBR10KWXXtpYHItaISAEhIAQcATKCgBC3XzzzeHNN98M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6xdGjBgRX3v8pPXdd9+lfscdd1xYddVVw1dffZX66UYIVAsBCYBqIat4GxaBl19+Oey8887h1VdfDUceeWTYaKONwplnnhnOPvts5+nXX38NW265ZRg2bFg4//zzPWz//v3DH3/8kfKcJElYc801w2233Ra23377cNlll4Vvvvkm9OrVK4wZM8bD7bnnnuG5557zNPB4+umnw7HHHutxIzDkhEDVEbCCKicEcovAa6+9llglS2688cYUg+mnnz6xhjp95qZ3797JWmut5X420Zt06tQp+eSTT9IwN9xwg8dz0UUXuV98HjJkSBrmp59+SqaZZprk0EMPTf1OPvnkxCaPk2eeeSbp0aNH0rdv38QESfpeN0Kgmgh0rLqEUQJCoAER6NOnTwHVCy20UHjnnXfcjxECap8555wzDbPFFluEySb734D6iSeeCF26dAnTTTed9+xjwKWWWqrg+aCDDvJRggmX0LFjx/DAAw+4VVIMr6sQqCYCEgDVRFdxNywCxSqYzp07pyqed99913X/WeZsRBC6du2aejFHMHbsWNfnp57/vWFOIDpMR/fbb7+AConf3HPPHV/pKgSqjsD/uixVT0oJCIHGQYC1Ac25eeaZJ9XjZ8N8//336ePMM88cCDd+/HgXHMwPxN8HH3yQhvv5559d709YUxsVjA7SQLoRAlVCQAKgSsAq2vaLwNJLLx1eeuml8O2336ZMvvLKK+HHH39MnxdffHG3+GGSF2HCz3S5Ydtttw1nnHFGGu6II44II0eODI8//nhYbbXVwo477hgQCnJCoBYISADUAmWl0a4QQFUz00wzeWM9atSoMHz48DBw4MACHnfbbbfAKABLn7vuussb+UMOOSTccsstAX0/DqufQYMGhRNOOMFVP5dccokLDYSCnBCoBQISALVAWWm0KwRo2AcPHhw+/vjjMPvss4fFFlssrL/++n4fGZ1hhhnCgw8+6I+bbrqpTxg/9NBD4YILLgjLLLNMGDdunAsQJpP32msvD2dWQOHwww93oYBwkBMC1UagAyZG1U5E8QuB9orA6NGj3dJn6qmnbpZFVEU0+CwakxMC9YSABEA95YZoEQJCQAjUEAGpgGoItpISAkJACNQTAhIA9ZQbokUICAEhUEMEJABqCLaSEgJCQAjUEwISAPWUG6JFCAgBIVBDBCQAagi2khICQkAI1BMCEgD1lBuiRQgIASFQQwQkAGoItpISAkJACNQTAhIA9ZQbokUICAEhUEMEJABqCLaSEgJCQAjUEwISAPWUG6JFCAgBIVBDBCQAagi2khICQkAI1BMCEgD1lBuiRQgIASFQQwQkAGoItpISAkJACNQTAhIA9ZQbokUICAEhUEMEJABqCLaSEgJCQAjUEwISAPWUG6JFCAgBIVBDBCQAagi2khICQkAI1BMCEgD1lBuiRQgIASFQQwQkAGoItpISAkJACNQTAhIA9ZQbokUICAEhUEMEJABqCLaSEgJCQAjUEwISAPWUG6JFCAgBIVBDBP4ff5FIZ9V5xZgAAAAASUVORK5CYII=" /><!-- --></p>
+<p>The posterior probability plot shows the location of the causal variant (red line) - we see that the causal variant is not the variant with the largest posterior probability. This is fairly common in fine-mapping experiments due to linkage disequilibrium (correlation between SNPs).</p>
+<p>The <code>credset</code> function reports the claimed coverage <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> (the cumulative sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set. If the <code>CV</code> parameter is supplied in the <code>credset</code> function, then the output also includes a binary indicator of whether the causal variant was contained in the credible set.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">thresh &lt;-<span class="st"> </span><span class="fl">0.9</span>
+
+<span class="kw">credset</span>(<span class="dt">pp =</span> postprobs,
+      <span class="co"># CV = iCV,</span>
+       <span class="dt">thr =</span> thresh 
+       ) </code></pre></div>
+<pre><code>##     claimed.cov nvar
+## s30   0.9008649  114</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cs &lt;-<span class="st"> </span><span class="kw">credset</span>(<span class="dt">pp =</span> postprobs,
+              <span class="dt">CV =</span> iCV,
+             <span class="dt">thr =</span> thresh 
+       ) 
+
+cs</code></pre></div>
+<pre><code>##     claimed.cov covered nvar
+## s30   0.9008649       1  114</code></pre>
+<p>The credible set obtained contains 114 (out of 200) variants and the claimed coverage is 0.9004596. In papers, we would expect to see author report that they have found a 90% credible set of 45 variants, which they are 90% confident contains the true causal variant.</p>
+<hr />
+</div>
+<div id="obtain-corrected-coverage-estimate" class="section level2">
+<h2>Obtain corrected coverage estimate</h2>
+<hr />
+<p>Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability using this fancy new package. The only parameters we need to supply to the <code>corrcov</code> function are z0 (marginal z-scores), f (minor allele frequencies), N0 (number of controls), N1 (number of cases), Sigma (SNP correlation matrix) and the threshold of the credible set.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">LD &lt;-<span class="st"> </span><span class="kw">cor2</span>(haps)
+
+corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw">corrcov</span>(z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</code></pre></div>
+<pre><code>## [1] 0.9593843</code></pre>
+<pre><code>##   Corrected.Coverage Claimed.Coverage Threshold
+## 1          0.9593843        0.9008649       0.9</code></pre>
+<p>In this example, the 90% credible set may in actual fact have nearer to 96% coverage of the causal variant in the credible set. To see the accuracy of this estimate we simulate more credible sets from the same system and find what proportion of these contains the true causal variant.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z0.tmp &lt;-<span class="st"> </span><span class="kw">simulated_z_score</span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span>
+                            <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span>
+                            <span class="dt">snps=</span>snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span>
+                            <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span>
+                            <span class="dt">gamma.W=</span><span class="kw">log</span>(g1), <span class="co"># log odds ratios</span>
+                            <span class="dt">freq=</span>freq, <span class="co"># reference haplotypes</span>
+                            <span class="dt">nrep =</span> <span class="dv">5000</span>
+)
+
+pps &lt;-<span class="st"> </span><span class="kw">ppfunc.mat</span>(z0.tmp, <span class="dt">V =</span> var) <span class="co"># find pps</span>
+cs &lt;-<span class="st"> </span><span class="kw">apply</span>(pps, <span class="dv">1</span>, credset, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh) <span class="op">%&gt;%</span><span class="st"> </span>data.table<span class="op">:::</span><span class="kw">rbindlist</span>() <span class="co"># form cred sets</span>
+true.cov.est &lt;-<span class="st"> </span><span class="kw">mean</span>(cs<span class="op">$</span>covered) <span class="co"># average covered col</span>
+true.cov.est</code></pre></div>
+<pre><code>## [1] 0.9746</code></pre>
+<p>The empirical coverage is found to be approximately 97.5%, so our estimate of ~96% is much more accurate than the original 90% (or 90.09% is using claimed coverage).</p>
+<pre><code>##   Empirical.Coverage Corrected.Coverage Claimed.Coverage Threshold
+## 1             0.9746          0.9593843        0.9005427       0.9</code></pre>
+<hr />
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ol style="list-style-type: decimal">
+<li><a href="https://github.com/chr1swallace/simGWAS">simGWAS</a>: Mary D Fortune, Chris Wallace; simGWAS: a fast method for simulation of large scale case–control GWAS summary statistics, Bioinformatics, , bty898, <a href="https://doi.org/10.1093/bioinformatics/bty898" class="uri">https://doi.org/10.1093/bioinformatics/bty898</a></li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">session_info</span>()</code></pre></div>
+<pre><code>## ─ Session info ──────────────────────────────────────────────────────────
+##  setting  value                       
+##  version  R version 3.5.1 (2018-07-02)
+##  os       macOS High Sierra 10.13.6   
+##  system   x86_64, darwin15.6.0        
+##  ui       X11                         
+##  language (EN)                        
+##  collate  en_GB.UTF-8                 
+##  ctype    en_GB.UTF-8                 
+##  tz       Europe/London               
+##  date     2019-02-05                  
+## 
+## ─ Packages ──────────────────────────────────────────────────────────────
+##  package      * version date       lib
+##  assertthat     0.2.0   2017-04-11 [1]
+##  backports      1.1.3   2018-12-14 [1]
+##  bindr          0.1.1   2018-03-13 [1]
+##  bindrcpp       0.2.2   2018-03-29 [1]
+##  BiocGenerics   0.28.0  2018-10-30 [1]
+##  BMA            3.18.9  2018-09-14 [1]
+##  callr          3.1.1   2018-12-21 [1]
+##  cli            1.0.1   2018-09-25 [1]
+##  cluster        2.0.7-1 2018-04-13 [1]
+##  codetools      0.2-15  2016-10-05 [1]
+##  coloc          3.1     2018-02-24 [1]
+##  colorspace     1.4-0   2019-01-13 [1]
+##  combinat       0.0-8   2012-10-29 [1]
+##  corpcor        1.6.9   2017-04-01 [1]
+##  corrcoverage * 0.1.0   2019-02-05 [1]
+##  crayon         1.3.4   2017-09-16 [1]
+##  data.table   * 1.12.0  2019-01-13 [1]
+##  DEoptimR       1.0-8   2016-11-19 [1]
+##  desc           1.2.0   2018-05-01 [1]
+##  devtools       2.0.1   2018-10-26 [1]
+##  digest         0.6.18  2018-10-10 [1]
+##  dplyr        * 0.7.8   2018-11-10 [1]
+##  evaluate       0.12    2018-10-09 [1]
+##  formatR      * 1.5     2017-04-25 [1]
+##  fs             1.2.6   2018-08-23 [1]
+##  ggplot2        3.1.0   2018-10-25 [1]
+##  glue           1.3.0   2018-07-17 [1]
+##  gtable         0.2.0   2016-02-26 [1]
+##  htmltools      0.3.6   2017-04-28 [1]
+##  inline         0.3.15  2018-05-18 [1]
+##  knitr          1.21    2018-12-10 [1]
+##  lattice        0.20-35 2017-03-25 [1]
+##  lazyeval       0.2.1   2017-10-29 [1]
+##  leaps          3.0     2017-01-10 [1]
+##  magrittr       1.5     2014-11-22 [1]
+##  Matrix         1.2-14  2018-04-13 [1]
+##  memoise        1.1.0   2017-04-21 [1]
+##  mgcv           1.8-26  2018-11-21 [1]
+##  munsell        0.5.0   2018-06-12 [1]
+##  mvtnorm        1.0-8   2018-05-31 [1]
+##  nlme           3.1-137 2018-04-07 [1]
+##  pcaPP          1.9-73  2018-01-14 [1]
+##  pillar         1.3.1   2018-12-15 [1]
+##  pkgbuild       1.0.2   2018-10-16 [1]
+##  pkgconfig      2.0.2   2018-08-16 [1]
+##  pkgload        1.0.2   2018-10-29 [1]
+##  plyr           1.8.4   2016-06-08 [1]
+##  prettyunits    1.0.2   2015-07-13 [1]
+##  processx       3.2.1   2018-12-05 [1]
+##  ps             1.3.0   2018-12-21 [1]
+##  purrr          0.2.5   2018-05-29 [1]
+##  R6             2.3.0   2018-10-04 [1]
+##  Rcpp           1.0.0   2018-11-07 [1]
+##  remotes        2.0.2   2018-10-30 [1]
+##  reshape        0.8.8   2018-10-23 [1]
+##  rlang          0.3.1   2019-01-08 [1]
+##  rmarkdown      1.10    2018-06-11 [1]
+##  robustbase     0.93-3  2018-09-21 [1]
+##  rprojroot      1.3-2   2018-01-03 [1]
+##  rrcov          1.4-7   2018-11-15 [1]
+##  scales         1.0.0   2018-08-09 [1]
+##  sessioninfo    1.1.1   2018-11-05 [1]
+##  simGWAS      * 0.2.0-1 2018-11-13 [1]
+##  snpStats       1.30.0  2018-05-01 [1]
+##  stringi        1.2.4   2018-07-20 [1]
+##  stringr        1.3.1   2018-05-10 [1]
+##  survival       2.42-3  2018-04-16 [1]
+##  testthat       2.0.1   2018-10-13 [1]
+##  tibble         2.0.1   2019-01-12 [1]
+##  tidyselect     0.2.5   2018-10-11 [1]
+##  usethis        1.4.0   2018-08-14 [1]
+##  withr          2.1.2   2018-03-15 [1]
+##  xfun           0.4     2018-10-23 [1]
+##  yaml           2.2.0   2018-07-25 [1]
+##  zlibbioc       1.28.0  2018-10-30 [1]
+##  source                               
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  Bioconductor                         
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.1)                       
+##  CRAN (R 3.5.1)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.2)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  local                                
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.2)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.1)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.1)                       
+##  CRAN (R 3.5.1)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.1)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.1)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.2)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  Github (chr1swallace/simGWAS@7ed37da)
+##  Bioconductor                         
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.1)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.2)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  CRAN (R 3.5.0)                       
+##  Bioconductor                         
+## 
+## [1] /Library/Frameworks/R.framework/Versions/3.5/Resources/library</code></pre>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Researchers commonly use the size of the credible set as an estimate of the coverage probabiltiy of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (obviously claimed coverage &gt; threshold).<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -29,6 +29,7 @@ logsum <- function(x) {
 #' @title cor2
 #' @param x Phased haplotype matrix, rows as samples and columns as SNPs
 #' @return Correlation matrix
+#' @export
 #' @author Chris Wallace
 cor2 <- function(x) {
     1/(NROW(x) - 1) * crossprod(scale(x, TRUE, TRUE))
@@ -44,14 +45,14 @@ geth <- function(nsnp) {
     ## real data from UK10K
     file.ldd = "/home/cew54/share/Data/reference/lddetect/EUR/fourier_ls-chr22.bed"
     file.vcf = "/home/cew54/share/Data/reference/UK10K/BCF/chr22.bcf.gz"
-    
+
     ## ldblocks
     ldd <- fread(file.ldd)
-    
+
     ## split bcf by ldblocks
     ldd[, `:=`(blocknum, 1:.N)]
     ldd[, `:=`(dist, stop - start)]
-    ldd[, `:=`(comm, paste0("/home/cew54/share/bin/bcftools view ", file.vcf, " --min-af 0.02:minor --max-alleles 2 --min-alleles 2 ", " -r chr", 
+    ldd[, `:=`(comm, paste0("/home/cew54/share/bin/bcftools view ", file.vcf, " --min-af 0.02:minor --max-alleles 2 --min-alleles 2 ", " -r chr",
         22, ":", start, "-", stop, " -Ov "))]  # -o ',tmp)]
     gethap <- function(i) {
         y = fread(ldd$comm[i])
@@ -59,7 +60,7 @@ geth <- function(nsnp) {
         rownames(ha) <- paste0("pos", y$POS)
         t(ha)
     }
-    
+
     block <- sample(which(ldd$dist < 1200000), 1)  # use smallest LD block to be fast
     h <- gethap(block)  # rows=samples, cols=snps
     use <- apply(h, 2, var) > 0 & colMeans(h) > 0.01 & colMeans(h) < 0.99  # no monomorphs
@@ -80,6 +81,7 @@ geth <- function(nsnp) {
 #' @rdname pred_logit
 #' @title pred_logit
 #' @param x data.frame with column for 'covered' and 'logit.claim'
+#' @export
 #' @return Predicted probability of covered
 pred_logit <- function(x) {
     m <- mgcv:::gam(covered ~ s(logit.claim), data = x, family = "binomial")
@@ -92,6 +94,7 @@ pred_logit <- function(x) {
 #' @title pred_na
 #' @param x data.frame with a binary 'covered' column
 #' @return Predicted coverage
+#' @export
 #' @author Anna Hutchinson
 pred_na <- function(x) {
     mean(x$covered)
@@ -101,6 +104,7 @@ pred_na <- function(x) {
 #'
 #' @rdname mu.est
 #' @title mu_est
+#' @export
 #' @return Estimate of true effect at CV
 mu_est <- function(X) {
     y = seq(0, 20, 0.005)

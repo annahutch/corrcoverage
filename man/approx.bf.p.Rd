@@ -17,13 +17,16 @@ approx.bf.p(p, f, type, N, s, W)
 
 \item{s}{Proportion of cases (N1/N0+N1), ignored if type=="quant"}
 
-\item{W}{Prior for the standard deviation of the effect size parameter $\beta$}
+\item{W}{Prior for the standard deviation of the effect size parameter \beta}
 }
 \value{
 data.frame containing lABF and intermediate calculations
 }
 \description{
 Wakefield's ABF with prior SD as a parameter
+}
+\details{
+This function converts p-values to ABF
 }
 \author{
 Chris Wallace

@@ -19,3 +19,6 @@ data.frame of claimed.cov (cumulative sum of the posterior probabilities of the 
 \description{
 Obtain a credible set using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008)).
 }
+\details{
+If the CV parameter is supplied, the output includes a binary indicator of whether the CV is contained in the set
+}

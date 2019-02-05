@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{ppfunc}
 \alias{ppfunc}
-\title{Posterior probabilities for vectors}
+\title{ppfunc}
 \usage{
 ppfunc(z, V, W = 0.2)
 }
@@ -11,7 +11,7 @@ ppfunc(z, V, W = 0.2)
 
 \item{V}{Variance of the estimated effect size (can be obtained using var.beta.cc function)}
 
-\item{W}{Prior for the standard deviation of the effect size parameter $\beta$}
+\item{W}{Prior for the standard deviation of the effect size parameter \beta}
 }
 \value{
 Vector of posterior probabilities
@@ -20,6 +20,5 @@ Vector of posterior probabilities
 Quick posterior probabilities for each SNP causal from marginal z-scores
 }
 \details{
-This derivation does not include the null model, so one posterior probability is obtained for each marginal
-z-score and these sum to 1.
+This function converts z-scores to posterior probabilities, not including the null model of no genetic effects, so that the sum of the posterior probabilities is 1
 }

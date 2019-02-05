@@ -4,7 +4,7 @@
 \alias{corrcov}
 \title{corrcov}
 \usage{
-corrcov(z0, f, N0, N1, Sigma)
+corrcov(z0, f, N0, N1, Sigma, thr)
 }
 \arguments{
 \item{z0}{Marginal z-scores}
@@ -16,6 +16,8 @@ corrcov(z0, f, N0, N1, Sigma)
 \item{N1}{Number of cases}
 
 \item{Sigma}{SNP correlation matrix}
+
+\item{thr}{Minimum threshold for fine-mapping experiment}
 }
 \value{
 Corrected coverage estimate

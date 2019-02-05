@@ -4,7 +4,7 @@
 \alias{corrected_cov}
 \title{corrected_cov}
 \usage{
-corrected_cov(mu, nsnps = 200, V, Sigma, pp0)
+corrected_cov(mu, nsnps = 200, V, Sigma, pp0, thresh)
 }
 \arguments{
 \item{mu}{The true effect at the CV}
@@ -16,6 +16,8 @@ corrected_cov(mu, nsnps = 200, V, Sigma, pp0)
 \item{Sigma}{SNP correlation matrix}
 
 \item{pp0}{Posterior probabilities of system of interest}
+
+\item{thresh}{Minimum threshold for fine-mapping experiment}
 }
 \value{
 Corrected coverage estimate

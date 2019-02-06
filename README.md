@@ -5,6 +5,8 @@ corrcoverage
 
 The corrcoverage package can be used to obtain an accurate coverage estimate of the causal variant in a credible set that has been acquired using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008)).
 
+Webpage: <https://annahutch.github.io/corrcoverage/>
+
 ------------------------------------------------------------------------
 
 Installation
@@ -22,7 +24,7 @@ devtools::install_github("annahutch/corrcoverage")
 Examples
 --------
 
-For examples and usage, please see the vignettes \[<https://annahutch.github.io/corrcoverage/vignettes>\]
+For examples and usage, please see the vignettes \[<http://annahutch.github.io/corrcoverage/articles/my-vignette.html>\]
 
 ------------------------------------------------------------------------
 

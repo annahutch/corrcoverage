@@ -12,14 +12,14 @@
 
 <meta name="author" content="Anna Hutchinson" />
 
-<meta name="date" content="2019-02-05" />
+<meta name="date" content="2019-02-06" />
 
 <title>Obtaining Accurate Coverage Estimate for Credible Sets</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
+<style type="text/css" data-origin="pandoc">
 div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
@@ -55,7 +55,29 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
 </style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
 
 
 
@@ -70,7 +92,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Obtaining Accurate Coverage Estimate for Credible Sets</h1>
 <h4 class="author"><em>Anna Hutchinson</em></h4>
-<h4 class="date"><em>2019-02-05</em></h4>
+<h4 class="date"><em>2019-02-06</em></h4>
 
 
 
@@ -120,8 +142,11 @@ g1 &lt;-<span class="st"> </span><span class="fl">1.1</span></code></pre></div>
 <div id="obtain-credible-set" class="section level2">
 <h2>Obtain credible set</h2>
 <hr />
-<p>We now use the <code>credsets</code> function in the <code>corrcoverage</code> package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows these steps: 1. Order variants in descending order or posterior probabilities. 2. Cumulatively sum these variants until the user specific threshold is exceeded. 3. The required variants form the ‘credible set’.</p>
-<p>The function requires posterior probabilities as input and so we use the <code>ppfunc</code> function to convert the marginal z-scores to posterior probabilties. This function requires a value for <span class="math inline">\(V\)</span>, the variance of the estimate effect size, which can be easily calculated using the <code>Var.data.cc</code> function in the <code>coloc</code> package. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with default 0.2</p>
+<p>We now use the <code>credsets</code> function in the <code>corrcoverage</code> package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows these steps:</p>
+<pre><code>1. Order variants in descending order or posterior probabilities. 
+2. Cumulatively sum these variants until the user specific threshold is exceeded.
+3. The required variants form the 'credible set'.</code></pre>
+<p>The function requires posterior probabilities as input and so we use the <code>ppfunc</code> function to convert the marginal z-scores to posterior probabilties. This function requires a value for <span class="math inline">\(V\)</span>, the variance of the estimate effect size, which can be easily calculated using the <code>Var.data.cc</code> function in the <code>coloc</code> package. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with default value 0.2</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N0 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of controls</span>
 N1 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of cases</span>
 
@@ -157,23 +182,22 @@ cs</code></pre></div>
 <h2>Obtain corrected coverage estimate</h2>
 <hr />
 <p>Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability using this fancy new package. The only parameters we need to supply to the <code>corrcov</code> function are z0 (marginal z-scores), f (minor allele frequencies), N0 (number of controls), N1 (number of cases), Sigma (SNP correlation matrix) and the threshold of the credible set.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">LD &lt;-<span class="st"> </span><span class="kw">cor2</span>(haps)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">LD &lt;-<span class="st"> </span><span class="kw">cor2</span>(haps) <span class="co"># correlation between SNPs</span>
 
 corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw">corrcov</span>(z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</code></pre></div>
-<pre><code>## [1] 0.9593843</code></pre>
 <pre><code>##   Corrected.Coverage Claimed.Coverage Threshold
 ## 1          0.9593843        0.9008649       0.9</code></pre>
 <p>In this example, the 90% credible set may in actual fact have nearer to 96% coverage of the causal variant in the credible set. To see the accuracy of this estimate we simulate more credible sets from the same system and find what proportion of these contains the true causal variant.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z0.tmp &lt;-<span class="st"> </span><span class="kw">simulated_z_score</span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span>
                             <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span>
-                            <span class="dt">snps=</span>snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span>
+                            <span class="dt">snps=</span>snps, <span class="co"># column names in freq</span>
                             <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span>
                             <span class="dt">gamma.W=</span><span class="kw">log</span>(g1), <span class="co"># log odds ratios</span>
                             <span class="dt">freq=</span>freq, <span class="co"># reference haplotypes</span>
                             <span class="dt">nrep =</span> <span class="dv">5000</span>
 )
 
-pps &lt;-<span class="st"> </span><span class="kw">ppfunc.mat</span>(z0.tmp, <span class="dt">V =</span> var) <span class="co"># find pps</span>
+pps &lt;-<span class="st"> </span><span class="kw">ppfunc.mat</span>(<span class="dt">zstar =</span> z0.tmp, <span class="dt">V =</span> var) <span class="co"># find pps</span>
 cs &lt;-<span class="st"> </span><span class="kw">apply</span>(pps, <span class="dv">1</span>, credset, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh) <span class="op">%&gt;%</span><span class="st"> </span>data.table<span class="op">:::</span><span class="kw">rbindlist</span>() <span class="co"># form cred sets</span>
 true.cov.est &lt;-<span class="st"> </span><span class="kw">mean</span>(cs<span class="op">$</span>covered) <span class="co"># average covered col</span>
 true.cov.est</code></pre></div>
@@ -189,7 +213,7 @@ true.cov.est</code></pre></div>
 <li><a href="https://github.com/chr1swallace/simGWAS">simGWAS</a>: Mary D Fortune, Chris Wallace; simGWAS: a fast method for simulation of large scale case–control GWAS summary statistics, Bioinformatics, , bty898, <a href="https://doi.org/10.1093/bioinformatics/bty898" class="uri">https://doi.org/10.1093/bioinformatics/bty898</a></li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw">session_info</span>()</code></pre></div>
-<pre><code>## ─ Session info ──────────────────────────────────────────────────────────
+<pre><code>## ─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 3.5.1 (2018-07-02)
 ##  os       macOS High Sierra 10.13.6   
@@ -199,161 +223,84 @@ true.cov.est</code></pre></div>
 ##  collate  en_GB.UTF-8                 
 ##  ctype    en_GB.UTF-8                 
 ##  tz       Europe/London               
-##  date     2019-02-05                  
+##  date     2019-02-06                  
 ## 
-## ─ Packages ──────────────────────────────────────────────────────────────
-##  package      * version date       lib
-##  assertthat     0.2.0   2017-04-11 [1]
-##  backports      1.1.3   2018-12-14 [1]
-##  bindr          0.1.1   2018-03-13 [1]
-##  bindrcpp       0.2.2   2018-03-29 [1]
-##  BiocGenerics   0.28.0  2018-10-30 [1]
-##  BMA            3.18.9  2018-09-14 [1]
-##  callr          3.1.1   2018-12-21 [1]
-##  cli            1.0.1   2018-09-25 [1]
-##  cluster        2.0.7-1 2018-04-13 [1]
-##  codetools      0.2-15  2016-10-05 [1]
-##  coloc          3.1     2018-02-24 [1]
-##  colorspace     1.4-0   2019-01-13 [1]
-##  combinat       0.0-8   2012-10-29 [1]
-##  corpcor        1.6.9   2017-04-01 [1]
-##  corrcoverage * 0.1.0   2019-02-05 [1]
-##  crayon         1.3.4   2017-09-16 [1]
-##  data.table   * 1.12.0  2019-01-13 [1]
-##  DEoptimR       1.0-8   2016-11-19 [1]
-##  desc           1.2.0   2018-05-01 [1]
-##  devtools       2.0.1   2018-10-26 [1]
-##  digest         0.6.18  2018-10-10 [1]
-##  dplyr        * 0.7.8   2018-11-10 [1]
-##  evaluate       0.12    2018-10-09 [1]
-##  formatR      * 1.5     2017-04-25 [1]
-##  fs             1.2.6   2018-08-23 [1]
-##  ggplot2        3.1.0   2018-10-25 [1]
-##  glue           1.3.0   2018-07-17 [1]
-##  gtable         0.2.0   2016-02-26 [1]
-##  htmltools      0.3.6   2017-04-28 [1]
-##  inline         0.3.15  2018-05-18 [1]
-##  knitr          1.21    2018-12-10 [1]
-##  lattice        0.20-35 2017-03-25 [1]
-##  lazyeval       0.2.1   2017-10-29 [1]
-##  leaps          3.0     2017-01-10 [1]
-##  magrittr       1.5     2014-11-22 [1]
-##  Matrix         1.2-14  2018-04-13 [1]
-##  memoise        1.1.0   2017-04-21 [1]
-##  mgcv           1.8-26  2018-11-21 [1]
-##  munsell        0.5.0   2018-06-12 [1]
-##  mvtnorm        1.0-8   2018-05-31 [1]
-##  nlme           3.1-137 2018-04-07 [1]
-##  pcaPP          1.9-73  2018-01-14 [1]
-##  pillar         1.3.1   2018-12-15 [1]
-##  pkgbuild       1.0.2   2018-10-16 [1]
-##  pkgconfig      2.0.2   2018-08-16 [1]
-##  pkgload        1.0.2   2018-10-29 [1]
-##  plyr           1.8.4   2016-06-08 [1]
-##  prettyunits    1.0.2   2015-07-13 [1]
-##  processx       3.2.1   2018-12-05 [1]
-##  ps             1.3.0   2018-12-21 [1]
-##  purrr          0.2.5   2018-05-29 [1]
-##  R6             2.3.0   2018-10-04 [1]
-##  Rcpp           1.0.0   2018-11-07 [1]
-##  remotes        2.0.2   2018-10-30 [1]
-##  reshape        0.8.8   2018-10-23 [1]
-##  rlang          0.3.1   2019-01-08 [1]
-##  rmarkdown      1.10    2018-06-11 [1]
-##  robustbase     0.93-3  2018-09-21 [1]
-##  rprojroot      1.3-2   2018-01-03 [1]
-##  rrcov          1.4-7   2018-11-15 [1]
-##  scales         1.0.0   2018-08-09 [1]
-##  sessioninfo    1.1.1   2018-11-05 [1]
-##  simGWAS      * 0.2.0-1 2018-11-13 [1]
-##  snpStats       1.30.0  2018-05-01 [1]
-##  stringi        1.2.4   2018-07-20 [1]
-##  stringr        1.3.1   2018-05-10 [1]
-##  survival       2.42-3  2018-04-16 [1]
-##  testthat       2.0.1   2018-10-13 [1]
-##  tibble         2.0.1   2019-01-12 [1]
-##  tidyselect     0.2.5   2018-10-11 [1]
-##  usethis        1.4.0   2018-08-14 [1]
-##  withr          2.1.2   2018-03-15 [1]
-##  xfun           0.4     2018-10-23 [1]
-##  yaml           2.2.0   2018-07-25 [1]
-##  zlibbioc       1.28.0  2018-10-30 [1]
-##  source                               
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  Bioconductor                         
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.1)                       
-##  CRAN (R 3.5.1)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.2)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  local                                
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.2)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.1)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.1)                       
-##  CRAN (R 3.5.1)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.1)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.1)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.2)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  Github (chr1swallace/simGWAS@7ed37da)
-##  Bioconductor                         
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.1)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.2)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  CRAN (R 3.5.0)                       
-##  Bioconductor                         
+## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+##  package      * version date       lib source                               
+##  assertthat     0.2.0   2017-04-11 [1] CRAN (R 3.5.0)                       
+##  backports      1.1.3   2018-12-14 [1] CRAN (R 3.5.0)                       
+##  bindr          0.1.1   2018-03-13 [1] CRAN (R 3.5.0)                       
+##  bindrcpp       0.2.2   2018-03-29 [1] CRAN (R 3.5.0)                       
+##  BiocGenerics   0.28.0  2018-10-30 [1] Bioconductor                         
+##  BMA            3.18.9  2018-09-14 [1] CRAN (R 3.5.0)                       
+##  callr          3.1.1   2018-12-21 [1] CRAN (R 3.5.0)                       
+##  cli            1.0.1   2018-09-25 [1] CRAN (R 3.5.0)                       
+##  cluster        2.0.7-1 2018-04-13 [1] CRAN (R 3.5.1)                       
+##  codetools      0.2-15  2016-10-05 [1] CRAN (R 3.5.1)                       
+##  coloc          3.1     2018-02-24 [1] CRAN (R 3.5.0)                       
+##  colorspace     1.4-0   2019-01-13 [1] CRAN (R 3.5.2)                       
+##  combinat       0.0-8   2012-10-29 [1] CRAN (R 3.5.0)                       
+##  corpcor        1.6.9   2017-04-01 [1] CRAN (R 3.5.0)                       
+##  corrcoverage * 0.1.0   2019-02-05 [1] local                                
+##  crayon         1.3.4   2017-09-16 [1] CRAN (R 3.5.0)                       
+##  data.table     1.12.0  2019-01-13 [1] CRAN (R 3.5.2)                       
+##  DEoptimR       1.0-8   2016-11-19 [1] CRAN (R 3.5.0)                       
+##  desc           1.2.0   2018-05-01 [1] CRAN (R 3.5.0)                       
+##  devtools       2.0.1   2018-10-26 [1] CRAN (R 3.5.1)                       
+##  digest         0.6.18  2018-10-10 [1] CRAN (R 3.5.0)                       
+##  dplyr          0.7.8   2018-11-10 [1] CRAN (R 3.5.0)                       
+##  evaluate       0.12    2018-10-09 [1] CRAN (R 3.5.0)                       
+##  fs             1.2.6   2018-08-23 [1] CRAN (R 3.5.0)                       
+##  ggplot2        3.1.0   2018-10-25 [1] CRAN (R 3.5.0)                       
+##  glue           1.3.0   2018-07-17 [1] CRAN (R 3.5.0)                       
+##  gtable         0.2.0   2016-02-26 [1] CRAN (R 3.5.0)                       
+##  htmltools      0.3.6   2017-04-28 [1] CRAN (R 3.5.0)                       
+##  inline         0.3.15  2018-05-18 [1] CRAN (R 3.5.0)                       
+##  knitr          1.21    2018-12-10 [1] CRAN (R 3.5.1)                       
+##  lattice        0.20-35 2017-03-25 [1] CRAN (R 3.5.1)                       
+##  lazyeval       0.2.1   2017-10-29 [1] CRAN (R 3.5.0)                       
+##  leaps          3.0     2017-01-10 [1] CRAN (R 3.5.0)                       
+##  magrittr       1.5     2014-11-22 [1] CRAN (R 3.5.0)                       
+##  Matrix         1.2-14  2018-04-13 [1] CRAN (R 3.5.1)                       
+##  memoise        1.1.0   2017-04-21 [1] CRAN (R 3.5.0)                       
+##  mgcv           1.8-26  2018-11-21 [1] CRAN (R 3.5.0)                       
+##  munsell        0.5.0   2018-06-12 [1] CRAN (R 3.5.0)                       
+##  mvtnorm        1.0-8   2018-05-31 [1] CRAN (R 3.5.0)                       
+##  nlme           3.1-137 2018-04-07 [1] CRAN (R 3.5.1)                       
+##  pcaPP          1.9-73  2018-01-14 [1] CRAN (R 3.5.0)                       
+##  pillar         1.3.1   2018-12-15 [1] CRAN (R 3.5.0)                       
+##  pkgbuild       1.0.2   2018-10-16 [1] CRAN (R 3.5.0)                       
+##  pkgconfig      2.0.2   2018-08-16 [1] CRAN (R 3.5.0)                       
+##  pkgload        1.0.2   2018-10-29 [1] CRAN (R 3.5.0)                       
+##  plyr           1.8.4   2016-06-08 [1] CRAN (R 3.5.0)                       
+##  prettyunits    1.0.2   2015-07-13 [1] CRAN (R 3.5.0)                       
+##  processx       3.2.1   2018-12-05 [1] CRAN (R 3.5.0)                       
+##  ps             1.3.0   2018-12-21 [1] CRAN (R 3.5.0)                       
+##  purrr          0.3.0   2019-01-27 [1] CRAN (R 3.5.2)                       
+##  R6             2.3.0   2018-10-04 [1] CRAN (R 3.5.0)                       
+##  Rcpp           1.0.0   2018-11-07 [1] CRAN (R 3.5.0)                       
+##  remotes        2.0.2   2018-10-30 [1] CRAN (R 3.5.0)                       
+##  reshape        0.8.8   2018-10-23 [1] CRAN (R 3.5.0)                       
+##  rlang          0.3.1   2019-01-08 [1] CRAN (R 3.5.2)                       
+##  rmarkdown      1.11    2018-12-08 [1] CRAN (R 3.5.0)                       
+##  robustbase     0.93-3  2018-09-21 [1] CRAN (R 3.5.0)                       
+##  rprojroot      1.3-2   2018-01-03 [1] CRAN (R 3.5.0)                       
+##  rrcov          1.4-7   2018-11-15 [1] CRAN (R 3.5.0)                       
+##  scales         1.0.0   2018-08-09 [1] CRAN (R 3.5.0)                       
+##  sessioninfo    1.1.1   2018-11-05 [1] CRAN (R 3.5.0)                       
+##  simGWAS      * 0.2.0-1 2018-11-13 [1] Github (chr1swallace/simGWAS@7ed37da)
+##  snpStats       1.30.0  2018-05-01 [1] Bioconductor                         
+##  stringi        1.2.4   2018-07-20 [1] CRAN (R 3.5.0)                       
+##  stringr        1.3.1   2018-05-10 [1] CRAN (R 3.5.0)                       
+##  survival       2.42-3  2018-04-16 [1] CRAN (R 3.5.1)                       
+##  testthat       2.0.1   2018-10-13 [1] CRAN (R 3.5.0)                       
+##  tibble         2.0.1   2019-01-12 [1] CRAN (R 3.5.2)                       
+##  tidyselect     0.2.5   2018-10-11 [1] CRAN (R 3.5.0)                       
+##  usethis        1.4.0   2018-08-14 [1] CRAN (R 3.5.0)                       
+##  withr          2.1.2   2018-03-15 [1] CRAN (R 3.5.0)                       
+##  xfun           0.4     2018-10-23 [1] CRAN (R 3.5.0)                       
+##  yaml           2.2.0   2018-07-25 [1] CRAN (R 3.5.0)                       
+##  zlibbioc       1.28.0  2018-10-30 [1] Bioconductor                         
 ## 
 ## [1] /Library/Frameworks/R.framework/Versions/3.5/Resources/library</code></pre>
 </div>

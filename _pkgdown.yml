@@ -1,0 +1,48 @@
+URL: https://annahutch.github.io/corrcoverage
+navbar:
+  structure:
+    left:
+    - home
+    - intro
+    - reference
+    - articles
+    - tutorials
+    - news
+    right: github
+  components:
+    home:
+      icon: fa-home fa-lg
+      href:
+    reference:
+      text: Reference
+      href: reference/
+    intro:
+      text: Get started
+      href: articles/corrcoverage.html
+
+reference:
+- title: All functions
+  desc: ~
+  contents:
+  - '`Var.data.cc`'
+  - '`approx.bf.p`'
+  - '`cor2`'
+  - '`corrcov`'
+  - '`corrected_cov`'
+  - '`credset`'
+  - '`geth`'
+  - '`logsum`'
+  - '`mu_est`'
+  - '`ppfunc`'
+  - '`ppfunc.mat`'
+  - '`pred_logit`'
+  - '`pred_na`'
+  - '`pvals_pp`'
+  - '`z0_pp`'
+  - '`z_sim`'
+  - '`zj_pp`'
+
+articles:
+- title: All vignettes
+  desc: ~
+  contents: '`corrcoverage`'

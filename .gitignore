@@ -1,4 +1,8 @@
 inst/doc
 .Rproj.user/
-.DS_Store/
+.DS_Store
 .Rproj.user
+.Rhistory
+.RData
+corrcoverage.Rproj
+

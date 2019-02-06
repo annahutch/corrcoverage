@@ -17,7 +17,7 @@ pvals_pp(pvals, f, type, N, s, W = 0.2)
 
 \item{s}{Proportion of cases (N1/N0+N1), ignored if type=="quant"}
 
-\item{W}{Prior for the standard deviation of the effect size parameter \beta}
+\item{W}{Prior for the standard deviation of the effect size parameter beta}
 }
 \value{
 Posterior probabilities of null model (no genetic effect) and causality for each SNP

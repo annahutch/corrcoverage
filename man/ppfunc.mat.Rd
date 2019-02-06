@@ -11,7 +11,7 @@ ppfunc.mat(zstar, V, W = 0.2)
 
 \item{V}{Variance of the estimated effect size (can be obtained using var.beta.cc function), one element per column of zstar}
 
-\item{W}{Prior for the standard deviation of the effect size parameter \beta}
+\item{W}{Prior for the standard deviation of the effect size parameter beta}
 }
 \value{
 Vector of posterior probabilities

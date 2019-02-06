@@ -13,7 +13,7 @@ zj_pp(Zj, V, nrep = 5000, W = 0.2, Sigma)
 
 \item{nrep}{Number of marginal z-scores to simulate}
 
-\item{W}{Prior for the standard deviation of the effect size parameter $\beta$}
+\item{W}{Prior for the standard deviation of the effect size parameter, beta}
 
 \item{Sigma}{SNP correlation matrix}
 }

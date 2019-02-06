@@ -1,4 +1,4 @@
-#' Variance of the estimated effect size for case-control
+#' Variance of the estimated effect size for case-control data
 #'
 #' @title Var.data.cc
 #' @param f Minor allele frequencies
@@ -26,6 +26,7 @@ logsum <- function(x) {
 
 #' Correlation matrix of SNPS
 #'
+#' A quick function to find a correlation matrix
 #' @title cor2
 #' @param x Phased haplotype matrix, rows as samples and columns as SNPs
 #' @return Correlation matrix

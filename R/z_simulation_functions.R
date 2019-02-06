@@ -1,4 +1,4 @@
-#' Simulate marginal z-scores from the joint z-scores using \eqn{Z_m ~ MVN(E(Z_j),\Sigma)}
+#' Simulate marginal z-scores (\eqn{Zm}) from the joint z-scores (\eqn{Zj}) using \eqn{Zm ~ MVN(E(Zj),\Sigma)}
 #'
 #' @title z_sim
 #' @param Zj Vector of joint z-scores (0s except at CV)
@@ -18,7 +18,7 @@ z_sim <- function(Zj, Sigma, nrep) {
 #' @param Zj Vector of joint z-scores (0s except at CV)
 #' @param V Variance of the estimated effect size (can be obtained using var.beta.cc function)
 #' @param nrep Number of marginal z-scores to simulate
-#' @param W Prior for the standard deviation of the effect size parameter $\beta$
+#' @param W Prior for the standard deviation of the effect size parameter, beta
 #' @param Sigma SNP correlation matrix
 #' @export
 #' @return Matrix of simulated posterior probabilties, one simulation per row

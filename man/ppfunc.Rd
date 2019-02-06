@@ -11,7 +11,7 @@ ppfunc(z, V, W = 0.2)
 
 \item{V}{Variance of the estimated effect size (can be obtained using var.beta.cc function)}
 
-\item{W}{Prior for the standard deviation of the effect size parameter \beta}
+\item{W}{Prior for the standard deviation of the effect size parameter beta}
 }
 \value{
 Vector of posterior probabilities

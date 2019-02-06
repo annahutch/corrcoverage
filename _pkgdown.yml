@@ -15,7 +15,7 @@ navbar:
       href:
     reference:
       text: Reference
-      href: reference/
+      href: reference/index.html
     intro:
       text: Get started
       href: articles/corrcoverage.html

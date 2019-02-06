@@ -17,7 +17,7 @@ Var.data.cc(f, N, s)
 Variance of estimated effect size, V.
 }
 \description{
-Variance of the estimated effect size for case-control
+Variance of the estimated effect size for case-control data
 }
 \author{
 Claudia Giambartolomei

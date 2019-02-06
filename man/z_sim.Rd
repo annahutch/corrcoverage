@@ -17,5 +17,5 @@ z_sim(Zj, Sigma, nrep)
 Matrix of simulated z-scores, one simulation per row
 }
 \description{
-Simulate marginal z-scores from the joint z-scores using \eqn{Z_m ~ MVN(E(Z_j),\Sigma)}
+Simulate marginal z-scores (\eqn{Zm}) from the joint z-scores (\eqn{Zj}) using \eqn{Zm ~ MVN(E(Zj),\Sigma)}
 }

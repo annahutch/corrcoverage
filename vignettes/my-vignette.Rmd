@@ -1,10 +1,10 @@
 ---
-title: "Obtaining Accurate Coverage Estimate for Credible Sets"
+title: "Correcting the Coverage of Credible Sets"
 author: "Anna Hutchinson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Obtaining Accurate Coverage Estimate for Credible Sets}
+  %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

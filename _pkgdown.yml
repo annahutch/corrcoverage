@@ -12,13 +12,15 @@ navbar:
   components:
     home:
       icon: fa-home fa-lg
-      href:
+      href: index.html
     reference:
       text: Reference
       href: reference/index.html
-    intro:
-      text: Get started
-      href: articles/corrcoverage.html
+    articles:
+      text: Articles
+      menu:
+      - text: Correcting the Coverage of Credible Sets
+        href: articles/my-vignette.html
 
 reference:
 - title: All functions
@@ -45,4 +47,4 @@ reference:
 articles:
 - title: All vignettes
   desc: ~
-  contents: '`corrcoverage`'
+  contents: '`my-vignette`'

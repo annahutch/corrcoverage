@@ -1,6 +1,6 @@
-#' Wakefield's ABF with prior SD as a parameter
+#' Wakefield's lABF with prior SD as a parameter
 #'
-#' This function converts p-values to ABF
+#' This function converts p-values to lABF
 #' @title approx.bf.p
 #' @param p p-values
 #' @param f Minor allele frequencies

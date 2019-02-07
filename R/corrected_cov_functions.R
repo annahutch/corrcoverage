@@ -101,14 +101,14 @@ corrected_cov <- function(mu, nsnps = 200, V, Sigma, pp0, thresh) {
 #' @param thr Minimum threshold for fine-mapping experiment
 #' @export
 #' @return Corrected coverage estimate
-corrcov <- function(z0, f, N0, N1, Sigma, thr) {
-    ph0.tmp <- z0_pp(z0, f, type = "cc", N = N0 + N1, s = N1/(N0 + N1), W = 0.2)
+corrcov <- function(z0, f, N0, N1, Sigma, thr, W = 0.2) {
+    ph0.tmp <- z0_pp(z0, f, type = "cc", N = N0 + N1, s = N1/(N0 + N1), W = W)
     ph0 <- ph0.tmp[1]  # prob of the null
     pp0dash <- ph0.tmp[-1]  # pps including the null
 
     varbeta <- coloc:::Var.data.cc(f, N0 + N1, N1/(N0 + N1))  # variance of beta
 
-    pp0 <- ppfunc(z0, V = varbeta)  # posterior probs of system
+    pp0 <- ppfunc(z0, V = varbeta, W = W)  # posterior probs of system
 
     muhat.gam <- mu_est(sum(abs(z0) * pp0))  # estimate for true effect at CV
     corrected_cov(mu = muhat.gam, V = varbeta, Sigma = LD, pp0 = pp0, thresh = thr)

@@ -117,13 +117,13 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>corrcov</span>(<span class='no'>z0</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='no'>thr</span>)</pre>
+    <pre class="usage"><span class='fu'>corrcov</span>(<span class='no'>z</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='no'>thr</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>z0</th>
+      <th>z</th>
       <td><p>Marginal z-scores</p></td>
     </tr>
     <tr>
@@ -145,6 +145,10 @@
     <tr>
       <th>thr</th>
       <td><p>Minimum threshold for fine-mapping experiment</p></td>
+    </tr>
+    <tr>
+      <th>W</th>
+      <td><p>Prior for the standard deviation of the effect size parameter beta</p></td>
     </tr>
     </table>
     

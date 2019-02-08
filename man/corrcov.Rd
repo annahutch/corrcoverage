@@ -4,10 +4,10 @@
 \alias{corrcov}
 \title{corrcov}
 \usage{
-corrcov(z0, f, N0, N1, Sigma, thr)
+corrcov(z, f, N0, N1, Sigma, thr, W = 0.2)
 }
 \arguments{
-\item{z0}{Marginal z-scores}
+\item{z}{Marginal z-scores}
 
 \item{f}{Minor allele frequencies}
 
@@ -18,6 +18,8 @@ corrcov(z0, f, N0, N1, Sigma, thr)
 \item{Sigma}{SNP correlation matrix}
 
 \item{thr}{Minimum threshold for fine-mapping experiment}
+
+\item{W}{Prior for the standard deviation of the effect size parameter beta}
 }
 \value{
 Corrected coverage estimate

@@ -18,7 +18,7 @@ options(width = 3000)
 
 This guide will show readers how to use the `corrcoverage` package for fine-mapping analyses, including obtaining an accurate coverage estimate for the causal variant in a credible set. This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. [here](https://www.ncbi.nlm.nih.gov/pubmed/23104008).
 
-`corrcoverage` takes GWAS summary statistics (minor allele frequencies, z-scores (or p-values), sample sizes, reference LD matrix) and provides an accurate estimate of the probability that the true causal variant is contained within a credible set derived for a given threshold. 
+The `corrcoverage` package uses GWAS summary statistics to provides an accurate estimate of the probability that the true causal variant is contained within a credible set derived for a given threshold. 
 
 ---
 
@@ -35,17 +35,14 @@ library(corrcoverage)
 
 ---
 
-**This package is intended for use on real summary statistics obtained from GWAS, such as observed z-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data.** 
-
-We use the [simGWAS](https://github.com/chr1swallace/simGWAS) package to simulate GWAS data. Please refer to the walkthrough guide [here](https://chr1swallace.github.io/simGWAS/articles/intro.html), from which the following is based. Start by loading this package.
+**This package is intended for use on real summary statistics obtained from GWAS, such as observed z-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the [simGWAS](https://github.com/chr1swallace/simGWAS) package. Please refer to the walkthrough guide [here](https://chr1swallace.github.io/simGWAS/articles/intro.html) from which the following is taken from.** 
 
 ```{r}
 library(simGWAS)
 ```
 
-Next, simulate some reference haplotypes.
-
 ```{r}
+# Simulate reference haplotypes
 nsnps <- 200
 nhaps <- 1000
 lag <- 5 # genotypes are correlated between neighbouring variants
@@ -62,11 +59,11 @@ sum(freq$Probability)
 MAF <- colMeans(freq[,snps]-1)
 ```
 
-Next, we need to specify the causal variant and its effect on disease, as odds ratio. We only choose one CV as this is a key assumption underlying the Bayesian approach for fine-mapping. We choose a CV from the column names in `freq` and a value for the odds ratio.
+Specify the causal variant and it's effect on disease, as odds ratio. One causal variant is chosen since the Bayesian approach to fine-mapping relies on the assumption of one causal variant per region. We choose a CV from the column names in `freq` and a value for the odds ratio.
 
 ```{r}
 CV <- sample(snps[which(colMeans(haps)>0.1)],1)
-iCV <- sub("s","",CV) # index of cv
+iCV <- sub("s", "", CV) # index of cv
 g1 <- 1.1
 ```
 
@@ -88,13 +85,13 @@ z0 <- simulated_z_score(N0=5000, # number of controls
 
 ----
 
-We now use the `credsets` function in the `corrcoverage` package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows these steps:
+We now use the `credsets` function in the `corrcoverage` package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows the standard steps from Maller's approach:
 
 1. Order variants in descending order of posterior probabilities. 
 2. Cumulatively sum these variants until the specified threshold is exceeded.
-3. Group these variants, forming the credible set.
+3. Group these variants and form the credible set.
 
-The function requires posterior probabilities as input and so we use the `ppfunc` function to convert the marginal z-scores to posterior probabilties. This function requires a value for $V$, the variance of the estimate effect size, which can be easily calculated using the `Var.data.cc` function in the `coloc` package. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2
+The function requires posterior probabilities as input and so we use the `ppfunc` function to convert the marginal z-scores to posterior probabilties. This function requires a value for $V$, the variance of the estimate effect size, which can be easily calculated using the `Var.data.cc` function in the `coloc` package. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2.
 
 ```{r warning=FALSE, error=FALSE, fig.width=4}
 N0 <- 5000 # number of controls
@@ -110,7 +107,7 @@ abline(v = iCV, col = 2)
 
 The posterior probability plot shows the location of the causal variant (red line) - we see that the causal variant is not the variant with the largest posterior probability. This is sometimes seen in fine-mapping experiments due to linkage disequilibrium (correlation between SNPs).
 
-The `credset` function reports the claimed coverage ^[Researchers commonly use the size of the credible set as an estimate of the coverage probabiltiy of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (obviously claimed coverage > threshold).] (the cumulative sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set. If the `CV` parameter is supplied in the `credset` function, then the output also includes a binary indicator of whether the causal variant was contained in the credible set. 
+The `credset` function reports the claimed coverage ^[Researchers commonly use the size of the credible set as an estimate of the coverage probabiltiy of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (claimed coverage > threshold).] (the cumulative sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set. If the `CV` parameter is supplied by the user (e.g. in simulation studies when the CV is known), then the output also includes a binary indicator of whether the causal variant was contained in the credible set. 
 
 ```{r warning=FALSE, error=FALSE}
 thresh <- 0.9
@@ -136,7 +133,7 @@ The credible set obtained contains 114 (out of 200) variants and the claimed cov
   
 ----
   
-Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability using this fancy new package. The only parameters we need to supply to the `corrcov` function are z0 (marginal z-scores), f (minor allele frequencies), N0 (number of controls), N1 (number of cases), Sigma (SNP correlation matrix) and the threshold of the credible set.
+Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability using this fancy new package. The only parameters we need to supply to the `corrcov` function are `z0` (marginal z-scores), `f` (minor allele frequencies), `N0` (number of controls), `N1` (number of cases), `Sigma` (SNP correlation matrix) and the threshold of the credible set.
 
 ```{r cache = TRUE}
 LD <- cor2(haps) # correlation between SNPs
@@ -148,7 +145,7 @@ corrected_cov_estimate <- corrcov(z0, f = MAF, N0, N1, Sigma = LD, thr = thresh)
 data.frame("Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = cs$claimed.cov, "Threshold" = thresh)
 ```
 
-In this example, the 90% credible set may in actual fact have nearer to 96% coverage of the causal variant in the credible set. To see the accuracy of this estimate we simulate more credible sets from the same system and find what proportion of these contains the true causal variant. 
+In this example, the 90% credible set may in actual fact have nearer to 96% coverage of the causal variant in the credible set. For the purpose of this vignette and to see the accuracy of this estimate, we simulate more credible sets from the same system and find what proportion of these contains the true causal variant. 
 
 ```{r}
 z0.tmp <- simulated_z_score(N0=5000, # number of controls
@@ -166,7 +163,7 @@ true.cov.est <- mean(cs$covered) # average covered col
 true.cov.est
 ```
 
-The empirical coverage is found to be approximately 97.5%, so our estimate of ~96% is much more accurate than the original 90% (or 90.09% is using claimed coverage).
+The empirical coverage is found to be approximately 97.5%, so our estimate of ~96% is more accurate than the original estimate of 90% (or 90.09% is using claimed coverage).
 
 ```{r echo = FALSE, cache = TRUE}
 data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = cs$claimed.cov, "Threshold" = thresh)[1,]

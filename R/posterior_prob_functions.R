@@ -1,6 +1,6 @@
 #' Wakefield's lABF with prior SD as a parameter
 #'
-#' This function converts p-values to lABF
+#' This function converts p-values to log ABF
 #' @title approx.bf.p
 #' @param p p-values
 #' @param f Minor allele frequencies
@@ -49,7 +49,7 @@ pvals_pp <- function(pvals, f, type, N, s, W=0.2){
 #'
 #' This function converts z-scores to posterior probabilities, including the null model of no genetic effects
 #' @title z0_pp
-#' @param z0 Marginal z-scores of SNPs
+#' @param z Marginal z-scores of SNPs
 #' @param f Minor allele frequencies
 #' @param type Type of experiment ("quant" or "cc")
 #' @param N Total sample size
@@ -58,8 +58,8 @@ pvals_pp <- function(pvals, f, type, N, s, W=0.2){
 #' @return Posterior probabilities of null model (no genetic effect) and causality for each SNP
 #' @export
 #' @author Anna Hutchinson
-z0_pp <- function(z0, f, type, N, s, W = 0.2){
-  pvals <- pnorm(abs(z0),lower.tail = FALSE)*2 # convert z-scores to p-values
+z0_pp <- function(z, f, type, N, s, W = 0.2){
+  pvals <- pnorm(abs(z),lower.tail = FALSE)*2 # convert z-scores to p-values
   tmp <- approx.bf.p(p = pvals, # find approx bf
                      f = f, type = "cc", N = N, s = 0.5, W = W)[,"lABF"]
   p1 <- 1e-04 # hard coded - bad code
@@ -175,7 +175,7 @@ finemap.abf <- function(dataset, p1=1e-4) {
 #' @title ppfunc.mat
 #' @param zstar Matrix of marginal z-scores, one replicate per row
 #' @param V Variance of the estimated effect size (can be obtained using var.beta.cc function), one element per column of zstar
-#' @param W Prior for the standard deviation of the effect size parameter beta
+#' @param W Prior for the standard deviation of the effect size parameter, beta
 #' @return Vector of posterior probabilities
 #' @export
 #' @author Chris Wallace

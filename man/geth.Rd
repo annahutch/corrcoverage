@@ -15,6 +15,9 @@ Haplotype matrix
 \description{
 Obtain phased haplotype matrix from UK10K data
 }
+\details{
+This function takes 100 SNPs from one end (likely to be in LD) and 100 SNPs from elsewhere, so that the CV will be in LD with some variants and not at all linked to others.
+}
 \author{
 Chris Wallace
 }

@@ -4,10 +4,10 @@
 \alias{z0_pp}
 \title{z0_pp}
 \usage{
-z0_pp(z0, f, type, N, s, W = 0.2)
+z0_pp(z, f, type, N, s, W = 0.2)
 }
 \arguments{
-\item{z0}{Marginal z-scores of SNPs}
+\item{z}{Marginal z-scores of SNPs}
 
 \item{f}{Minor allele frequencies}
 

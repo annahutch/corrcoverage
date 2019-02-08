@@ -15,6 +15,9 @@ Predicted coverage
 \description{
 Prediction for corrected coverage if gam cannot be fitted
 }
+\details{
+Predicted corrected coverage is the proportion of simulated credible sets that contain the causal variant
+}
 \author{
 Anna Hutchinson
 }

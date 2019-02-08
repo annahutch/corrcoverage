@@ -117,7 +117,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>corrected_cov</span>(<span class='no'>mu</span>, <span class='kw'>nsnps</span> <span class='kw'>=</span> <span class='fl'>200</span>, <span class='no'>V</span>, <span class='no'>Sigma</span>, <span class='no'>pp0</span>, <span class='no'>thresh</span>)</pre>
+    <pre class="usage"><span class='fu'>corrected_cov</span>(<span class='no'>mu</span>, <span class='no'>V</span>, <span class='no'>Sigma</span>, <span class='no'>pp0</span>, <span class='no'>thresh</span>, <span class='no'>size</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -125,10 +125,6 @@
     <tr>
       <th>mu</th>
       <td><p>The true effect at the CV</p></td>
-    </tr>
-    <tr>
-      <th>nsnps</th>
-      <td><p>Number of SNPs</p></td>
     </tr>
     <tr>
       <th>V</th>
@@ -146,6 +142,10 @@
       <th>thresh</th>
       <td><p>Minimum threshold for fine-mapping experiment</p></td>
     </tr>
+    <tr>
+      <th>size</th>
+      <td><p>Optional parameter: The size of the credible set (sum of the posterior probabilities of the variants). If not supplied, then the function can calculate this</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -154,7 +154,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Requires an estimate of the true effect at the CV</p>
+    <p>Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from mu_est function)</p>
     
 
   </div>

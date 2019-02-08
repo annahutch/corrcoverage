@@ -118,20 +118,38 @@
     </div>
 
     <pre class="usage"><span class='fu'>mu_est</span>(<span class='no'>X</span>)</pre>
-        
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>X</th>
+      <td><p>Some estimate of \(E(|Z|)\)</p></td>
+    </tr>
+    </table>
+    
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Estimate of true effect at CV</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function approximates the true effect at the causal variant given the expected value of the absolute marginal z-scores. For the correction we input the absolute marginal z-scores normalised by the corresponding posterior probabilities, \(sum(abs(z0)*pp0)\).</p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
+    <h2>Author</h2>
+    <p>Anna Hutchinson</p>
   </div>
 </div>
 

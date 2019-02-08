@@ -9,7 +9,7 @@ credset(pp, CV = iCV, thr)
 \arguments{
 \item{pp}{Vector of posterior probabilities}
 
-\item{CV}{Index of CV}
+\item{CV}{Optional parameter: Index of CV}
 
 \item{thr}{Minimum threshold for credible set size}
 }

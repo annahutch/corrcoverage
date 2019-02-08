@@ -117,7 +117,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>pred_logit</span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>pred_logit</span>(<span class='no'>x</span>, <span class='no'>size</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -126,11 +126,19 @@
       <th>x</th>
       <td><p>data.frame with column for 'covered' and 'logit.claim'</p></td>
     </tr>
+    <tr>
+      <th>size</th>
+      <td><p>size of the credible set to correct (sum of the posterior probabilities of the variants)</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Predicted probability of covered</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function builds a GAM model with log(claimed_coverage/(1-claimed_coverage)) (logit(claimed) as the predictor and the binary covered value as the response. This model is then used to accurately predict the coverage probability of the causal variant in the credible set</p>
     
 
   </div>
@@ -140,8 +148,12 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
+    <h2>Author</h2>
+    <p>Anna Hutchinson</p>
   </div>
 </div>
 

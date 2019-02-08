@@ -23,10 +23,10 @@ approx.bf.p(p, f, type, N, s, W)
 data.frame containing lABF and intermediate calculations
 }
 \description{
-Wakefield's ABF with prior SD as a parameter
+Wakefield's lABF with prior SD as a parameter
 }
 \details{
-This function converts p-values to ABF
+This function converts p-values to log ABF
 }
 \author{
 Chris Wallace

@@ -14,7 +14,7 @@ Var.data.cc(f, N, s)
 \item{s}{Proportion of cases (N1/N0+N1)}
 }
 \value{
-Variance of estimated effect size, V.
+Variance of estimated effect size \eqn{\hat{\beta}}, V.
 }
 \description{
 Variance of the estimated effect size for case-control data

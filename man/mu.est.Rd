@@ -6,9 +6,18 @@
 \usage{
 mu_est(X)
 }
+\arguments{
+\item{X}{Some estimate of \eqn{E(|Z|)}}
+}
 \value{
 Estimate of true effect at CV
 }
 \description{
 Estimate for true effect at CV
+}
+\details{
+This function approximates the true effect at the causal variant given the expected value of the absolute marginal z-scores. For the correction we input the absolute marginal z-scores normalised by the corresponding posterior probabilities, \eqn{sum(abs(z0)*pp0)}.
+}
+\author{
+Anna Hutchinson
 }

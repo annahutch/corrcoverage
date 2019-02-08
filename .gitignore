@@ -1,8 +1,13 @@
 inst/doc
 .Rproj.user/
 .DS_Store
-.Rproj.user
 .Rhistory
 .RData
 corrcoverage.Rproj
 corrcoverage/corrcoverage_cache
+_pkgdown.yml
+.travis.yml
+/*_cache/
+/cache/
+.Rbuildignore
+/vignette/my-vignette_cache/html

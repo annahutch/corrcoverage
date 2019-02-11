@@ -73,7 +73,7 @@
       <h1>Correcting the Coverage of Credible Sets</h1>
                         <h4 class="author">Anna Hutchinson</h4>
             
-            <h4 class="date">2019-02-08</h4>
+            <h4 class="date">2019-02-11</h4>
       
       
       <div class="hidden name"><code>my-vignette.Rmd</code></div>
@@ -94,7 +94,7 @@
 <h2 class="hasAnchor">
 <a href="#simulate-gwas-summary-statistics" class="anchor"></a>Simulate GWAS summary statistics</h2>
 <hr>
-<p><strong>This package is intended for use on real summary statistics obtained from GWAS, such as observed z-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the <a href="https://github.com/chr1swallace/simGWAS">simGWAS</a> package. Please refer to the walkthrough guide <a href="https://chr1swallace.github.io/simGWAS/articles/intro.html">here</a> from which the following is taken from.</strong></p>
+<p><strong>This package is intended for use on real summary statistics obtained from GWAS, such as observed <span class="math inline">\(Z\)</span> scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the <a href="https://github.com/chr1swallace/simGWAS">simGWAS</a> package. Please refer to the walkthrough guide <a href="https://chr1swallace.github.io/simGWAS/articles/intro.html">here</a> from which the following is taken from.</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simGWAS)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Simulate reference haplotypes</span>
 nsnps &lt;-<span class="st"> </span><span class="dv">200</span>
@@ -116,7 +116,7 @@ freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span cla
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(snps[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(haps)<span class="op">&gt;</span><span class="fl">0.1</span>)],<span class="dv">1</span>)
 iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV) <span class="co"># index of cv</span>
 g1 &lt;-<span class="st"> </span><span class="fl">1.1</span></code></pre></div>
-<p>We then simulate marginal z-scores. Here, we consider a GWAS with 5000 cases and 5000 controls.</p>
+<p>We then simulate marginal <span class="math inline">\(Z\)</span> scores. Here, we consider a GWAS with 5000 cases and 5000 controls.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span>
               <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span>
               <span class="dt">snps=</span>snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span>
@@ -136,7 +136,7 @@ g1 &lt;-<span class="st"> </span><span class="fl">1.1</span></code></pre></div>
 <li>Cumulatively sum these variants until the specified threshold is exceeded.</li>
 <li>Group these variants and form the credible set.</li>
 </ol>
-<p>The function requires posterior probabilities as input and so we use the <code>ppfunc</code> function to convert the marginal z-scores to posterior probabilties. This function requires a value for <span class="math inline">\(V\)</span>, the variance of the estimate effect size, which can be easily calculated using the <code>Var.data.cc</code> function in the <code>coloc</code> package. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with a default value of 0.2.</p>
+<p>The function requires posterior probabilities as input and so we use the <code>ppfunc</code> function to convert the marginal <span class="math inline">\(Z\)</span> scores to posterior probabilties. This function requires a value for <span class="math inline">\(V\)</span>, the variance of the estimate effect size, which can be easily calculated using the <code>Var.data.cc</code> function in the <code>coloc</code> package. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with a default value of 0.2.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N0 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of controls</span>
 N1 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of cases</span>
 
@@ -172,7 +172,7 @@ cs</code></pre></div>
 <h2 class="hasAnchor">
 <a href="#obtain-corrected-coverage-estimate" class="anchor"></a>Obtain corrected coverage estimate</h2>
 <hr>
-<p>Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability using this fancy new package. The only parameters we need to supply to the <code>corrcov</code> function are <code>z0</code> (marginal z-scores), <code>f</code> (minor allele frequencies), <code>N0</code> (number of controls), <code>N1</code> (number of cases), <code>Sigma</code> (SNP correlation matrix) and the threshold of the credible set.</p>
+<p>Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability using this fancy new package. The only parameters we need to supply to the <code>corrcov</code> function are <code>z0</code> (marginal <span class="math inline">\(Z\)</span> scores), <code>f</code> (minor allele frequencies), <code>N0</code> (number of controls), <code>N1</code> (number of cases), <code>Sigma</code> (SNP correlation matrix) and the threshold of the credible set. The prior on the standard deviation of the effect size is an optional parameter, it’s default value of <span class="math inline">\(0.2\)</span> is used here.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps) <span class="co"># correlation between SNPs</span>
 
 corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrcov.html">corrcov</a></span>(z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</code></pre></div>
@@ -196,6 +196,7 @@ true.cov.est</code></pre></div>
 <p>The empirical coverage is found to be approximately 97.5%, so our estimate of ~96% is more accurate than the original estimate of 90% (or 90.09% is using claimed coverage).</p>
 <pre><code>##   Empirical.Coverage Corrected.Coverage Claimed.Coverage Threshold
 ## 1             0.9746          0.9593843        0.9005427       0.9</code></pre>
+<p>This vignette has shown readers how to use the `corrcoverage’ package to obtain more accurate coverage estimates of the causal variant in the credible set.</p>
 <hr>
 </div>
 <div id="references" class="section level2">
@@ -217,7 +218,7 @@ true.cov.est</code></pre></div>
 ##  collate  en_GB.UTF-8                 
 ##  ctype    en_GB.UTF-8                 
 ##  tz       Europe/London               
-##  date     2019-02-08                  
+##  date     2019-02-11                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  package      * version    date       lib source                               
@@ -236,7 +237,7 @@ true.cov.est</code></pre></div>
 ##  combinat       0.0-8      2012-10-29 [1] CRAN (R 3.5.0)                       
 ##  commonmark     1.7        2018-12-01 [1] CRAN (R 3.5.0)                       
 ##  corpcor        1.6.9      2017-04-01 [1] CRAN (R 3.5.0)                       
-##  corrcoverage * 0.1.0      2019-02-08 [1] local                                
+##  corrcoverage * 0.1.0      2019-02-11 [1] local                                
 ##  crayon         1.3.4      2017-09-16 [1] CRAN (R 3.5.0)                       
 ##  data.table     1.12.0     2019-01-13 [1] CRAN (R 3.5.2)                       
 ##  DEoptimR       1.0-8      2016-11-19 [1] CRAN (R 3.5.0)                       
@@ -290,7 +291,7 @@ true.cov.est</code></pre></div>
 ##  simGWAS      * 0.2.0-1    2018-11-13 [1] Github (chr1swallace/simGWAS@7ed37da)
 ##  snpStats       1.30.0     2018-05-01 [1] Bioconductor                         
 ##  stringi        1.2.4      2018-07-20 [1] CRAN (R 3.5.0)                       
-##  stringr        1.3.1      2018-05-10 [1] CRAN (R 3.5.0)                       
+##  stringr        1.4.0      2019-02-10 [1] CRAN (R 3.5.2)                       
 ##  survival       2.42-3     2018-04-16 [1] CRAN (R 3.5.1)                       
 ##  testthat       2.0.1      2018-10-13 [1] CRAN (R 3.5.0)                       
 ##  tibble         2.0.1      2019-01-12 [1] CRAN (R 3.5.2)                       

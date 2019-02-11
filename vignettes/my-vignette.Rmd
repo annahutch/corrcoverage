@@ -35,7 +35,7 @@ library(corrcoverage)
 
 ---
 
-**This package is intended for use on real summary statistics obtained from GWAS, such as observed z-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the [simGWAS](https://github.com/chr1swallace/simGWAS) package. Please refer to the walkthrough guide [here](https://chr1swallace.github.io/simGWAS/articles/intro.html) from which the following is taken from.** 
+**This package is intended for use on real summary statistics obtained from GWAS, such as observed $Z$ scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the [simGWAS](https://github.com/chr1swallace/simGWAS) package. Please refer to the walkthrough guide [here](https://chr1swallace.github.io/simGWAS/articles/intro.html) from which the following is taken from.** 
 
 ```{r}
 library(simGWAS)
@@ -67,7 +67,7 @@ iCV <- sub("s", "", CV) # index of cv
 g1 <- 1.1
 ```
 
-We then simulate marginal z-scores. Here, we consider a GWAS with 5000 cases and 5000 controls. 
+We then simulate marginal $Z$ scores. Here, we consider a GWAS with 5000 cases and 5000 controls. 
 
 ```{r}
 z0 <- simulated_z_score(N0=5000, # number of controls
@@ -91,7 +91,7 @@ We now use the `credsets` function in the `corrcoverage` package to obtain a cre
 2. Cumulatively sum these variants until the specified threshold is exceeded.
 3. Group these variants and form the credible set.
 
-The function requires posterior probabilities as input and so we use the `ppfunc` function to convert the marginal z-scores to posterior probabilties. This function requires a value for $V$, the variance of the estimate effect size, which can be easily calculated using the `Var.data.cc` function in the `coloc` package. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2.
+The function requires posterior probabilities as input and so we use the `ppfunc` function to convert the marginal $Z$ scores to posterior probabilties. This function requires a value for $V$, the variance of the estimate effect size, which can be easily calculated using the `Var.data.cc` function in the `coloc` package. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2.
 
 ```{r warning=FALSE, error=FALSE, fig.width=4}
 N0 <- 5000 # number of controls
@@ -133,7 +133,7 @@ The credible set obtained contains 114 (out of 200) variants and the claimed cov
   
 ----
   
-Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability using this fancy new package. The only parameters we need to supply to the `corrcov` function are `z0` (marginal z-scores), `f` (minor allele frequencies), `N0` (number of controls), `N1` (number of cases), `Sigma` (SNP correlation matrix) and the threshold of the credible set.
+Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability using this fancy new package. The only parameters we need to supply to the `corrcov` function are `z0` (marginal $Z$ scores), `f` (minor allele frequencies), `N0` (number of controls), `N1` (number of cases), `Sigma` (SNP correlation matrix) and the threshold of the credible set. The prior on the standard deviation of the effect size is an optional parameter, it's default value of $0.2$ is used here.
 
 ```{r cache = TRUE}
 LD <- cor2(haps) # correlation between SNPs
@@ -168,6 +168,8 @@ The empirical coverage is found to be approximately 97.5%, so our estimate of ~9
 ```{r echo = FALSE, cache = TRUE}
 data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = cs$claimed.cov, "Threshold" = thresh)[1,]
 ```
+
+This vignette has shown readers how to use the `corrcoverage' package to obtain more accurate coverage estimates of the causal variant in the credible set.
 
 ----
   

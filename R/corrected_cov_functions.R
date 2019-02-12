@@ -7,7 +7,7 @@
 #' @param thr Minimum threshold for credible set size
 #' @export
 #' @return  data.frame of claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set), nvar (number of variants in the set)
-credset <- function(pp, CV = iCV, thr) {
+credset <- function(pp, CV, thr) {
     o <- order(pp, decreasing = TRUE)  # order index for true pp
     cumpp <- cumsum(pp[o])  # cum sums of ordered pps
     wh <- which(cumpp > thr)[1]  # how many needed to exceed thr
@@ -52,7 +52,7 @@ corrected_cov <- function(mu, V, Sigma, pp0, thresh, size) {
     zj <- do.call(c, apply(temp, 1, list))  # nsnp zj vectors for each snp considered causal
 
     # simulate pp systems
-    pps <- mapply(zj_pp, zj, V, MoreArgs = list(Sigma = LD), SIMPLIFY = FALSE)
+    pps <- mapply(zj_pp, zj, V, MoreArgs = list(Sigma = Sigma), SIMPLIFY = FALSE)
 
     # consider different CV as causal in each list
     n_pps <- length(pps)
@@ -126,5 +126,5 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2) {
 
     muhat.gam <- mu_est(sum(abs(z) * pp0))  # estimate for true effect at CV
 
-    corrected_cov(mu = muhat.gam, V = varbeta, Sigma = LD, pp0 = pp0, thresh = thr)
+    corrected_cov(mu = muhat.gam, V = varbeta, Sigma = Sigma, pp0 = pp0, thresh = thr)
 }

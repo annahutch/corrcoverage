@@ -14,7 +14,7 @@
 approx.bf.p <- function (p, f, type, N, s, W) {
   sd.prior <- W
   V <- coloc:::Var.data.cc(f, N, s)
-  z <- qnorm(0.5 * p, lower.tail = FALSE)
+  z <- stats::qnorm(0.5 * p, lower.tail = FALSE)
   r <- sd.prior^2/(sd.prior^2 + V)
   lABF = 0.5 * (log(1 - r) + (r * z^2))
   ret <- data.frame(V, z, r, lABF)

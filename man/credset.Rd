@@ -4,7 +4,7 @@
 \alias{credset}
 \title{credset}
 \usage{
-credset(pp, CV = iCV, thr)
+credset(pp, CV, thr)
 }
 \arguments{
 \item{pp}{Vector of posterior probabilities}

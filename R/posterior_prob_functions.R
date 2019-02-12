@@ -59,7 +59,7 @@ pvals_pp <- function(pvals, f, type, N, s, W=0.2){
 #' @export
 #' @author Anna Hutchinson
 z0_pp <- function(z, f, type, N, s, W = 0.2){
-  pvals <- pnorm(abs(z),lower.tail = FALSE)*2 # convert z-scores to p-values
+  pvals <- stats::pnorm(abs(z),lower.tail = FALSE)*2 # convert z-scores to p-values
   tmp <- approx.bf.p(p = pvals, # find approx bf
                      f = f, type = "cc", N = N, s = 0.5, W = W)[,"lABF"]
   p1 <- 1e-04 # hard coded - bad code

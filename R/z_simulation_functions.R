@@ -8,7 +8,7 @@
 #' @return Matrix of simulated z-scores, one simulation per row
 z_sim <- function(Zj, Sigma, nrep) {
     exp.zm = Zj %*% Sigma  # find E(X_m) (of for each SNP being causal)
-    mvtnorm:::rmvnorm(nrep, exp.zm, Sigma)  # nrep is rows, nsnps is cols
+    mvtnorm::rmvnorm(nrep, exp.zm, Sigma)  # nrep is rows, nsnps is cols
 }
 
 #' Simulate nrep marginal z-scores from joint z-scores and convert these to posterior probabilities

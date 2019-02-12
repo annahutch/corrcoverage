@@ -36,48 +36,6 @@ cor2 <- function(x) {
     1/(NROW(x) - 1) * crossprod(scale(x, TRUE, TRUE))
 }
 
-#' Obtain phased haplotype matrix from UK10K data
-#'
-#' This function takes 100 SNPs from one end (likely to be in LD) and 100 SNPs from elsewhere, so that the CV will be in LD with some variants and not at all linked to others.
-#' @title geth
-#' @param nsnp Number of SNPs to consider for fine-mapping
-#' @return Haplotype matrix
-#' @author Chris Wallace
-geth <- function(nsnp) {
-    ## real data from UK10K
-    file.ldd = "/home/cew54/share/Data/reference/lddetect/EUR/fourier_ls-chr22.bed"
-    file.vcf = "/home/cew54/share/Data/reference/UK10K/BCF/chr22.bcf.gz"
-    
-    ## ldblocks
-    ldd <- fread(file.ldd)
-    
-    ## split bcf by ldblocks
-    ldd[, `:=`(blocknum, 1:.N)]
-    ldd[, `:=`(dist, stop - start)]
-    ldd[, `:=`(comm, paste0("/home/cew54/share/bin/bcftools view ", file.vcf, " --min-af 0.02:minor --max-alleles 2 --min-alleles 2 ", 
-        " -r chr", 22, ":", start, "-", stop, " -Ov "))]  # -o ',tmp)]
-    gethap <- function(i) {
-        y = fread(ldd$comm[i])
-        ha <- simGWAS:::vcf2haps(as.matrix(y[, -c(1:9)]))
-        rownames(ha) <- paste0("pos", y$POS)
-        t(ha)
-    }
-    
-    block <- sample(which(ldd$dist < 1200000), 1)  # use smallest LD block to be fast
-    h <- gethap(block)  # rows=samples, cols=snps
-    use <- apply(h, 2, var) > 0 & colMeans(h) > 0.01 & colMeans(h) < 0.99  # no monomorphs
-    h <- h[, use, drop = FALSE]
-    nmax <- floor(nsnp/2)  # keep this small to make simulations fast
-    if (ncol(h) > nmax) {
-        start <- sample(1:ncol(h), 1)  # choose a random starting point
-        start2 <- start + floor(ncol(h)/2)  # choose another random starting point, the other end
-        idx <- c(start + 1:nmax, start2 + 1:nmax)  # doing this means we're not just looking at one LD block of SNPs, so there will be some snps completely seperate to CV
-        idx <- idx%%ncol(h)
-        h <- h[, idx]
-    }
-    list(h = h, block = block)
-}
-
 #' Build and predict corrected coverage using logistic GAM
 #'
 #' This function builds a GAM model with log(claimed_coverage/(1-claimed_coverage)) (logit(claimed) as the predictor and the binary covered value as the response. This model is then used to accurately predict the coverage probability of the causal variant in the credible set
@@ -89,7 +47,7 @@ geth <- function(nsnp) {
 #' @return Predicted probability of covered
 #' @author Anna Hutchinson
 pred_logit <- function(x, size) {
-    m <- mgcv:::gam(covered ~ s(logit.claim), data = x, family = "binomial")
+    m <- mgcv::gam(covered ~ s(logit.claim), data = x, family = "binomial")
     invlogit(predict(m, newdata = data.frame(logit.claim = logit(size))))
 }
 
@@ -125,6 +83,6 @@ pred_na <- function(x) {
 #' @author Anna Hutchinson
 mu_est <- function(X) {
     y = seq(0, 20, 0.005)
-    x <- sapply(y, function(m) mean(abs(rnorm(50000, mean = m))))
-    approx(x, y, xout = X)$y
+    x <- sapply(y, function(m) mean(abs(stats::rnorm(50000, mean = m))))
+    stats::approx(x, y, xout = X)$y
 }

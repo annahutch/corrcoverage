@@ -79,7 +79,7 @@ corrected_cov <- function(mu, V, Sigma, pp0, thresh, size) {
     # if get error when fitting model use mean(covered)
     model <- function(y) {
         out <- tryCatch({
-            lapply(y, pred_logit, size) %>% unlist()
+            lapply(y, pred_logit, size = claim0) %>% unlist()
         }, error = function(cond) {
             lapply(y, pred_na) %>% unlist()
         })

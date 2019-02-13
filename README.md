@@ -3,7 +3,7 @@
 corrcoverage
 ============
 
-The corrcoverage package can be used to obtain an accurate coverage estimate of the causal variant in a credible set that has been acquired using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008)).
+The corrcoverage package can be used to obtain an accurate coverage estimate of the causal variant in a credible set that has been acquired using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008), [Wakefield, 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359).).
 
 Webpage: <https://annahutch.github.io/corrcoverage/>
 

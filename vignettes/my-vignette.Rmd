@@ -16,7 +16,7 @@ options(width = 3000)
 
 ---
 
-This guide will show readers how to use the `corrcoverage` package for fine-mapping analyses, including obtaining an accurate coverage estimate for the causal variant in a credible set. This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. [here](https://www.ncbi.nlm.nih.gov/pubmed/23104008).
+This guide will show readers how to use the `corrcoverage` package for fine-mapping analyses, including obtaining an accurate coverage estimate for the causal variant in a credible set. This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. [here](https://www.ncbi.nlm.nih.gov/pubmed/23104008), which depends on Wakefield's work on Bayes factors in genetic association studies [here](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359).
 
 The `corrcoverage` package uses GWAS summary statistics to provides an accurate estimate of the probability that the true causal variant is contained within a credible set derived for a given threshold. 
 

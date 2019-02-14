@@ -16,7 +16,7 @@ options(width = 3000)
 
 ---
 
-This guide will show readers how to use the `corrcoverage` package for fine-mapping analyses, including obtaining an accurate coverage estimate for the causal variant in a credible set. This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. [here](https://www.ncbi.nlm.nih.gov/pubmed/23104008), which depends on Wakefield's work on Bayes factors in genetic association studies [here](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359).
+This guide will show readers how to use the `corrcoverage` package for fine-mapping analyses, including obtaining an accurate coverage estimate for the causal variant in a credible set. This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. [here](https://www.ncbi.nlm.nih.gov/pubmed/23104008), which utilises Bayes factors for genetic association studies described by Wakefield's [here](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359).
 
 The `corrcoverage` package uses GWAS summary statistics to provides an accurate estimate of the probability that the true causal variant is contained within a credible set derived for a given threshold. 
 
@@ -125,7 +125,7 @@ cs <- credset(pp = postprobs,
 cs
 ```
 
-The credible set obtained contains 114 (out of 200) variants and the claimed coverage is 0.9004596. In papers, we would expect to see author report that they have found a 90% credible set of 45 variants, which they are 90% confident contains the true causal variant. 
+The credible set contains 114 (out of 200) variants and the claimed coverage is just over 90%. In papers, we would expect to see authors report that they have found a 90% credible set containing 114 variants, which they are 90% confident contains the true causal variant. 
 
 ----
   
@@ -169,13 +169,19 @@ The empirical coverage is found to be approximately 97.5%, so our estimate of ~9
 data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = cs$claimed.cov, "Threshold" = thresh)[1,]
 ```
 
+----
+
 This vignette has shown readers how to use the `corrcoverage' package to obtain more accurate coverage estimates of the causal variant in the credible set.
 
 ----
   
 ## References
 
-1. [simGWAS](https://github.com/chr1swallace/simGWAS): Mary D Fortune, Chris Wallace; simGWAS: a fast method for simulation of large scale case–control GWAS summary statistics, Bioinformatics, , bty898, https://doi.org/10.1093/bioinformatics/bty898 
+[Maller et al., 2013](https://www.ncbi.nlm.nih.gov/pubmed/23104008) Maller, J. B. et al. Bayesian refinement of association signals for 14 loci in 3 common diseases. Nature Genet. 44, 1294–1301 (2012)
+
+[simGWAS](https://github.com/chr1swallace/simGWAS): Mary D Fortune, Chris Wallace; simGWAS: a fast method for simulation of large scale case–control GWAS summary statistics, Bioinformatics, bty898 (2018)
+
+[Wakefield, 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359) Wakefield, J. Bayes factors for genome-wide association studies: comparison with P-values. Genet. Epidemiol. 33, 79–86 (2009)
 
 ```{r session_info, include=TRUE, echo=TRUE, results='markup'}
 devtools::session_info()

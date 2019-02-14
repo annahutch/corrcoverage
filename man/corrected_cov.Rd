@@ -7,7 +7,7 @@
 corrected_cov(mu, V, Sigma, pp0, thresh, size)
 }
 \arguments{
-\item{mu}{The true effect at the CV}
+\item{mu}{An estimate for the true effect at the CV}
 
 \item{V}{Variance of the estimated effect size (can be obtained using var.beta.cc function)}
 

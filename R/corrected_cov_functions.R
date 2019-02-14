@@ -26,7 +26,7 @@ credset <- function(pp, CV, thr) {
 #' Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from mu_est function)
 #' @rdname corrected_cov
 #' @title corrected_cov
-#' @param mu The true effect at the CV
+#' @param mu An estimate for the true effect at the CV
 #' @param V Variance of the estimated effect size (can be obtained using var.beta.cc function)
 #' @param Sigma SNP correlation matrix
 #' @param pp0 Posterior probabilities of system of interest
@@ -124,7 +124,10 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2) {
 
     pp0 <- ppfunc(z, V = varbeta, W = W)  # posterior probs of system
 
-    muhat.gam <- mu_est(sum(abs(z) * pp0))  # estimate for true effect at CV
+    z0.abs.pp0dash <- sum(abs(z)*pp0dash) # normalise z scores then sum
+    ph0.maxabsz0 <- (1-ph0)*max(abs(z)) # normalise maximum z
 
-    corrected_cov(mu = muhat.gam, V = varbeta, Sigma = Sigma, pp0 = pp0, thresh = thr)
+    muhat = mean(c(z0.abs.pp0dash, ph0.maxabsz0)) # estimate for true effect at CV
+
+    corrected_cov(mu = muhat, V = varbeta, Sigma = Sigma, pp0 = pp0, thresh = thr)
 }

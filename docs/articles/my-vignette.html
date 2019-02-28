@@ -73,7 +73,7 @@
       <h1>Correcting the Coverage of Credible Sets</h1>
                         <h4 class="author">Anna Hutchinson</h4>
             
-            <h4 class="date">2019-02-11</h4>
+            <h4 class="date">2019-02-14</h4>
       
       
       <div class="hidden name"><code>my-vignette.Rmd</code></div>
@@ -83,7 +83,7 @@
     
     
 <hr>
-<p>This guide will show readers how to use the <code>corrcoverage</code> package for fine-mapping analyses, including obtaining an accurate coverage estimate for the causal variant in a credible set. This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. <a href="https://www.ncbi.nlm.nih.gov/pubmed/23104008">here</a>.</p>
+<p>This guide will show readers how to use the <code>corrcoverage</code> package for fine-mapping analyses, including obtaining an accurate coverage estimate for the causal variant in a credible set. This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. <a href="https://www.ncbi.nlm.nih.gov/pubmed/23104008">here</a>, which utilises Bayes factors for genetic association studies described by Wakefield’s <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359">here</a>.</p>
 <p>The <code>corrcoverage</code> package uses GWAS summary statistics to provides an accurate estimate of the probability that the true causal variant is contained within a credible set derived for a given threshold.</p>
 <hr>
 <p>Load the library.</p>
@@ -165,7 +165,7 @@ postprobs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/p
 cs</code></pre></div>
 <pre><code>##     claimed.cov covered nvar
 ## s30   0.9008649       1  114</code></pre>
-<p>The credible set obtained contains 114 (out of 200) variants and the claimed coverage is 0.9004596. In papers, we would expect to see author report that they have found a 90% credible set of 45 variants, which they are 90% confident contains the true causal variant.</p>
+<p>The credible set contains 114 (out of 200) variants and the claimed coverage is just over 90%. In papers, we would expect to see authors report that they have found a 90% credible set containing 114 variants, which they are 90% confident contains the true causal variant.</p>
 <hr>
 </div>
 <div id="obtain-corrected-coverage-estimate" class="section level2">
@@ -196,17 +196,16 @@ true.cov.est</code></pre></div>
 <p>The empirical coverage is found to be approximately 97.5%, so our estimate of ~96% is more accurate than the original estimate of 90% (or 90.09% is using claimed coverage).</p>
 <pre><code>##   Empirical.Coverage Corrected.Coverage Claimed.Coverage Threshold
 ## 1             0.9746          0.9593843        0.9005427       0.9</code></pre>
+<hr>
 <p>This vignette has shown readers how to use the `corrcoverage’ package to obtain more accurate coverage estimates of the causal variant in the credible set.</p>
 <hr>
 </div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<ol style="list-style-type: decimal">
-<li>
-<a href="https://github.com/chr1swallace/simGWAS">simGWAS</a>: Mary D Fortune, Chris Wallace; simGWAS: a fast method for simulation of large scale case–control GWAS summary statistics, Bioinformatics, , bty898, <a href="https://doi.org/10.1093/bioinformatics/bty898" class="uri">https://doi.org/10.1093/bioinformatics/bty898</a>
-</li>
-</ol>
+<p><a href="https://www.ncbi.nlm.nih.gov/pubmed/23104008">Maller et al., 2013</a> Maller, J. B. et al. Bayesian refinement of association signals for 14 loci in 3 common diseases. Nature Genet. 44, 1294–1301 (2012)</p>
+<p><a href="https://github.com/chr1swallace/simGWAS">simGWAS</a>: Mary D Fortune, Chris Wallace; simGWAS: a fast method for simulation of large scale case–control GWAS summary statistics, Bioinformatics, bty898 (2018)</p>
+<p><a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359">Wakefield, 2009</a> Wakefield, J. Bayes factors for genome-wide association studies: comparison with P-values. Genet. Epidemiol. 33, 79–86 (2009)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">session_info</a></span>()</code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  setting  value                       
@@ -218,7 +217,7 @@ true.cov.est</code></pre></div>
 ##  collate  en_GB.UTF-8                 
 ##  ctype    en_GB.UTF-8                 
 ##  tz       Europe/London               
-##  date     2019-02-11                  
+##  date     2019-02-14                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  package      * version    date       lib source                               

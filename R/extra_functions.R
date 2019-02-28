@@ -64,25 +64,19 @@ pred_na <- function(x) {
     mean(x$covered)
 }
 
-#' Estimate for true effect at CV
+#' Find an estimate for the true effect at the causal variant
 #'
-#' This function approximates the true effect at the causal variant given the expected value of the absolute marginal z-scores. For the correction we input the absolute marginal z-scores normalised by the corresponding posterior probabilities, \eqn{sum(abs(z0)*pp0)}.
-#' @rdname mu.est
-#' @title mu_est
-#' @param X Some estimate of \eqn{E(|Z|)}
+#' @param z Vector of Z-scores
+#' @param f Minor allele frequencies
+#' @param N0 Number of cases
+#' @param N1 Number of controls
+#'
+#' @return Estimate of the true effect at the causal variant
 #' @export
-#' @return Estimate of true effect at CV
-#' @example
-#' y = seq(0, 20, 0.005)
-#' x <- sapply(y, function(m) mean(abs(rnorm(50000, mean = m))))
-#' par(mfrow=c(1,2))
-#' plot(x, y, xlab='E(|z|)', ylab='mu', main = 'Find mu value given expected |Z|')
-#' abline(0, 1, col = 2)
-#' plot(x, y, xlim=c(0,2), ylim=c(0,2), xlab='E(|z|)', ylab='mu', main = 'Zoom in to bottom left')
-#' abline(0, 1, col = 2)
+#'
 #' @author Anna Hutchinson
-mu_est <- function(X) {
-    y = seq(0, 20, 0.005)
-    x <- sapply(y, function(m) mean(abs(stats::rnorm(50000, mean = m))))
-    stats::approx(x, y, xout = X)$y
+est_mu <- function(z, f, N0, N1){
+  ph0.tmp <- z0_pp(z = z, f = f, type = "cc", N = N0+NN, s = 0.5)
+  ph0 <- ph0.tmp[1] # prob of the null
+  mean(c(sum(abs(z)*ph0.tmp[-1]),(1-ph0.tmp[1])*max(abs(z))))
 }

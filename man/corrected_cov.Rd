@@ -23,7 +23,7 @@ corrected_cov(mu, V, Sigma, pp0, thresh, size)
 Corrected coverage estimate
 }
 \description{
-Provide a corrected coverage estimate of the causal variant in the credible set
+Provide a corrected coverage estimate of the causal variant (CV) in the credible set
 }
 \details{
 Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from mu_est function)

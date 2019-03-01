@@ -61,7 +61,7 @@ pred_logit <- function(x, size) {
 #' @export
 #' @author Anna Hutchinson
 pred_na <- function(x) {
-    mean(x$covered)
+  sum(x$covered)/length(x$covered)
 }
 
 #' Find an estimate for the true effect at the causal variant

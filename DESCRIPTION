@@ -26,4 +26,5 @@ Imports:
     magrittr,
     data.table,
     simGWAS,
-    stats
+    stats,
+    Rcpp

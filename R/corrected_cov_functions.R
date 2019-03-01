@@ -20,84 +20,66 @@ credset <- function(pp, CV, thr) {
     }
 }
 
+#' Quicker credset function for matrix of posterior probabilities (using Cpp)
+#'
+#' @param pp Matrix of posterior probabilities (row per system)
+#' @param CV Vector of indices of the causal variant for each row of posterior probabilities
+#' @param thr Threshold
+#'
+#' @return Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants.
+#' @export
+credset3 <- function(pp, CV=iCV, thr=0.6) {
+  ret  <-  credsetmat(pp,CV,thr) ## list 1 = wh, 2 = size, 3=contained
+  data.frame(claimed.cov=ret[[2]], covered=ret[[3]], nvar=ret[[1]])
+}
 
-#' Provide a corrected coverage estimate of the causal variant (CV) in the credible set
+#' Provide a corrected coverage estimate of the causal variant in the credible set
 #'
 #' Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from mu_est function)
 #' @rdname corrected_cov
 #' @title corrected_cov
-#' @param mu An estimate for the true effect at the CV
+#' @param mu The true effect at the CV
 #' @param V Variance of the estimated effect size (can be obtained using var.beta.cc function)
 #' @param Sigma SNP correlation matrix
 #' @param pp0 Posterior probabilities of system of interest
 #' @param thresh Minimum threshold for fine-mapping experiment
 #' @param size Optional parameter: The size of the credible set (sum of the posterior probabilities of the variants). If not supplied, then the function can calculate this
+#' @param nrep Number of posterior probability systems to simulate for each variant considered causal
 #' @export
 #' @return Corrected coverage estimate
-corrected_cov <- function(mu, V, Sigma, pp0, thresh, size) {
+corrected_cov <- function(mu, V, Sigma, pp0, thresh, size, nrep = 1000) {
 
-    # number of snps
-    nsnps <- length(pp0)
+  # number of snps
+  nsnps <- length(pp0)
 
-    # find size of credible set
-    if (missing(size)) {
-        cs <- credset(pp0, thr = thresh)
-        claim0 <- cs$claimed.cov
-    } else {
-        claim0 <- size
-    }
+  # find size of credible set
+  if (missing(size)) {
+    cs <- credset(pp0, thr = thresh)
+    claim0 <- cs$claimed.cov
+  } else {
+    claim0 <- size
+  }
 
-    # form joint z-score vectors
-    temp <- diag(x = mu, nrow = nsnps, ncol = nsnps)
-    zj <- do.call(c, apply(temp, 1, list))  # nsnp zj vectors for each snp considered causal
+  # form joint z-score vectors
+  temp <- diag(x = mu, nrow = nsnps, ncol = nsnps)
+  zj <- do.call(c, apply(temp, 1, list))  # nsnp zj vectors for each snp considered causal
 
-    # simulate pp systems
-    pps <- mapply(zj_pp, zj, V, MoreArgs = list(Sigma = Sigma), SIMPLIFY = FALSE)
+  # simulate pp systems
+  pps <- mapply(zj_pp, zj, V, MoreArgs = list(nrep = nrep, Sigma = LD), SIMPLIFY = FALSE)
 
-    # consider different CV as causal in each list
-    n_pps <- length(pps)
-    args <- 1:nsnps
+  # consider different CV as causal in each list
+  n_pps <- length(pps)
+  args <- 1:nsnps
 
-    # obtain credible set for each simulation
-    d5 <- lapply(1:n_pps, function(x) {
-        apply(pps[[x]], 1, credset, CV = args[x], thr = thresh) %>% data.table::rbindlist()
-    })
+  # obtain credible set for each simulation
+  d5 <- lapply(1:n_pps, function(x) {
+    credset3(pps[[x]], CV = rep(args[x], nrep), thr = thresh )
+  })
 
-    invlogit <- function(x) exp(x)/(1 + exp(x))
-    logit <- function(x) log(x/(1 - x))
+  prop_cov <- lapply(d5, pred_na) %>% unlist()
 
-    # resize claimed coverage so not dividing by 0
-    resize <- function(x) {
-        x[x > 0.99999999] <- 0.999999
-        return(x)
-    }
-
-    claim.cov <- lapply(d5, function(p) resize(p$claimed.cov))
-    logitclaimed <- lapply(claim.cov, function(p) logit(p))
-    y <- mapply(cbind, d5, logit.claim = logitclaimed, SIMPLIFY = FALSE)
-
-    # if get error when fitting model use mean(covered)
-    model <- function(y) {
-        out <- tryCatch({
-            lapply(y, pred_logit, size = claim0) %>% unlist()
-        }, error = function(cond) {
-            lapply(y, pred_na) %>% unlist()
-        })
-        return(out)
-    }
-
-    final <- model(y)
-
-    # if NaNs, fit intercept only model
-
-    if (mean(final) == "NaN") {
-        final1 <- lapply(d5, pred_na) %>% unlist()
-    } else {
-        final1 <- final
-    }
-
-    # final corrected coverage value
-    sum(final1 * pp0)
+  # final corrected coverage value
+  sum(prop_cov * pp0)
 }
 
 
@@ -113,18 +95,19 @@ corrected_cov <- function(mu, V, Sigma, pp0, thresh, size) {
 #' @param Sigma SNP correlation matrix
 #' @param thr Minimum threshold for fine-mapping experiment
 #' @param W Prior for the standard deviation of the effect size parameter beta
+#' @param rep The number of simulated posterior probability systems to consider for the corrected coverage estimate. Simulations show that rep=1000 is a robust choice.
 #' @export
 #' @return Corrected coverage estimate
-corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2) {
-    ph0.tmp <- z0_pp(z, f, type = "cc", N = N0 + N1, s = N1/(N0 + N1), W = W)
-    ph0 <- ph0.tmp[1]  # prob of the null
-    pp0dash <- ph0.tmp[-1]  # pps of variants
+corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, rep = 1000) {
+  ph0.tmp <- z0_pp(z, f, type = "cc", N = N0 + N1, s = N1/(N0 + N1), W = W)
+  ph0 <- ph0.tmp[1]  # prob of the null
+  pp0dash <- ph0.tmp[-1]  # pps of variants
 
-    varbeta <- coloc:::Var.data.cc(f, N0 + N1, N1/(N0 + N1))  # variance of estimated effect size
+  varbeta <- coloc:::Var.data.cc(f, NN = N0 + N1, s = N1/(N0 + N1))  # variance of estimated effect size
 
-    pp0 <- ppfunc(z, V = varbeta, W = W)  # posterior probs of system
+  pp0 <- ppfunc(z, V = varbeta, W = W)  # posterior probs of system
 
-    muhat <- est_mu(z, f, N0, N1)
+  muhat <- est_mu(z, f, N0, N1)
 
-    corrected_cov(mu = muhat, V = varbeta, Sigma = Sigma, pp0 = pp0, thresh = thr)
+  corrected_cov(mu = muhat, V = varbeta, Sigma = Sigma, pp0 = pp0, thresh = thr, nrep = rep)
 }

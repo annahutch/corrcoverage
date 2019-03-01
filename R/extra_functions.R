@@ -76,7 +76,7 @@ pred_na <- function(x) {
 #'
 #' @author Anna Hutchinson
 est_mu <- function(z, f, N0, N1){
-  ph0.tmp <- z0_pp(z = z, f = f, type = "cc", N = N0+NN, s = 0.5)
+  ph0.tmp <- z0_pp(z = z, f = f, type = "cc", N = N0+N1, s = 0.5)
   ph0 <- ph0.tmp[1] # prob of the null
   mean(c(sum(abs(z)*ph0.tmp[-1]),(1-ph0.tmp[1])*max(abs(z))))
 }

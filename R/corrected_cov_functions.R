@@ -27,6 +27,8 @@ credset <- function(pp, CV, thr) {
 #' @param thr Threshold
 #'
 #' @return Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants.
+#' @useDynLib corrcoverage
+#' @importFrom Rcpp sourceCpp
 #' @export
 credset3 <- function(pp, CV=iCV, thr=0.6) {
   ret  <-  credsetmat(pp,CV,thr) ## list 1 = wh, 2 = size, 3=contained
@@ -103,7 +105,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, rep = 1000) {
   ph0 <- ph0.tmp[1]  # prob of the null
   pp0dash <- ph0.tmp[-1]  # pps of variants
 
-  varbeta <- coloc:::Var.data.cc(f, NN = N0 + N1, s = N1/(N0 + N1))  # variance of estimated effect size
+  varbeta <- coloc:::Var.data.cc(f, N = N0 + N1, s = N1/(N0 + N1))  # variance of estimated effect size
 
   pp0 <- ppfunc(z, V = varbeta, W = W)  # posterior probs of system
 

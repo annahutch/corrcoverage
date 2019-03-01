@@ -4,7 +4,7 @@
 \alias{corrcov}
 \title{corrcov}
 \usage{
-corrcov(z, f, N0, N1, Sigma, thr, W = 0.2)
+corrcov(z, f, N0, N1, Sigma, thr, W = 0.2, rep = 1000)
 }
 \arguments{
 \item{z}{Marginal z-scores}
@@ -20,6 +20,8 @@ corrcov(z, f, N0, N1, Sigma, thr, W = 0.2)
 \item{thr}{Minimum threshold for fine-mapping experiment}
 
 \item{W}{Prior for the standard deviation of the effect size parameter beta}
+
+\item{rep}{The number of simulated posterior probability systems to consider for the corrected coverage estimate. Simulations show that rep=1000 is a robust choice.}
 }
 \value{
 Corrected coverage estimate

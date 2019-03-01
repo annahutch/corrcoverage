@@ -28,3 +28,4 @@ Imports:
     simGWAS,
     stats,
     Rcpp
+SystemRequirements: C++11

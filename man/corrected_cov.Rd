@@ -4,10 +4,10 @@
 \alias{corrected_cov}
 \title{corrected_cov}
 \usage{
-corrected_cov(mu, V, Sigma, pp0, thresh, size)
+corrected_cov(mu, V, Sigma, pp0, thresh, size, nrep = 1000)
 }
 \arguments{
-\item{mu}{An estimate for the true effect at the CV}
+\item{mu}{The true effect at the CV}
 
 \item{V}{Variance of the estimated effect size (can be obtained using var.beta.cc function)}
 
@@ -18,12 +18,14 @@ corrected_cov(mu, V, Sigma, pp0, thresh, size)
 \item{thresh}{Minimum threshold for fine-mapping experiment}
 
 \item{size}{Optional parameter: The size of the credible set (sum of the posterior probabilities of the variants). If not supplied, then the function can calculate this}
+
+\item{nrep}{Number of posterior probability systems to simulate for each variant considered causal}
 }
 \value{
 Corrected coverage estimate
 }
 \description{
-Provide a corrected coverage estimate of the causal variant (CV) in the credible set
+Provide a corrected coverage estimate of the causal variant in the credible set
 }
 \details{
 Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from mu_est function)

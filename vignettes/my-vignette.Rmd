@@ -145,7 +145,7 @@ corrected_cov_estimate <- corrcov(z0, f = MAF, N0, N1, Sigma = LD, thr = thresh)
 data.frame("Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = cs$claimed.cov, "Threshold" = thresh)
 ```
 
-In this example, the 90% credible set may in actual fact have nearer to 96% coverage of the causal variant in the credible set. For the purpose of this vignette and to see the accuracy of this estimate, we simulate more credible sets from the same system and find what proportion of these contains the true causal variant. 
+In this example, the 90% credible set may in actual fact have nearer to 98% coverage of the causal variant in the credible set. For the purpose of this vignette and to see the accuracy of this estimate, we simulate more credible sets from the same system and find what proportion of these contains the true causal variant. 
 
 ```{r}
 z0.tmp <- simulated_z_score(N0=5000, # number of controls

@@ -11,9 +11,9 @@
 #' @return data.frame containing lABF and intermediate calculations
 #' @export
 #' @author Chris Wallace
-approx.bf.p <- function (p, f, type, N, s, W) {
+approx.bf.p <- function(p, f, type, N, s, W){
   sd.prior <- W
-  V <- coloc:::Var.data.cc(f, N, s)
+  V <- coloc:::Var.data.cc(f = f, N = N, s = s)
   z <- stats::qnorm(0.5 * p, lower.tail = FALSE)
   r <- sd.prior^2/(sd.prior^2 + V)
   lABF = 0.5 * (log(1 - r) + (r * z^2))

@@ -117,14 +117,14 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>corrected_cov</span>(<span class='no'>mu</span>, <span class='no'>V</span>, <span class='no'>Sigma</span>, <span class='no'>pp0</span>, <span class='no'>thresh</span>, <span class='no'>size</span>)</pre>
+    <pre class="usage"><span class='fu'>corrected_cov</span>(<span class='no'>mu</span>, <span class='no'>V</span>, <span class='no'>Sigma</span>, <span class='no'>pp0</span>, <span class='no'>thresh</span>, <span class='no'>size</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>mu</th>
-      <td><p>An estimate for the true effect at the CV</p></td>
+      <td><p>The true effect at the CV</p></td>
     </tr>
     <tr>
       <th>V</th>
@@ -145,6 +145,10 @@
     <tr>
       <th>size</th>
       <td><p>Optional parameter: The size of the credible set (sum of the posterior probabilities of the variants). If not supplied, then the function can calculate this</p></td>
+    </tr>
+    <tr>
+      <th>nrep</th>
+      <td><p>Number of posterior probability systems to simulate for each variant considered causal</p></td>
     </tr>
     </table>
     

@@ -45,26 +45,15 @@ credset3 <- function(pp, CV=iCV, thr=0.6) {
 #' @param Sigma SNP correlation matrix
 #' @param pp0 Posterior probabilities of system of interest
 #' @param thresh Minimum threshold for fine-mapping experiment
-#' @param size Optional parameter: The size of the credible set (sum of the posterior probabilities of the variants). If not supplied, then the function can calculate this
 #' @param nrep Number of posterior probability systems to simulate for each variant considered causal
 #' @export
 #' @return Corrected coverage estimate
-corrected_cov <- function(mu, V, Sigma, pp0, thresh, size, nrep = 1000) {
-
-  # number of snps
+corrected_cov <- function(mu, V, Sigma, pp0, thresh, nrep = 1000) {
   nsnps <- length(pp0)
-
-  # find size of credible set
-  if (missing(size)) {
-    cs <- credset(pp0, thr = thresh)
-    claim0 <- cs$claimed.cov
-  } else {
-    claim0 <- size
-  }
 
   # form joint z-score vectors
   temp <- diag(x = mu, nrow = nsnps, ncol = nsnps)
-  zj <- do.call(c, apply(temp, 1, list))  # nsnp zj vectors for each snp considered causal
+  zj <- lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
 
   # simulate pp systems
   pps <- mapply(zj_pp, zj, V, MoreArgs = list(nrep = nrep, Sigma = LD), SIMPLIFY = FALSE)
@@ -74,11 +63,10 @@ corrected_cov <- function(mu, V, Sigma, pp0, thresh, size, nrep = 1000) {
   args <- 1:nsnps
 
   # obtain credible set for each simulation
-  d5 <- lapply(1:n_pps, function(x) {
-    credset3(pps[[x]], CV = rep(args[x], nrep), thr = thresh )
-  })
-
-  prop_cov <- lapply(d5, pred_na) %>% unlist()
+  prop_cov <- lapply(1:n_pps, function(x) {
+    tmp = credset_cov(pps[[x]], CV = rep(args[x], nrep), thr = thresh)
+    sum(tmp)/length(tmp)
+  }) %>% unlist()
 
   # final corrected coverage value
   sum(prop_cov * pp0)

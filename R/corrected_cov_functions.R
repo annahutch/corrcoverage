@@ -60,7 +60,7 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
 
   # simulate ERR matrix
-  ERR = rmvnorm(nrep,rep(0,ncol(Sigma)),Sigma)
+  ERR = mvtnorm:::rmvnorm(nrep,rep(0,ncol(Sigma)),Sigma)
   r = W^2/(W^2 + V)
 
   pp_ERR = function(Zj, nrep, Sigma){
@@ -133,7 +133,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
   # simulate ERR matrix
 
-  ERR = rmvnorm(nrep,rep(0,ncol(Sigma)),Sigma)
+  ERR = mvtnorm:::rmvnorm(nrep,rep(0,ncol(Sigma)),Sigma)
   pp_ERR = function(Zj, nrep, Sigma){
     exp.zm = Zj %*% Sigma
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
@@ -201,7 +201,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
   # simulate ERR matrix
 
-  ERR = rmvnorm(nrep,rep(0,ncol(Sigma)),Sigma)
+  ERR = mvtnorm:::rmvnorm(nrep,rep(0,ncol(Sigma)),Sigma)
   pp_ERR = function(Zj, nrep, Sigma){
     exp.zm = Zj %*% Sigma
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row

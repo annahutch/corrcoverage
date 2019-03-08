@@ -19,8 +19,10 @@ navbar:
     articles:
       text: Articles
       menu:
-      - text: Correcting the Coverage of Credible Sets
+      - text: Corrected Coverage
         href: articles/my-vignette.html
+      - text: New Credible Set
+        href: articles/New-Credible-Set.html
 
 reference:
 - title: All functions
@@ -47,4 +49,7 @@ reference:
 articles:
 - title: All vignettes
   desc: ~
-  contents: '`my-vignette`'
+  contents:
+  - '`New-Credible-Set`'
+  - '`my-vignette`'
+

@@ -1,0 +1,98 @@
+---
+title: "New Credible Set"
+author: "Anna Hutchinson"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, set.seed = 2, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(corrcoverage)
+```
+
+---
+
+This vignette will show users how the `corrcoverage` package can be used to obtain a new credible set of variants that contains the true causal variant with some specified desired coverage value whilst containing as few variants as possible.
+
+---
+
+As before, let's begin by simulating some GWAS data using the `simGWAS` package.
+
+```{r}
+library(simGWAS)
+
+# Simulate reference haplotypes
+nsnps <- 200
+nhaps <- 1000
+lag <- 5 # genotypes are correlated between neighbouring variants
+maf <- runif(nsnps+lag,0.05,0.5) # common SNPs
+laghaps <- do.call("cbind", lapply(maf, function(f) rbinom(nhaps,1,f)))
+haps <- laghaps[,1:nsnps]
+for(j in 1:lag) 
+    haps <- haps + laghaps[,(1:nsnps)+j]
+haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
+snps <- colnames(haps) <- paste0("s",1:nsnps)
+freq <- as.data.frame(haps+1)
+freq$Probability <- 1/nrow(freq)
+sum(freq$Probability)
+MAF <- colMeans(freq[,snps]-1) # minor allele frequencies
+CV <- sample(snps[which(colMeans(haps)>0.1)],1)
+iCV <- sub("s", "", CV) # index of cv
+```
+
+```{r}
+OR <- 1.1 # odds ratios
+z0 <- simulated_z_score(N0=5000, # number of controls
+              N1=5000, # number of cases
+              snps=snps, # column names in freq of SNPs for which Z scores should be generated
+              W=CV, # causal variants, subset of snps
+              gamma.W=log(OR), # log odds ratios
+              freq=freq # reference haplotypes
+              )
+N0 <- 5000 # number of controls
+N1 <- 5000 # number of cases
+thresh <- 0.9 # threshold
+
+var <- coloc:::Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of estimated effect size
+
+postprobs <- ppfunc(z = z0, V = var) # pp0
+LD <- cor2(haps) # correlation matrix
+```
+
+---
+
+We use the `est_mu` function to obtain an estimate of the true effect at the causal variant.
+
+```{r}
+muhat <- est_mu(z0, MAF, N0, N1)
+```
+
+---
+
+To speed things up, we simulate a list of matrices of posterior probabilities (one simulation per row), where each list element considers a different SNP as causal. For example, row 1 in the 2nd matrix/ list element is a posterior probability system simulated by considering SNP 2 as causal. The function `zj_pp` does this.
+
+```{r}
+nsnps = length(postprobs)
+temp <- diag(x = muhat, nrow = nsnps, ncol = nsnps)
+zj <- do.call(c, apply(temp, 1, list))  # nsnp zj vectors for each snp considered causal
+
+# simulate pp systems
+pps <- mapply(zj_pp, zj, V = var , MoreArgs = list(nrep = 1000, Sigma = LD), SIMPLIFY = FALSE)
+```
+
+---
+
+The `quick_corrcov_cs` function can now be used to quickly find the credible set and the corrected coverage estimate of this credible set using a threshold defined by the user. 
+
+```{r}
+quick_corrcov_cs(0.8, simulated.pps = pps, pp = postprobs)
+```
+
+---
+
+The `XXX` function can be used to find the smallest credible set that has corrected coverage as close to the user specified desired coverage as possible (specify accuracy...)
+
+STILL WORKING ON THIS

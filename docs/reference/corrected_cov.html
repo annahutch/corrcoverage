@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="corrected_cov — corrected_cov" />
 
-<meta property="og:description" content="Provide a corrected coverage estimate of the causal variant in the credible set" />
+<meta property="og:description" content="Obtain a corrected coverage estimate of the causal variant in the credible set" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -86,7 +86,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/my-vignette.html">Correcting the Coverage of Credible Sets</a>
+      <a href="../articles/my-vignette.html">Corrected Coverage</a>
+    </li>
+    <li>
+      <a href="../articles/New-Credible-Set.html">New Credible Set</a>
     </li>
   </ul>
 </li>
@@ -113,11 +116,11 @@
 
     <div class="ref-description">
     
-    <p>Provide a corrected coverage estimate of the causal variant in the credible set</p>
+    <p>Obtain a corrected coverage estimate of the causal variant in the credible set</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>corrected_cov</span>(<span class='no'>mu</span>, <span class='no'>V</span>, <span class='no'>Sigma</span>, <span class='no'>pp0</span>, <span class='no'>thresh</span>, <span class='no'>size</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
+    <pre class="usage"><span class='fu'>corrected_cov</span>(<span class='no'>mu</span>, <span class='no'>V</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='no'>Sigma</span>, <span class='no'>pp0</span>, <span class='no'>thresh</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -128,7 +131,11 @@
     </tr>
     <tr>
       <th>V</th>
-      <td><p>Variance of the estimated effect size (can be obtained using var.beta.cc function)</p></td>
+      <td><p>Variance of the estimated effect size (can be obtained using Var.beta.cc function)</p></td>
+    </tr>
+    <tr>
+      <th>W</th>
+      <td><p>Prior for the standard deviation of the effect size parameter beta (W=0.2 default)</p></td>
     </tr>
     <tr>
       <th>Sigma</th>
@@ -143,12 +150,8 @@
       <td><p>Minimum threshold for fine-mapping experiment</p></td>
     </tr>
     <tr>
-      <th>size</th>
-      <td><p>Optional parameter: The size of the credible set (sum of the posterior probabilities of the variants). If not supplied, then the function can calculate this</p></td>
-    </tr>
-    <tr>
       <th>nrep</th>
-      <td><p>Number of posterior probability systems to simulate for each variant considered causal</p></td>
+      <td><p>Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)</p></td>
     </tr>
     </table>
     
@@ -158,7 +161,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from mu_est function)</p>
+    <p>Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)</p>
     
 
   </div>

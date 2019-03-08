@@ -9,18 +9,20 @@ ppfunc.mat(zstar, V, W = 0.2)
 \arguments{
 \item{zstar}{Matrix of marginal z-scores, one replicate per row}
 
-\item{V}{Variance of the estimated effect size (can be obtained using var.beta.cc function), one element per column of zstar}
+\item{V}{Variance of the estimated effect size, one element per column of zstar}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta}
 }
 \value{
-Vector of posterior probabilities
+Matrix of posterior probabilities of causality
 }
 \description{
-Obtain posterior probabilities for each SNP causal from multiple marginal z-scores simulations
+Posterior probabilities of causality from matrix of marginal Z-scores (1 simulation per row)
 }
 \details{
-This function converts a matrix of z-scores (one row per simulation) to posterior probabilities, not including the null model of no genetic effects, so that the sum of the posterior probabilities for each simulation (each row) is 1.
+This function converts a matrix of Z-scores (one row per simulation) to posterior probabilities of causality,
+not including the null model of no genetic effects,
+so that the sum of the posterior probabilities for each simulation (each row) is 1.
 }
 \author{
 Chris Wallace

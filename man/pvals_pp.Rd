@@ -17,16 +17,16 @@ pvals_pp(pvals, f, type, N, s, W = 0.2)
 
 \item{s}{Proportion of cases (N1/N0+N1), ignored if type=="quant"}
 
-\item{W}{Prior for the standard deviation of the effect size parameter beta}
+\item{W}{Prior for the standard deviation of the effect size parameter, beta (W = 0.2 default)}
 }
 \value{
 Posterior probabilities of null model (no genetic effect) and causality for each SNP
 }
 \description{
-Quick posterior probabilities from p-values with prior SD as a parameter
+Posterior probabilities of causality from p-values
 }
 \details{
-This function converts p-values to posterior probabilities, including the null model of no genetic effects
+This function converts p-values to posterior probabilities of causality, including the null model of no genetic effects
 }
 \author{
 Anna Hutchinson

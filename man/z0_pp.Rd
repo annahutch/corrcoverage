@@ -7,7 +7,7 @@
 z0_pp(z, f, type, N, s, W = 0.2)
 }
 \arguments{
-\item{z}{Marginal z-scores of SNPs}
+\item{z}{Marginal Z-scores of SNPs}
 
 \item{f}{Minor allele frequencies}
 
@@ -23,10 +23,10 @@ z0_pp(z, f, type, N, s, W = 0.2)
 Posterior probabilities of null model (no genetic effect) and causality for each SNP
 }
 \description{
-Quick posterior probabilities from marginal z-scores with prior SD as a parameter
+Posterior probabilities of causality from marginal Z-scores with prior SD as a parameter
 }
 \details{
-This function converts z-scores to posterior probabilities, including the null model of no genetic effects
+This function converts Z-scores to posterior probabilities of causality, including the null model of no genetic effects
 }
 \author{
 Anna Hutchinson

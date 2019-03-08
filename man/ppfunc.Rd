@@ -7,18 +7,20 @@
 ppfunc(z, V, W = 0.2)
 }
 \arguments{
-\item{z}{Vector of marginal z-scores}
+\item{z}{Vector of marginal Z-scores}
 
-\item{V}{Variance of the estimated effect size (can be obtained using var.beta.cc function)}
+\item{V}{Variance of the estimated effect size (can be obtained using Var.beta.cc function)}
 
-\item{W}{Prior for the standard deviation of the effect size parameter beta}
+\item{W}{Prior for the standard deviation of the effect size parameter, beta (W = 0.2 default)}
 }
 \value{
 Vector of posterior probabilities
 }
 \description{
-Quick posterior probabilities for each SNP causal from marginal z-scores
+Posterior probabilities of causality from marginal Z-scores
 }
 \details{
-This function converts z-scores to posterior probabilities, not including the null model of no genetic effects, so that the sum of the posterior probabilities is 1
+This function converts Z-scores to posterior probabilities of causality
+i.e. not including the null model of no genetic effects,
+so that the sum of the posterior probabilities for all variants is 1
 }

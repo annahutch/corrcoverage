@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>z_sim — z_sim • corrcoverage</title>
+<title>corrcov_bhat — corrcov_bhat • corrcoverage</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="z_sim — z_sim" />
+<meta property="og:title" content="corrcov_bhat — corrcov_bhat" />
 
-<meta property="og:description" content="Simulate marginal z-scores (\(Z_m\)) from the joint z-scores (\(Z_j\)) using \(E(Z_m) = Z_j \times \Sigma\) and
-\(Z* \sim MVN(E(Z_m), \Sigma)\)" />
+<meta property="og:description" content="Obtain corrected coverage estimate using estimated effect sizes (beta hats) and their standard errors" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -110,40 +109,63 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>z_sim</h1>
+    <h1>corrcov_bhat</h1>
     
-    <div class="hidden name"><code>z_sim.Rd</code></div>
+    <div class="hidden name"><code>corrcov_bhat.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Simulate marginal z-scores (\(Z_m\)) from the joint z-scores (\(Z_j\)) using \(E(Z_m) = Z_j \times \Sigma\) and
-\(Z* \sim MVN(E(Z_m), \Sigma)\)</p>
+    <p>Obtain corrected coverage estimate using estimated effect sizes (beta hats) and their standard errors</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>z_sim</span>(<span class='no'>Zj</span>, <span class='no'>Sigma</span>, <span class='no'>nrep</span>)</pre>
+    <pre class="usage"><span class='fu'>corrcov_bhat</span>(<span class='no'>bhat</span>, <span class='no'>V</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='no'>thr</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Zj</th>
-      <td><p>Vector of joint Z-scores (a vector of 0s except at the causal variant)</p></td>
+      <th>bhat</th>
+      <td><p>Estimated effect sizes from single-SNP logistic regressions</p></td>
+    </tr>
+    <tr>
+      <th>V</th>
+      <td><p>Variance of estimated effect sizes</p></td>
+    </tr>
+    <tr>
+      <th>N0</th>
+      <td><p>Number of controls</p></td>
+    </tr>
+    <tr>
+      <th>N1</th>
+      <td><p>Number of cases</p></td>
     </tr>
     <tr>
       <th>Sigma</th>
       <td><p>SNP correlation matrix</p></td>
     </tr>
     <tr>
+      <th>thr</th>
+      <td><p>Minimum threshold for fine-mapping experiment</p></td>
+    </tr>
+    <tr>
+      <th>W</th>
+      <td><p>Prior for the standard deviation of the effect size parameter beta</p></td>
+    </tr>
+    <tr>
       <th>nrep</th>
-      <td><p>Number of Z-score systems to simulate</p></td>
+      <td><p>The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Matrix of simulated z-scores, one simulation per row</p>
+    <p>Corrected coverage estimate</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function only requires the marginal summary statistics from GWAS</p>
     
 
   </div>
@@ -153,6 +175,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
           </ul>
 
   </div>

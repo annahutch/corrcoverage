@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="ppfunc — ppfunc" />
 
-<meta property="og:description" content="Quick posterior probabilities for each SNP causal from marginal z-scores" />
+<meta property="og:description" content="Posterior probabilities of causality from marginal Z-scores" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -86,7 +86,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/my-vignette.html">Correcting the Coverage of Credible Sets</a>
+      <a href="../articles/my-vignette.html">Corrected Coverage</a>
+    </li>
+    <li>
+      <a href="../articles/New-Credible-Set.html">New Credible Set</a>
     </li>
   </ul>
 </li>
@@ -113,7 +116,7 @@
 
     <div class="ref-description">
     
-    <p>Quick posterior probabilities for each SNP causal from marginal z-scores</p>
+    <p>Posterior probabilities of causality from marginal Z-scores</p>
     
     </div>
 
@@ -124,15 +127,15 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>z</th>
-      <td><p>Vector of marginal z-scores</p></td>
+      <td><p>Vector of marginal Z-scores</p></td>
     </tr>
     <tr>
       <th>V</th>
-      <td><p>Variance of the estimated effect size (can be obtained using var.beta.cc function)</p></td>
+      <td><p>Variance of the estimated effect size (can be obtained using Var.beta.cc function)</p></td>
     </tr>
     <tr>
       <th>W</th>
-      <td><p>Prior for the standard deviation of the effect size parameter beta</p></td>
+      <td><p>Prior for the standard deviation of the effect size parameter, beta (W = 0.2 default)</p></td>
     </tr>
     </table>
     
@@ -142,7 +145,9 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function converts z-scores to posterior probabilities, not including the null model of no genetic effects, so that the sum of the posterior probabilities is 1</p>
+    <p>This function converts Z-scores to posterior probabilities of causality
+i.e. not including the null model of no genetic effects,
+so that the sum of the posterior probabilities for all variants is 1</p>
     
 
   </div>

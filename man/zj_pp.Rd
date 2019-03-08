@@ -21,8 +21,8 @@ zj_pp(Zj, V, nrep = 5000, W = 0.2, Sigma)
 Matrix of simulated posterior probabilties, one simulation per row
 }
 \description{
-Simulate nrep marginal z-scores from joint z-scores and convert these to posterior probabilities
+Simulate nrep marginal Z-scores from joint Z-scores and convert these to posterior probabilities of causality
 }
 \details{
-Does not include posterior probabilities for null model
+Does not include posterior probabilities for null model s.t the output will sum to 1
 }

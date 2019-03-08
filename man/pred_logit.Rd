@@ -9,7 +9,7 @@ pred_logit(x, size)
 \arguments{
 \item{x}{data.frame with column for 'covered' and 'logit.claim'}
 
-\item{size}{size of the credible set to correct (sum of the posterior probabilities of the variants)}
+\item{size}{size of the credible set to correct (sum of the posterior probabilities of causality of the variants)}
 }
 \value{
 Predicted probability of covered
@@ -18,7 +18,9 @@ Predicted probability of covered
 Build and predict corrected coverage using logistic GAM
 }
 \details{
-This function builds a GAM model with log(claimed_coverage/(1-claimed_coverage)) (logit(claimed) as the predictor and the binary covered value as the response. This model is then used to accurately predict the coverage probability of the causal variant in the credible set
+This function builds a GAM model with log(claimed_coverage/(1-claimed_coverage)) (logit(claimed))
+as the predictor and the binary covered value as the response.
+This model is then used to predict the coverage probability of the causal variant in the credible set
 }
 \author{
 Anna Hutchinson

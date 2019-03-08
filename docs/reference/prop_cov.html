@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>z_sim — z_sim • corrcoverage</title>
+<title>prop_cov — prop_cov • corrcoverage</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="z_sim — z_sim" />
+<meta property="og:title" content="prop_cov — prop_cov" />
 
-<meta property="og:description" content="Simulate marginal z-scores (\(Z_m\)) from the joint z-scores (\(Z_j\)) using \(E(Z_m) = Z_j \times \Sigma\) and
-\(Z* \sim MVN(E(Z_m), \Sigma)\)" />
+<meta property="og:description" content="Proportion of simulated credible sets containing the causal variant" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -110,40 +109,31 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>z_sim</h1>
+    <h1>prop_cov</h1>
     
-    <div class="hidden name"><code>z_sim.Rd</code></div>
+    <div class="hidden name"><code>prop_cov.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Simulate marginal z-scores (\(Z_m\)) from the joint z-scores (\(Z_j\)) using \(E(Z_m) = Z_j \times \Sigma\) and
-\(Z* \sim MVN(E(Z_m), \Sigma)\)</p>
+    <p>Proportion of simulated credible sets containing the causal variant</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>z_sim</span>(<span class='no'>Zj</span>, <span class='no'>Sigma</span>, <span class='no'>nrep</span>)</pre>
+    <pre class="usage"><span class='fu'>prop_cov</span>(<span class='no'>x</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Zj</th>
-      <td><p>Vector of joint Z-scores (a vector of 0s except at the causal variant)</p></td>
-    </tr>
-    <tr>
-      <th>Sigma</th>
-      <td><p>SNP correlation matrix</p></td>
-    </tr>
-    <tr>
-      <th>nrep</th>
-      <td><p>Number of Z-score systems to simulate</p></td>
+      <th>x</th>
+      <td><p>data.frame with a binary 'covered' column</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Matrix of simulated z-scores, one simulation per row</p>
+    <p>Proportion of x with x = 1</p>
     
 
   </div>
@@ -155,6 +145,8 @@
       <li><a href="#value">Value</a></li>
           </ul>
 
+    <h2>Author</h2>
+    <p>Anna Hutchinson</p>
   </div>
 </div>
 

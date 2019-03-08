@@ -4,10 +4,10 @@
 \alias{approx.bf.p}
 \title{approx.bf.p}
 \usage{
-approx.bf.p(p, f, type, N, s, W)
+approx.bf.p(pvals, f, type, N, s, W = 0.2)
 }
 \arguments{
-\item{p}{p-values}
+\item{pvals}{p-values}
 
 \item{f}{Minor allele frequencies}
 
@@ -17,17 +17,15 @@ approx.bf.p(p, f, type, N, s, W)
 
 \item{s}{Proportion of cases (N1/N0+N1), ignored if type=="quant"}
 
-\item{W}{Prior for the standard deviation of the effect size parameter beta}
+\item{W}{Prior for the standard deviation of the effect size parameter beta (W=0.2 default)}
 }
 \value{
 data.frame containing lABF and intermediate calculations
 }
 \description{
-Wakefield's lABF with prior SD as a parameter
+Wakefield's log asymptotic Bayes factor (lABF) with prior standard deviation of effect size as a parameter
 }
 \details{
-This function converts p-values to log ABF
-}
-\author{
-Chris Wallace
+([Wakefield et al. 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359)
+This function converts p-values to log ABFs, also reporting intermediate calculations
 }

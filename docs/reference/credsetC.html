@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>z_sim — z_sim • corrcoverage</title>
+<title>credsetC — credsetC • corrcoverage</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,10 +30,9 @@
 
 
 
-<meta property="og:title" content="z_sim — z_sim" />
+<meta property="og:title" content="credsetC — credsetC" />
 
-<meta property="og:description" content="Simulate marginal z-scores (\(Z_m\)) from the joint z-scores (\(Z_j\)) using \(E(Z_m) = Z_j \times \Sigma\) and
-\(Z* \sim MVN(E(Z_m), \Sigma)\)" />
+<meta property="og:description" content="Quicker credset function for matrix of posterior probabilities (using RCpp)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -110,40 +109,39 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>z_sim</h1>
+    <h1>credsetC</h1>
     
-    <div class="hidden name"><code>z_sim.Rd</code></div>
+    <div class="hidden name"><code>credsetC.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Simulate marginal z-scores (\(Z_m\)) from the joint z-scores (\(Z_j\)) using \(E(Z_m) = Z_j \times \Sigma\) and
-\(Z* \sim MVN(E(Z_m), \Sigma)\)</p>
+    <p>Quicker credset function for matrix of posterior probabilities (using RCpp)</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>z_sim</span>(<span class='no'>Zj</span>, <span class='no'>Sigma</span>, <span class='no'>nrep</span>)</pre>
+    <pre class="usage"><span class='fu'>credsetC</span>(<span class='no'>pp</span>, <span class='kw'>CV</span> <span class='kw'>=</span> <span class='no'>iCV</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.6</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Zj</th>
-      <td><p>Vector of joint Z-scores (a vector of 0s except at the causal variant)</p></td>
+      <th>pp</th>
+      <td><p>Matrix of posterior probabilities of causality (one row per system)</p></td>
     </tr>
     <tr>
-      <th>Sigma</th>
-      <td><p>SNP correlation matrix</p></td>
+      <th>CV</th>
+      <td><p>Vector of CV indices (one per system/row)</p></td>
     </tr>
     <tr>
-      <th>nrep</th>
-      <td><p>Number of Z-score systems to simulate</p></td>
+      <th>thr</th>
+      <td><p>Minimum threshold for credible set size</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Matrix of simulated z-scores, one simulation per row</p>
+    <p>Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants (nvar).</p>
     
 
   </div>

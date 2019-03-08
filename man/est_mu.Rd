@@ -2,24 +2,24 @@
 % Please edit documentation in R/extra_functions.R
 \name{est_mu}
 \alias{est_mu}
-\title{Find an estimate for the true effect at the causal variant}
+\title{Estimate the true effect at the causal variant}
 \usage{
 est_mu(z, f, N0, N1)
 }
 \arguments{
-\item{z}{Vector of Z-scores}
+\item{z}{Vector of marginal Z-scores}
 
 \item{f}{Minor allele frequencies}
 
-\item{N0}{Number of cases}
+\item{N0}{Number of controls}
 
-\item{N1}{Number of controls}
+\item{N1}{Number of cases}
 }
 \value{
 Estimate of the true effect at the causal variant
 }
 \description{
-Find an estimate for the true effect at the causal variant
+Estimate the true effect at the causal variant
 }
 \author{
 Anna Hutchinson

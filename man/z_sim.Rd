@@ -7,15 +7,16 @@
 z_sim(Zj, Sigma, nrep)
 }
 \arguments{
-\item{Zj}{Vector of joint z-scores (0s except at CV)}
+\item{Zj}{Vector of joint Z-scores (a vector of 0s except at the causal variant)}
 
 \item{Sigma}{SNP correlation matrix}
 
-\item{nrep}{Number of simulated z-scores}
+\item{nrep}{Number of Z-score systems to simulate}
 }
 \value{
 Matrix of simulated z-scores, one simulation per row
 }
 \description{
-Simulate marginal z-scores (\eqn{Zm}) from the joint z-scores (\eqn{Zj}) using \eqn{Zm ~ MVN(E(Zj),\Sigma)}
+Simulate marginal z-scores (\eqn{Z_m}) from the joint z-scores (\eqn{Z_j}) using \eqn{E(Z_m) = Z_j \times \Sigma} and
+\eqn{Z* \sim MVN(E(Z_m), \Sigma)}
 }

@@ -4,12 +4,14 @@
 \alias{corrected_cov}
 \title{corrected_cov}
 \usage{
-corrected_cov(mu, V, Sigma, pp0, thresh, size, nrep = 1000)
+corrected_cov(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000)
 }
 \arguments{
 \item{mu}{The true effect at the CV}
 
-\item{V}{Variance of the estimated effect size (can be obtained using var.beta.cc function)}
+\item{V}{Variance of the estimated effect size (can be obtained using Var.beta.cc function)}
+
+\item{W}{Prior for the standard deviation of the effect size parameter beta (W=0.2 default)}
 
 \item{Sigma}{SNP correlation matrix}
 
@@ -17,16 +19,14 @@ corrected_cov(mu, V, Sigma, pp0, thresh, size, nrep = 1000)
 
 \item{thresh}{Minimum threshold for fine-mapping experiment}
 
-\item{size}{Optional parameter: The size of the credible set (sum of the posterior probabilities of the variants). If not supplied, then the function can calculate this}
-
-\item{nrep}{Number of posterior probability systems to simulate for each variant considered causal}
+\item{nrep}{Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)}
 }
 \value{
 Corrected coverage estimate
 }
 \description{
-Provide a corrected coverage estimate of the causal variant in the credible set
+Obtain a corrected coverage estimate of the causal variant in the credible set
 }
 \details{
-Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from mu_est function)
+Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)
 }

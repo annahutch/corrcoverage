@@ -7,18 +7,19 @@
 credset(pp, CV, thr)
 }
 \arguments{
-\item{pp}{Vector of posterior probabilities}
+\item{pp}{Vector of posterior probabilities of causality}
 
 \item{CV}{Optional parameter: Index of CV}
 
 \item{thr}{Minimum threshold for credible set size}
 }
 \value{
-data.frame of claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set), nvar (number of variants in the set)
+data.frame of claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)
 }
 \description{
 Obtain a credible set using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008)).
 }
 \details{
-If the CV parameter is supplied, the output includes a binary indicator of whether the CV is contained in the set
+If the CV parameter is supplied (index of causal variant) then the
+output includes a binary indicator of whether the CV is contained in the set
 }

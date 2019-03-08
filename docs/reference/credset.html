@@ -86,7 +86,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/my-vignette.html">Correcting the Coverage of Credible Sets</a>
+      <a href="../articles/my-vignette.html">Corrected Coverage</a>
+    </li>
+    <li>
+      <a href="../articles/New-Credible-Set.html">New Credible Set</a>
     </li>
   </ul>
 </li>
@@ -124,7 +127,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>pp</th>
-      <td><p>Vector of posterior probabilities</p></td>
+      <td><p>Vector of posterior probabilities of causality</p></td>
     </tr>
     <tr>
       <th>CV</th>
@@ -138,11 +141,12 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data.frame of claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set), nvar (number of variants in the set)</p>
+    <p>data.frame of claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If the CV parameter is supplied, the output includes a binary indicator of whether the CV is contained in the set</p>
+    <p>If the CV parameter is supplied (index of causal variant) then the
+output includes a binary indicator of whether the CV is contained in the set</p>
     
 
   </div>

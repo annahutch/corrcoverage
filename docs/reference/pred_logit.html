@@ -86,7 +86,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/my-vignette.html">Correcting the Coverage of Credible Sets</a>
+      <a href="../articles/my-vignette.html">Corrected Coverage</a>
+    </li>
+    <li>
+      <a href="../articles/New-Credible-Set.html">New Credible Set</a>
     </li>
   </ul>
 </li>
@@ -128,7 +131,7 @@
     </tr>
     <tr>
       <th>size</th>
-      <td><p>size of the credible set to correct (sum of the posterior probabilities of the variants)</p></td>
+      <td><p>size of the credible set to correct (sum of the posterior probabilities of causality of the variants)</p></td>
     </tr>
     </table>
     
@@ -138,7 +141,9 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function builds a GAM model with log(claimed_coverage/(1-claimed_coverage)) (logit(claimed) as the predictor and the binary covered value as the response. This model is then used to accurately predict the coverage probability of the causal variant in the credible set</p>
+    <p>This function builds a GAM model with log(claimed_coverage/(1-claimed_coverage)) (logit(claimed))
+as the predictor and the binary covered value as the response.
+This model is then used to predict the coverage probability of the causal variant in the credible set</p>
     
 
   </div>

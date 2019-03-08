@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="approx.bf.p — approx.bf.p" />
 
-<meta property="og:description" content="Wakefield's lABF with prior SD as a parameter" />
+<meta property="og:description" content="Wakefield's log asymptotic Bayes factor (lABF) with prior standard deviation of effect size as a parameter" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -86,7 +86,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/my-vignette.html">Correcting the Coverage of Credible Sets</a>
+      <a href="../articles/my-vignette.html">Corrected Coverage</a>
+    </li>
+    <li>
+      <a href="../articles/New-Credible-Set.html">New Credible Set</a>
     </li>
   </ul>
 </li>
@@ -113,17 +116,17 @@
 
     <div class="ref-description">
     
-    <p>Wakefield's lABF with prior SD as a parameter</p>
+    <p>Wakefield's log asymptotic Bayes factor (lABF) with prior standard deviation of effect size as a parameter</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>approx.bf.p</span>(<span class='no'>p</span>, <span class='no'>f</span>, <span class='no'>type</span>, <span class='no'>N</span>, <span class='no'>s</span>, <span class='no'>W</span>)</pre>
+    <pre class="usage"><span class='fu'>approx.bf.p</span>(<span class='no'>pvals</span>, <span class='no'>f</span>, <span class='no'>type</span>, <span class='no'>N</span>, <span class='no'>s</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>p</th>
+      <th>pvals</th>
       <td><p>p-values</p></td>
     </tr>
     <tr>
@@ -144,7 +147,7 @@
     </tr>
     <tr>
       <th>W</th>
-      <td><p>Prior for the standard deviation of the effect size parameter beta</p></td>
+      <td><p>Prior for the standard deviation of the effect size parameter beta (W=0.2 default)</p></td>
     </tr>
     </table>
     
@@ -154,7 +157,8 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function converts p-values to log ABF</p>
+    <p>([Wakefield et al. 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359)
+This function converts p-values to log ABFs, also reporting intermediate calculations</p>
     
 
   </div>
@@ -168,8 +172,6 @@
       <li><a href="#details">Details</a></li>
           </ul>
 
-    <h2>Author</h2>
-    <p>Chris Wallace</p>
   </div>
 </div>
 

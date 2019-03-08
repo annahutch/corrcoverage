@@ -243,7 +243,7 @@ quick_corrcov <- function(thr, simulated.pps, pp){
     credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
   })
 
-  prop_cov <- lapply(d5, pred_na) %>% unlist()
+  prop_cov <- lapply(d5, prop_cov) %>% unlist()
   sum(prop_cov * pp)
 }
 
@@ -265,7 +265,7 @@ quick_corrcov_cs <- function(thr, simulated.pps, pp){
     credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
   })
 
-  prop_cov <- lapply(d5, pred_na) %>% unlist()
+  prop_cov <- lapply(d5, prop_cov) %>% unlist()
   corr_cov <- sum(prop_cov * pp)
 
   o <- order(pp, decreasing = TRUE)

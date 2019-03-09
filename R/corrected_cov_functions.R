@@ -74,7 +74,7 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
   }
 
   # simulate pp systems
-  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = LD), SIMPLIFY = FALSE)
+  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
 
   # consider different CV as causal in each list
   n_pps <- length(pps)
@@ -144,7 +144,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
     pp.tmp / rowSums(pp.tmp)
   }
   # simulate pp systems
-  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = LD), SIMPLIFY = FALSE)
+  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
   # consider different CV as causal in each list
   n_pps <- length(pps)
   args <- 1:nsnps
@@ -212,7 +212,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
     pp.tmp / rowSums(pp.tmp)
   }
   # simulate pp systems
-  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = LD), SIMPLIFY = FALSE)
+  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
   # consider different CV as causal in each list
   n_pps <- length(pps)
   args <- 1:nsnps

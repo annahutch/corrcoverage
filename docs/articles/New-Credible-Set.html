@@ -139,17 +139,26 @@ pps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumen
 <p>The <code>quick_corrcov_cs</code> function can now be used to quickly find the credible set and the corrected coverage estimate of this credible set using a threshold defined by the user.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/quick_corrcov_cs.html">quick_corrcov_cs</a></span>(<span class="fl">0.8</span>, <span class="dt">simulated.pps =</span> pps, <span class="dt">pp =</span> postprobs)</code></pre></div>
 <pre><code>## $credset
-## [1] "s168"
+##  [1] "s171" "s173" "s172" "s170" "s21"  "s157" "s121" "s24"  "s74"  "s43" 
+## [11] "s169" "s132" "s13"  "s84"  "s108" "s123" "s144" "s139" "s48"  "s196"
+## [21] "s165" "s42"  "s156" "s159" "s197" "s113" "s56"  "s66"  "s104" "s10" 
+## [31] "s98"  "s75"  "s17"  "s168" "s147" "s140" "s128" "s39"  "s15"  "s103"
+## [41] "s30"  "s167" "s47"  "s131" "s11"  "s44"  "s187" "s110" "s82"  "s12" 
+## [51] "s152" "s124" "s79"  "s23"  "s64"  "s67"  "s52"  "s158" "s31"  "s32" 
+## [61] "s178" "s33"  "s177" "s19"  "s41"  "s125" "s120" "s91"  "s53"  "s101"
+## [71] "s72"  "s8"   "s148" "s122" "s22"  "s57"  "s133" "s77"  "s154" "s54" 
+## [81] "s78"  "s162" "s89"  "s126" "s109" "s50"  "s40"  "s73"  "s137" "s183"
+## [91] "s193" "s117" "s191" "s81"  "s141" "s163" "s90" 
 ## 
 ## $corr.cov
-## [1] 0.9793866
+## [1] 0.9001341
 ## 
 ## $thr
 ## [1] 0.8
 ## 
 ## $size
-##      s168 
-## 0.8099801</code></pre>
+##       s90 
+## 0.8007922</code></pre>
 <hr>
 <p>The <code>XXX</code> function can be used to find the smallest credible set that has corrected coverage as close to the user specified desired coverage as possible (specify accuracy…)</p>
 <p>STILL WORKING ON THIS</p>

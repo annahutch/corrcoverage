@@ -81,12 +81,12 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
   args <- 1:nsnps
 
   # obtain credible set for each simulation
-  prop_cov <- lapply(1:n_pps, function(x) {
-    tmp = credsetC(pps[[x]], CV = rep(args[x], nrep), thr = thresh)
-    sum(tmp[[2]])/length(tmp[[2]])
-  }) %>% unlist()
+  d5 <- lapply(1:n_pps, function(x) {
+    credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
+  })
 
-  # final corrected coverage value
+  prop_cov <- lapply(d5, prop_cov) %>% unlist()
+
   sum(prop_cov * pp0)
 }
 
@@ -148,13 +148,14 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
   # consider different CV as causal in each list
   n_pps <- length(pps)
   args <- 1:nsnps
-  # obtain credible set for each simulation
-  prop_cov <- lapply(1:n_pps, function(x) {
-    tmp = credsetC(pps[[x]], CV = rep(args[x], nrep), thr = thr)
-    sum(tmp[[2]])/length(tmp[[2]])
-  }) %>% unlist()
 
-  # final corrected coverage value
+  # obtain credible set for each simulation
+  d5 <- lapply(1:n_pps, function(x) {
+    credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
+  })
+
+  prop_cov <- lapply(d5, prop_cov) %>% unlist()
+
   sum(prop_cov * pp0)
 }
 
@@ -216,13 +217,14 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
   # consider different CV as causal in each list
   n_pps <- length(pps)
   args <- 1:nsnps
-  # obtain credible set for each simulation
-  prop_cov <- lapply(1:n_pps, function(x) {
-    tmp = credsetC(pps[[x]], CV = rep(args[x], nrep), thr = thr)
-    sum(tmp[[2]])/length(tmp[[2]])
-  }) %>% unlist()
 
-  # final corrected coverage value
+  # obtain credible set for each simulation
+  d5 <- lapply(1:n_pps, function(x) {
+    credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
+  })
+
+  prop_cov <- lapply(d5, prop_cov) %>% unlist()
+
   sum(prop_cov * pp0)
 }
 

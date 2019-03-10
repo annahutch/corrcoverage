@@ -82,7 +82,7 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
 
   # obtain credible set for each simulation
   d5 <- lapply(1:n_pps, function(x) {
-    credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
+    credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
   })
 
   prop_cov <- lapply(d5, prop_cov) %>% unlist()
@@ -151,7 +151,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
 
   # obtain credible set for each simulation
   d5 <- lapply(1:n_pps, function(x) {
-    credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
+    credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
   })
 
   prop_cov <- lapply(d5, prop_cov) %>% unlist()
@@ -220,7 +220,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
 
   # obtain credible set for each simulation
   d5 <- lapply(1:n_pps, function(x) {
-    credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
+    credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
   })
 
   prop_cov <- lapply(d5, prop_cov) %>% unlist()

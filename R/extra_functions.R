@@ -71,12 +71,13 @@ prop_cov <- function(x) {
 #' @param f Minor allele frequencies
 #' @param N0 Number of controls
 #' @param N1 Number of cases
+#' @param W Prior for the standard deviation of the effect size parameter beta
 #'
 #' @return Estimate of the true effect at the causal variant
 #' @export
 #'
 #' @author Anna Hutchinson
-est_mu <- function(z, f, N0, N1){
+est_mu <- function(z, f, N0, N1, W = 0.2){
   V = 1/(2 * (N0+N1) * f * (1 - f) * (N1/(N0+N1)) * (1 - (N1/(N0+N1))))
   r = W^2/(W^2 + V)
   lABF = 0.5 * (log(1 - r) + (r * z^2))

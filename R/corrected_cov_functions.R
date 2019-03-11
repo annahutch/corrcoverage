@@ -7,7 +7,7 @@
 #' @param CV Optional parameter: Index of CV
 #' @param thr Minimum threshold for credible set size
 #' @export
-#' @return data.frame of claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)
+#' @return list of the variants in the credible set, the claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)
 credset <- function(pp, CV, thr) {
     o <- order(pp, decreasing = TRUE)  # order index for true pp
     cumpp <- cumsum(pp[o])  # cum sums of ordered pps
@@ -17,7 +17,7 @@ credset <- function(pp, CV, thr) {
         data.frame(claimed.cov = size, nvar = wh)
     } else {
         contained = as.numeric(CV %in% o[1:wh])
-        data.frame(claimed.cov = size, covered = contained, nvar = wh)
+        list(credset = o[1:wh], claimed.cov = size, covered = contained, nvar = wh)
     }
 }
 
@@ -33,7 +33,7 @@ credset <- function(pp, CV, thr) {
 #' @importFrom Rcpp sourceCpp
 #' @export
 credsetC <- function(pp, CV=iCV, thr=0.6) {
-  ret  <-  credsetmat(pp,CV,thr) ## list 1 = wh, 2 = size, 3=contained
+  ret  <-  credsetmat(pp, CV, thr) ## list 1 = wh, 2 = size, 3=contained
   data.frame(claimed.cov=ret[[2]], covered=ret[[3]], nvar=ret[[1]])
 }
 

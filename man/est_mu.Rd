@@ -4,7 +4,7 @@
 \alias{est_mu}
 \title{Estimate the true effect at the causal variant}
 \usage{
-est_mu(z, f, N0, N1)
+est_mu(z, f, N0, N1, W = 0.2)
 }
 \arguments{
 \item{z}{Vector of marginal Z-scores}
@@ -14,6 +14,8 @@ est_mu(z, f, N0, N1)
 \item{N0}{Number of controls}
 
 \item{N1}{Number of cases}
+
+\item{W}{Prior for the standard deviation of the effect size parameter beta}
 }
 \value{
 Estimate of the true effect at the causal variant

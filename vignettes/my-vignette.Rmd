@@ -67,7 +67,7 @@ iCV <- sub("s", "", CV) # index of cv
 OR <- 1.1
 ```
 
-We then simulate marginal $Z$ scores. Here, we consider a GWAS with 5000 cases and 5000 controls. 
+Then simulate marginal $Z$ scores. Here, we consider a GWAS with 5000 cases and 5000 controls. 
 
 ```{r}
 z0 <- simulated_z_score(N0=5000, # number of controls
@@ -89,9 +89,9 @@ We now use the `credset` function in the `corrcoverage` package to obtain a cred
 
 1. Order variants in descending order of posterior probabilities. 
 2. Cumulatively sum these variants until the specified threshold is exceeded.
-3. Group these variants. These variants form the credible set.
+3. Group these variants to form the credible set.
 
-The function requires posterior probabilities of causality as an input, and so we use the `ppfunc` function to convert the marginal $Z$ scores to posterior probabilties. This function also requires a value for $V$, the variance of the estimated effect size, which can be easily calculated using the `Var.data.cc` function in the `coloc` package. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2.
+The function requires posterior probabilities of causality as an input, and so we use the `ppfunc` function to convert the marginal $Z$ scores to posterior probabilties of causality. The `ppfunc` function also requires a value for $V$, the variance of the estimated effect size, which can be easily calculated using the `coloc::Var.data.cc` function. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.
 
 ```{r warning=FALSE, error=FALSE, fig.width=4}
 N0 <- 5000 # number of controls
@@ -107,7 +107,7 @@ abline(v = iCV, col = 2)
 
 The posterior probability plot shows the location of the causal variant (red line). Notice that the causal variant is not the variant with the largest posterior probability. This is not rare in fine-mapping analyses and occurs due to linkage disequilibrium patterns (correlation between SNPs).
 
-The `credset` function reports the claimed coverage ^[Researchers commonly use the size of the credible set as an estimate of the coverage probabiltiy of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (claimed coverage > threshold).] (the cumulative sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set. If the `CV` parameter is supplied by the user (e.g. in simulation studies when the CV is known), then the output also includes a binary indicator of whether the causal variant was contained in the credible set. 
+The `credset` function reports the variants in the credible set, the claimed coverage ^[Researchers commonly use the size of the credible set as an estimate of the coverage probabiltiy of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (claimed coverage > threshold).] (the cumulative sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set. If the `CV` parameter is supplied by the user (e.g. in simulation studies when the CV is known), then the output also includes a binary indicator of whether the causal variant was contained in the credible set. 
 
 ```{r warning=FALSE, error=FALSE}
 thresh <- 0.9
@@ -117,24 +117,24 @@ credset(pp = postprobs,
        thr = thresh 
        ) 
 
-cs <- credset(pp = postprobs,
+credibleset <- credset(pp = postprobs,
               CV = iCV,
              thr = thresh 
        ) 
 
-cs
+credibleset
 ```
 
-Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9008649% and contains the true causal variant. In literature, authors would commonly report that they have found a 90% credible set containing 114 variants, which they are 90% confident contains the true causal variant. 
+Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9008649% and contains the true causal variant. In literature, authors would commonly report that they have found a 90% credible set containing 114 variants, which they are at least 90% confident contains the true causal variant. 
 
 ----
   
 ## Corrected coverage estimate
 
 
-Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability of the causal variant using this fancy new package. The only parameters we need to supply to the `corrcov` function are `z0` (marginal $Z$ scores), `f` (minor allele frequencies), `N0` (number of controls), `N1` (number of cases), `Sigma` (SNP correlation matrix) and the threshold of the credible set. The prior on the standard deviation of the effect size is an optional parameter, it's default value of $0.2$ is used here.
+Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability of the causal variant using this fancy new package. The only parameters we need to supply to the `corrcov` function are `z0` (marginal $Z$ scores), `f` (minor allele frequencies), `N0` (number of controls), `N1` (number of cases), `Sigma` (SNP correlation matrix) and the threshold used to derive the credible set.
 
-Side note: The `corrcov_bhat` function can be used if instead of marginal $Z$-scores and mafs, the user has the effect size coefficients (`bhat`) and their standard errors (`sqrt(V)`).
+Side note: If the estimated effect size coefficients (`bhat`) and their standard errors (`sqrt(V)`) are known instead of $Z$-scores and minor allele frequencies, then the `corrcov_bhat` function can be used instead.
 
 ```{r cache = TRUE}
 LD <- cor2(haps) # correlation between SNPs
@@ -143,7 +143,7 @@ corrected_cov_estimate <- corrcov(z0, f = MAF, N0, N1, Sigma = LD, thr = thresh)
 ```
 
 ```{r echo = FALSE, cache = TRUE}
-data.frame("Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = cs$claimed.cov, "Threshold" = thresh)
+data.frame("Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)
 ```
 
 In this example, the 90% credible set may in actual fact have nearer to 97.4% coverage of the causal variant in the credible set. 
@@ -152,7 +152,7 @@ In this example, the 90% credible set may in actual fact have nearer to 97.4% co
 
 ## Compare with estimate of 'true' coverage
 
-For the purpose of this vignette and to see the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant. 
+For the purpose of this vignette and to see the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant. This can obviously not be calculated in the 'real-world' setting, as the causal variant is unknown.  
 
 ```{r}
 z0.tmp <- simulated_z_score(N0=5000, # number of controls
@@ -164,23 +164,23 @@ z0.tmp <- simulated_z_score(N0=5000, # number of controls
                             nrep = 5000
 )
 
-pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta) # find pps
-cs <- apply(pps, 1, credset, CV = iCV, thr = thresh) %>% data.table:::rbindlist() # form cred sets
-true.cov.est <- mean(cs$covered) # average covered column 
+pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta) # find pps from a matrix of simulations
+cs <- apply(pps, 1, function(x) credset(x, CV = iCV, thr = thresh)$cov)
+true.cov.est <- mean(cs)
 true.cov.est
 ```
 
 The estimated empirical coverage is found to be approximately 97.6%, so our estimate of ~97.4% is very accurate - far more so than the standard 'claimed coverage' of ~90.09%.
 
 ```{r echo = FALSE, cache = TRUE}
-data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = cs$claimed.cov, "Threshold" = thresh)[1,]
+data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)[1,]
 ```
 
 ----
 
 ## So what?
 
-This vignette has shown readers how to use the `corrcoverage` package to obtain more accurate coverage estimates of the causal variant in the credible set. Obtaining accurate coverage estimates will allow researchers to adjust their credible set to achieve the true desired coverage - for example narrowing down a 95% credible set of 10 variants to just 5 variants. Moreover, it will allow for more efficient expenditure of resources in the follow-up process of annotating the variants in the credible set to determine the implicated genes and pathways, helping to untangle the complex relationship between genetic variants and disease.
+This vignette has shown readers how to use the `corrcoverage` package to obtain more accurate coverage estimates of the causal variant in the credible set. Obtaining accurate coverage estimates will allow researchers to adjust their credible set to achieve the true desired coverage - for example narrowing down a 95% credible set of 10 variants to just 5 variants. Moreover, reporting an accurate coverage estimate of the causal variant in a credible set will allow for more efficient allocation and expenditure of resources in the laborious follow-up wet lab analyses of the variants in the credible set. Altogether, this procedure will improve the efficiency of determining the genes and pathways which play a role in human disease, ultimately helping to untangle the complex relationship between genetic variants and disease.
 
 ---
 

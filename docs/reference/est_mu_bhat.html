@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • corrcoverage</title>
+<title>Estimate the true effect at the causal variant — est_mu_bhat • corrcoverage</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,10 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Estimate the true effect at the causal variant — est_mu_bhat" />
+
+<meta property="og:description" content="Estimate the true effect at the causal variant" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -47,7 +50,7 @@
   </head>
 
   <body>
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -106,18 +109,60 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Estimate the true effect at the causal variant</h1>
+    
+    <div class="hidden name"><code>est_mu_bhat.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <ul>
-        <li><a href="New-Credible-Set.html">New Credible Set: `corrected_cs`</a></li>
-        <li><a href="my-vignette.html">Correcting the Coverage of Credible Sets: `corrcov`</a></li>
-      </ul>
+    <div class="ref-description">
+    
+    <p>Estimate the true effect at the causal variant</p>
+    
     </div>
+
+    <pre class="usage"><span class='fu'>est_mu_bhat</span>(<span class='no'>bhat</span>, <span class='no'>V</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>bhat</th>
+      <td><p>Vector of estimated effect sizes</p></td>
+    </tr>
+    <tr>
+      <th>V</th>
+      <td><p>Prior variance for estimated effect sizes</p></td>
+    </tr>
+    <tr>
+      <th>N0</th>
+      <td><p>Number of controls</p></td>
+    </tr>
+    <tr>
+      <th>N1</th>
+      <td><p>Number of cases</p></td>
+    </tr>
+    <tr>
+      <th>W</th>
+      <td><p>Prior for the standard deviation of the effect size parameter beta</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Estimate of the true effect at the causal variant</p>
+    
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
+
+    <h2>Author</h2>
+    <p>Anna Hutchinson</p>
   </div>
 </div>
 

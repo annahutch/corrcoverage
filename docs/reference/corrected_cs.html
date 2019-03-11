@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • corrcoverage</title>
+<title>corrected_cs — corrected_cs • corrcoverage</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,10 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="corrected_cs — corrected_cs" />
+
+<meta property="og:description" content="corrected_cs" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -47,7 +50,7 @@
   </head>
 
   <body>
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -106,18 +109,75 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>corrected_cs</h1>
+    
+    <div class="hidden name"><code>corrected_cs.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <ul>
-        <li><a href="New-Credible-Set.html">New Credible Set: `corrected_cs`</a></li>
-        <li><a href="my-vignette.html">Correcting the Coverage of Credible Sets: `corrcov`</a></li>
-      </ul>
+    <div class="ref-description">
+    
+    <p>corrected_cs</p>
+    
     </div>
+
+    <pre class="usage"><span class='fu'>corrected_cs</span>(<span class='no'>z</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>lower</span>, <span class='no'>upper</span>, <span class='no'>desired.cov</span>, <span class='kw'>acc</span> <span class='kw'>=</span> <span class='fl'>5e-04</span>,
+  <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>20</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>z</th>
+      <td><p>Z-scores</p></td>
+    </tr>
+    <tr>
+      <th>f</th>
+      <td><p>Minor allele frequencies</p></td>
+    </tr>
+    <tr>
+      <th>N0</th>
+      <td><p>Number of controls</p></td>
+    </tr>
+    <tr>
+      <th>N1</th>
+      <td><p>Number of cases</p></td>
+    </tr>
+    <tr>
+      <th>lower</th>
+      <td><p>Lower threshold</p></td>
+    </tr>
+    <tr>
+      <th>upper</th>
+      <td><p>Upper threshold</p></td>
+    </tr>
+    <tr>
+      <th>desired.cov</th>
+      <td><p>The desired coverage of the causal variant in the credible set</p></td>
+    </tr>
+    <tr>
+      <th>acc</th>
+      <td><p>Accuracy of corrected coverage to desired coverage (default = 0.0005)</p></td>
+    </tr>
+    <tr>
+      <th>max.iter</th>
+      <td><p>Maximum iterations (default = 20)</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>list of variants in credible set, required threshold, the corrected coverage and the size of the credible set</p>
+    
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+          </ul>
+
   </div>
 </div>
 

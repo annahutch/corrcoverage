@@ -1,5 +1,5 @@
 ---
-title: "Correcting the Coverage of Credible Sets"
+title: "Correcting the Coverage of Credible Sets: `corrcov`"
 author: "Anna Hutchinson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -111,11 +111,6 @@ The `credset` function reports the variants in the credible set, the claimed cov
 
 ```{r warning=FALSE, error=FALSE}
 thresh <- 0.9
-
-credset(pp = postprobs,
-      # CV = iCV,
-       thr = thresh 
-       ) 
 
 credibleset <- credset(pp = postprobs,
               CV = iCV,

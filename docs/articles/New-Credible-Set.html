@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>New Credible Set • corrcoverage</title>
+<title>New Credible Set: <code>corrected_cs</code> • corrcoverage</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="New Credible Set">
+<script src="../pkgdown.js"></script><meta property="og:title" content="New Credible Set: &lt;code&gt;corrected_cs&lt;/code&gt;">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -73,7 +73,8 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>New Credible Set</h1>
+      <h1>New Credible Set: <code>corrected_cs</code>
+</h1>
                         <h4 class="author">Anna Hutchinson</h4>
             
       
@@ -87,7 +88,10 @@
 <hr>
 <p>This vignette will show users how the <code>corrcoverage</code> package can be used to obtain a new credible set of variants that contains the true causal variant with some specified desired coverage value whilst containing as few variants as possible.</p>
 <hr>
-<p>As before, let’s begin by simulating some GWAS data using the <code>simGWAS</code> package.</p>
+<div id="simulate-gwas-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#simulate-gwas-data" class="anchor"></a>Simulate GWAS data</h2>
+<p>As in the original vignette, let’s begin by simulating some GWAS data using the <code>simGWAS</code> package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simGWAS)
 
 <span class="co"># Simulate reference haplotypes</span>
@@ -107,66 +111,89 @@ freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span cla
 <pre><code>## [1] 1</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MAF &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(freq[,snps]<span class="op">-</span><span class="dv">1</span>) <span class="co"># minor allele frequencies</span>
 CV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(snps[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(haps)<span class="op">&gt;</span><span class="fl">0.1</span>)],<span class="dv">1</span>)
-iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV) <span class="co"># index of cv</span></code></pre></div>
+iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV) <span class="co"># index of cv</span>
+LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps) <span class="co"># correlation matrix</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OR &lt;-<span class="st"> </span><span class="fl">1.1</span> <span class="co"># odds ratios</span>
-z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span>
-              <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span>
+z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">10000</span>, <span class="co"># number of controls</span>
+              <span class="dt">N1=</span><span class="dv">10000</span>, <span class="co"># number of cases</span>
               <span class="dt">snps=</span>snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span>
               <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span>
               <span class="dt">gamma.W=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span>
               <span class="dt">freq=</span>freq <span class="co"># reference haplotypes</span>
               )
-N0 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of controls</span>
-N1 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of cases</span>
-thresh &lt;-<span class="st"> </span><span class="fl">0.9</span> <span class="co"># threshold</span>
-
-var &lt;-<span class="st"> </span>coloc<span class="op">:::</span><span class="kw"><a href="../reference/Var.data.cc.html">Var.data.cc</a></span>(<span class="dt">f =</span> MAF, <span class="dt">N =</span> N1<span class="op">+</span>N0, <span class="dt">s =</span> N1<span class="op">/</span>(N0<span class="op">+</span>N1)) <span class="co"># variance of estimated effect size</span>
-
-postprobs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.html">ppfunc</a></span>(<span class="dt">z =</span> z0, <span class="dt">V =</span> var) <span class="co"># pp0</span>
-LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps) <span class="co"># correlation matrix</span></code></pre></div>
-<hr>
+N0 &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co"># number of controls</span>
+N1 &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co"># number of cases</span></code></pre></div>
+<p>To calculate <span class="math inline">\(V\)</span>, the prior variance for the estimated effect size, we use <code><a href="https://www.rdocumentation.org/packages/coloc/topics/Var.data.cc">coloc::Var.data.cc</a></code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">varbeta &lt;-<span class="st"> </span>coloc<span class="op">:::</span><span class="kw"><a href="../reference/Var.data.cc.html">Var.data.cc</a></span>(<span class="dt">f =</span> MAF, <span class="dt">N =</span> N1<span class="op">+</span>N0, <span class="dt">s =</span> N1<span class="op">/</span>(N0<span class="op">+</span>N1)) <span class="co"># variance of estimated effect size</span></code></pre></div>
+<p>We can then use the <code>ppfunc</code> function to calculate the posterior probabilities of causality for each variant.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">postprobs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.html">ppfunc</a></span>(<span class="dt">z =</span> z0, <span class="dt">V =</span> varbeta) </code></pre></div>
 <p>We use the <code>est_mu</code> function to obtain an estimate of the true effect at the causal variant.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">muhat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/est_mu.html">est_mu</a></span>(z0, MAF, N0, N1)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">muhat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/est_mu.html">est_mu</a></span>(z0, MAF, N0, N1)
+muhat</code></pre></div>
+<pre><code>## [1] 2.78295</code></pre>
 <hr>
-<p>To speed things up, we simulate a list of matrices of posterior probabilities (one simulation per row), where each list element considers a different SNP as causal. For example, row 1 in the 2nd matrix/ list element is a posterior probability system simulated by considering SNP 2 as causal. The function <code>zj_pp</code> does this.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nsnps =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(postprobs)
-temp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/diag">diag</a></span>(<span class="dt">x =</span> muhat, <span class="dt">nrow =</span> nsnps, <span class="dt">ncol =</span> nsnps)
-zj &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(c, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(temp, <span class="dv">1</span>, list))  <span class="co"># nsnp zj vectors for each snp considered causal</span>
-
-<span class="co"># simulate pp systems</span>
-pps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mapply">mapply</a></span>(zj_pp, zj, <span class="dt">V =</span> var , <span class="dt">MoreArgs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">nrep =</span> <span class="dv">1000</span>, <span class="dt">Sigma =</span> LD), <span class="dt">SIMPLIFY =</span> <span class="ot">FALSE</span>)</code></pre></div>
+</div>
+<div id="corrected-coverage-estimate" class="section level2">
+<h2 class="hasAnchor">
+<a href="#corrected-coverage-estimate" class="anchor"></a>Corrected Coverage Estimate</h2>
+<p>The <code>corrected_cov</code> function is used to find the corrected coverage of a credible set with specified threshold, say 0.8.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">thr =<span class="st"> </span><span class="fl">0.8</span>
+corrcov &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cov.html">corrected_cov</a></span>(<span class="dt">mu =</span> muhat, <span class="dt">V =</span> varbeta, <span class="dt">Sigma =</span> LD, <span class="dt">pp0 =</span> postprobs, <span class="dt">thresh =</span> thr, <span class="dt">nrep =</span> <span class="dv">1000</span>)
+cs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">thr =</span> thr)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">claimed.cov =</span> cs<span class="op">$</span>claimed.cov, <span class="dt">corr.cov =</span>  corrcov, <span class="dt">nvar =</span> cs<span class="op">$</span>nvar)</code></pre></div>
+<pre><code>##   claimed.cov corr.cov nvar
+## 1   0.8010128 0.946319   30</code></pre>
+<p>We find that, using a threshold of 0.8, the claimed coverage (the size of the credible set) is 0.801, whilst the corrected coverage estimate is 0.946, suggesting we can afford to be ‘more confident’ that we have captured the causal variant in our credible set.</p>
 <hr>
-<p>The <code>quick_corrcov_cs</code> function can now be used to quickly find the credible set and the corrected coverage estimate of this credible set using a threshold defined by the user.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/quick_corrcov_cs.html">quick_corrcov_cs</a></span>(<span class="fl">0.8</span>, <span class="dt">simulated.pps =</span> pps, <span class="dt">pp =</span> postprobs)</code></pre></div>
+</div>
+<div id="obtain-a-new-credible-set" class="section level2">
+<h2 class="hasAnchor">
+<a href="#obtain-a-new-credible-set" class="anchor"></a>Obtain a New Credible Set</h2>
+<p>Our results suggest that we can remove some variants from the credible set, whilst still achieving the desired coverage of 0.8.</p>
+<p>The <code>corrected_cs</code> function uses GWAS summary statistics and some user-defined parameters to find the smallest threshold such that the corrected coverage is above the desired coverage, and uses this threshold to report this new credible set.</p>
+<p>The function requires the <span class="math inline">\(Z\)</span>-scores (<code>z</code>), the minor allele frequencies (<code>f</code>), the control and case sample sizes (<code>N0</code> and <code>N1</code> respectively), some lower threshold value (<code>lower</code>), some upper threshold value (<code>upper</code>) and the desired coverage (<code>desired.cov</code>).</p>
+<p>The function uses the <a href="https://en.wikipedia.org/wiki/Root-finding_algorithm#Bisection_method">bisection root finding method</a> to find the smallest threshold such that the corrected coverage is larger than the desired coverage. The accuracy parameter is optional (default value set to 0.0005) and controls how much greater than the desired coverage you are happy for the corrected coverage value to lie.</p>
+<p>The function reports the threshold values tested and their corresponding corrected coverage value. The maximum number of iterations for the bisecting root finding algorithm is an optional parameter, with default value 20.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/corrected_cs.html">corrected_cs</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">lower =</span> <span class="fl">0.5</span>, <span class="dt">upper =</span> <span class="fl">0.9</span>, <span class="dt">desired.cov =</span> <span class="fl">0.8</span>)</code></pre></div>
+<pre><code>## [1] "thr:  0.7 , cov:  0.910328579500856"
+## [1] "thr:  0.6 , cov:  0.856032116643212"
+## [1] "thr:  0.55 , cov:  0.823014540979299"
+## [1] "thr:  0.525 , cov:  0.804533822811525"
+## [1] "thr:  0.5125 , cov:  0.796459851726308"
+## [1] "thr:  0.51875 , cov:  0.800185732580964"</code></pre>
 <pre><code>## $credset
-##   [1] "s43"  "s49"  "s33"  "s25"  "s55"  "s26"  "s136" "s45"  "s83"  "s197"
-##  [11] "s160" "s39"  "s23"  "s195" "s73"  "s20"  "s19"  "s184" "s18"  "s161"
-##  [21] "s8"   "s164" "s34"  "s196" "s92"  "s44"  "s91"  "s200" "s17"  "s98" 
-##  [31] "s1"   "s5"   "s70"  "s114" "s158" "s183" "s30"  "s16"  "s170" "s42" 
-##  [41] "s129" "s31"  "s169" "s157" "s186" "s38"  "s52"  "s78"  "s165" "s167"
-##  [51] "s85"  "s99"  "s21"  "s139" "s96"  "s105" "s71"  "s162" "s32"  "s66" 
-##  [61] "s187" "s194" "s53"  "s54"  "s4"   "s168" "s109" "s198" "s179" "s48" 
-##  [71] "s130" "s175" "s159" "s12"  "s51"  "s142" "s40"  "s166" "s131" "s144"
-##  [81] "s119" "s59"  "s57"  "s190" "s28"  "s116" "s47"  "s74"  "s151" "s35" 
-##  [91] "s156" "s135" "s61"  "s138" "s134" "s3"   "s118" "s81"  "s171" "s140"
-## [101] "s68"  "s199" "s115" "s77"  "s141" "s108" "s133" "s15"  "s180" "s41" 
-## [111] "s90"  "s149"
+## [1] "s197" "s84"  "s16"  "s47"  "s198"
+## 
+## $req.thr
+## [1] 0.51875
 ## 
 ## $corr.cov
-## [1] 0.8794729
-## 
-## $thr
-## [1] 0.8
+## [1] 0.8001857
 ## 
 ## $size
-##      s149 
-## 0.8022306</code></pre>
+##     s198 
+## 0.542569</code></pre>
+<p>The output is a credible set containing 5 variants, that has a corrected coverage estimate of 0.8. This suggests that if the user required a credible set that has 80% coverage of the causal variant, then rather than include the top 30 variants with highest posterior probabilities (as the standard Bayesian fine-mapping protocol would suggest), we actually only need the top 5 variants with the highest posterior probabilities.</p>
 <hr>
-<p>The <code>XXX</code> function can be used to find the smallest credible set that has corrected coverage as close to the user specified desired coverage as possible (specify accuracy…)</p>
-<p>STILL WORKING ON THIS</p>
+<p>This vignette has shown 2 things:</p>
+<ol style="list-style-type: decimal">
+<li><p>The 80% credible set has nearer to 94.6% coverage of the causal variant.</p></li>
+<li><p>If we did indeed want a credible set with 80% coverage of the causal variant, then we can use a threshold of 0.52539 in the Bayesian approach to fine-mapping, resulting in a credible set containing only 5 variants.</p></li>
+</ol>
+<p>We have improved the resolution of the fine-mapping experiment significantly, reducing the number of variants in the 80% credible set from 30 variants to just 5 variants, potentially saving time and resources in the follow-up analyses of these variants.</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+        <div id="tocnav">
+      <h2 class="hasAnchor">
+<a href="#tocnav" class="anchor"></a>Contents</h2>
+      <ul class="nav nav-pills nav-stacked">
+<li><a href="#simulate-gwas-data">Simulate GWAS data</a></li>
+      <li><a href="#corrected-coverage-estimate">Corrected Coverage Estimate</a></li>
+      <li><a href="#obtain-a-new-credible-set">Obtain a New Credible Set</a></li>
+      </ul>
+</div>
       </div>
 
 </div>

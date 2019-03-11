@@ -1,5 +1,5 @@
 ---
-title: "New Credible Set"
+title: "New Credible Set: `corrected_cs`"
 author: "Anna Hutchinson"
 output: rmarkdown::html_vignette
 vignette: >
@@ -10,6 +10,7 @@ vignette: >
 
 ```{r setup, set.seed = 2, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+set.seed(2)
 library(corrcoverage)
 ```
 
@@ -19,7 +20,9 @@ This vignette will show users how the `corrcoverage` package can be used to obta
 
 ---
 
-As before, let's begin by simulating some GWAS data using the `simGWAS` package.
+## Simulate GWAS data
+
+As in the original vignette, let's begin by simulating some GWAS data using the `simGWAS` package.
 
 ```{r}
 library(simGWAS)
@@ -41,58 +44,141 @@ sum(freq$Probability)
 MAF <- colMeans(freq[,snps]-1) # minor allele frequencies
 CV <- sample(snps[which(colMeans(haps)>0.1)],1)
 iCV <- sub("s", "", CV) # index of cv
+LD <- cor2(haps) # correlation matrix
 ```
 
 ```{r}
 OR <- 1.1 # odds ratios
-z0 <- simulated_z_score(N0=5000, # number of controls
-              N1=5000, # number of cases
+z0 <- simulated_z_score(N0=10000, # number of controls
+              N1=10000, # number of cases
               snps=snps, # column names in freq of SNPs for which Z scores should be generated
               W=CV, # causal variants, subset of snps
               gamma.W=log(OR), # log odds ratios
               freq=freq # reference haplotypes
               )
-N0 <- 5000 # number of controls
-N1 <- 5000 # number of cases
-thresh <- 0.9 # threshold
-
-var <- coloc:::Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of estimated effect size
-
-postprobs <- ppfunc(z = z0, V = var) # pp0
-LD <- cor2(haps) # correlation matrix
+N0 <- 10000 # number of controls
+N1 <- 10000 # number of cases
 ```
 
----
+To calculate $V$, the prior variance for the estimated effect size, we use `coloc::Var.data.cc`.
+
+```{r}
+varbeta <- coloc:::Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of estimated effect size
+```
+
+We can then use the `ppfunc` function to calculate the posterior probabilities of causality for each variant.
+
+```{r}
+postprobs <- ppfunc(z = z0, V = varbeta) 
+```
 
 We use the `est_mu` function to obtain an estimate of the true effect at the causal variant.
 
 ```{r}
 muhat <- est_mu(z0, MAF, N0, N1)
+muhat
 ```
 
 ---
 
-To speed things up, we simulate a list of matrices of posterior probabilities (one simulation per row), where each list element considers a different SNP as causal. For example, row 1 in the 2nd matrix/ list element is a posterior probability system simulated by considering SNP 2 as causal. The function `zj_pp` does this.
+## Corrected Coverage Estimate
+
+The `corrected_cov` function is used to find the corrected coverage of a credible set with specified threshold, say 0.8.
 
 ```{r}
-nsnps = length(postprobs)
-temp <- diag(x = muhat, nrow = nsnps, ncol = nsnps)
-zj <- do.call(c, apply(temp, 1, list))  # nsnp zj vectors for each snp considered causal
-
-# simulate pp systems
-pps <- mapply(zj_pp, zj, V = var , MoreArgs = list(nrep = 1000, Sigma = LD), SIMPLIFY = FALSE)
+thr = 0.8
+corrcov <- corrected_cov(mu = muhat, V = varbeta, Sigma = LD, pp0 = postprobs, thresh = thr, nrep = 1000)
+cs <- credset(pp = postprobs, thr = thr)
+data.frame(claimed.cov = cs$claimed.cov, corr.cov =  corrcov, nvar = cs$nvar)
 ```
+
+We find that, using a threshold of 0.8, the claimed coverage (the size of the credible set) is 0.801, whilst the corrected coverage estimate is 0.946, suggesting we can afford to be 'more confident' that we have captured the causal variant in our credible set. 
 
 ---
 
-The `quick_corrcov_cs` function can now be used to quickly find the credible set and the corrected coverage estimate of this credible set using a threshold defined by the user. 
+## Obtain a New Credible Set
+
+Our results suggest that we can remove some variants from the credible set, whilst still achieving the desired coverage of 0.8.
+
+The `corrected_cs` function uses GWAS summary statistics and some user-defined parameters to find the smallest threshold such that the corrected coverage is above the desired coverage, and uses this threshold to report this new credible set.
+
+The function requires the $Z$-scores (`z`), the minor allele frequencies (`f`), the control and case sample sizes (`N0` and `N1` respectively), some lower threshold value (`lower`), some upper threshold value (`upper`) and the desired coverage (`desired.cov`). 
+
+The function uses the [bisection root finding method](https://en.wikipedia.org/wiki/Root-finding_algorithm#Bisection_method) to find the smallest threshold such that the corrected coverage is larger than the desired coverage. The accuracy parameter is optional (default value set to 0.0005) and controls how much greater than the desired coverage you are happy for the corrected coverage value to lie. 
+
+The function reports the threshold values tested and their corresponding corrected coverage value. The maximum number of iterations for the bisecting root finding algorithm is an optional parameter, with default value 20. 
+
+```{r echo=FALSE}
+corrected_cs <- function(z, f, N0, N1, lower, upper, desired.cov, acc = 0.0005, max.iter = 20){
+  # lower <- 2*desired.cov - 1
+  # upper <- min(1,desired.cov + 0.05)
+  s = N1/(N0+N1) # proportion of cases
+  V = 1/(2 * (N0+N1) * f * (1 - f) * s * (1 - s))
+  pp <- ppfunc(z, V = V) # pp of system in question
+  muhat = est_mu(z, f, N0, N1)
+  nsnps = length(pp)
+  temp <- diag(x = muhat, nrow = nsnps, ncol = nsnps)
+  zj <- do.call(c, apply(temp, 1, list))  # nsnp zj vectors for each snp considered causal
+
+  # simulate pp systems
+  pps <- mapply(zj_pp, zj, V = V, MoreArgs = list(nrep = 1000, Sigma = LD), SIMPLIFY = FALSE)
+
+  n_pps <- length(pps)
+  args <- 1:length(pp)
+
+  f <- function(thr){ # finds the difference between corrcov and desired.cov
+    d5 <- lapply(1:n_pps, function(x) {
+      credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
+    })
+    prop_cov <- lapply(d5, prop_cov) %>% unlist()
+    sum(prop_cov * pp) - desired.cov
+  }
+
+  # initalize
+  N=1
+  fa = f(lower)
+  fb = f(upper)
+
+  if (fa * fb > 0) {
+    stop("No root in range, increase window")
+  } else {
+    fc = min(fa, fb)
+    while (N < max.iter & !dplyr::between(fc, 0, acc)) {
+      c = lower + (upper-lower)/2
+      fc = f(c)
+      print(paste("thr: ", c, ", cov: ", desired.cov + fc))
+
+      if (fa * fc < 0) {
+        upper = c
+        fb = fc
+      } else if (f(upper) * fc < 0) {
+        lower = c
+        fa = fc
+      }
+      N = N + 1
+    }
+    # df <- data.frame(req.thr = c, corr.cov = desired.cov + fc)
+  }
+  o <- order(pp, decreasing = TRUE)  # order index for true pp
+  cumpp <- cumsum(pp[o])  # cum sums of ordered pps
+  wh <- which(cumpp > c)[1]  # how many needed to exceed thr
+  list(credset = names(pp)[o[1:wh]], req.thr = c, corr.cov = desired.cov + fc, size = cumpp[wh])
+}
+```
 
 ```{r}
-quick_corrcov_cs(0.8, simulated.pps = pps, pp = postprobs)
+corrected_cs(z = z0, f = MAF, N0, N1, lower = 0.5, upper = 0.9, desired.cov = 0.8)
 ```
+
+The output is a credible set containing 5 variants, that has a corrected coverage estimate of 0.8. This suggests that if the user required a credible set that has 80% coverage of the causal variant, then rather than include the top 30 variants with highest posterior probabilities (as the standard Bayesian fine-mapping protocol would suggest), we actually only need the top 5 variants with the highest posterior probabilities. 
 
 ---
 
-The `XXX` function can be used to find the smallest credible set that has corrected coverage as close to the user specified desired coverage as possible (specify accuracy...)
+This vignette has shown 2 things:
 
-STILL WORKING ON THIS
+1. The 80% credible set has nearer to 94.6% coverage of the causal variant.
+
+2. If we did indeed want a credible set with 80% coverage of the causal variant, then we can use a threshold of 0.52539 in the Bayesian approach to fine-mapping, resulting in a credible set containing only 5 variants. 
+
+We have improved the resolution of the fine-mapping experiment significantly, reducing the number of variants in the 80% credible set from 30 variants to just 5 variants, potentially saving time and resources in the follow-up analyses of these variants. 
+

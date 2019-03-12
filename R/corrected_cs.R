@@ -8,12 +8,12 @@
 #' @param lower Lower threshold
 #' @param upper Upper threshold
 #' @param desired.cov The desired coverage of the causal variant in the credible set
-#' @param acc Accuracy of corrected coverage to desired coverage (default = 0.0005)
+#' @param acc Accuracy of corrected coverage to desired coverage (default = 0.005)
 #' @param max.iter Maximum iterations (default = 20)
 #'
 #' @return list of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 #' @export
-corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0.0005, max.iter = 20){
+corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0.005, max.iter = 20){
   # lower <- 2*desired.cov - 1
   # upper <- min(1,desired.cov + 0.05)
   s = N1/(N0+N1) # proportion of cases
@@ -60,7 +60,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
     stop("No root in range, increase window")
   } else {
     fc = min(fa, fb)
-    while (N < max.iter & !dplyr::between(fc, 0, acc)) {
+    while (N <= max.iter & !dplyr::between(fc, 0, acc)) {
       c = lower + (upper-lower)/2
       fc = f(c)
       print(paste("thr: ", c, ", cov: ", desired.cov + fc))
@@ -92,12 +92,12 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
 #' @param lower Lower threshold
 #' @param upper Upper threshold
 #' @param desired.cov The desired coverage of the causal variant in the credible set
-#' @param acc Accuracy of corrected coverage to desired coverage (default = 0.0005)
+#' @param acc Accuracy of corrected coverage to desired coverage (default = 0.005)
 #' @param max.iter Maximum iterations (default = 20)
 #'
 #' @return list of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 #' @export
-corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov, acc = 0.0005, max.iter = 20){
+corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov, acc = 0.005, max.iter = 20){
   # lower <- 2*desired.cov - 1
   # upper <- min(1,desired.cov + 0.05)
   z = bhat/sqrt(V)
@@ -143,7 +143,7 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov,
     stop("No root in range, increase window")
   } else {
     fc = min(fa, fb)
-    while (N < max.iter & !dplyr::between(fc, 0, acc)) {
+    while (N <= max.iter & !dplyr::between(fc, 0, acc)) {
       c = lower + (upper-lower)/2
       fc = f(c)
       print(paste("thr: ", c, ", cov: ", desired.cov + fc))

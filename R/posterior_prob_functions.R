@@ -5,19 +5,19 @@
 #' @title approx.bf.p
 #' @param pvals p-values
 #' @param f Minor allele frequencies
-#' @param type Type of experiment ("quant" or "cc")
+#' @param type Type of experiment ('quant' or 'cc')
 #' @param N Total sample size
-#' @param s Proportion of cases (N1/N0+N1), ignored if type=="quant"
+#' @param s Proportion of cases (N1/N0+N1), ignored if type=='quant'
 #' @param W Prior for the standard deviation of the effect size parameter beta (W=0.2 default)
 #' @return data.frame containing lABF and intermediate calculations
 #' @export
-approx.bf.p <- function(pvals, f, type, N, s, W = 0.2){
-  V = 1/(2 * N * f * (1 - f) * s * (1 - s))
-  z = stats::qnorm(0.5 * pvals, lower.tail = FALSE)
-  r = W^2/(W^2 + V)
-  lABF = 0.5 * (log(1 - r) + (r * z^2))
-  ret <- data.frame(V, z, r, lABF)
-  return(ret)
+approx.bf.p <- function(pvals, f, type, N, s, W = 0.2) {
+    V = 1/(2 * N * f * (1 - f) * s * (1 - s))
+    z = stats::qnorm(0.5 * pvals, lower.tail = FALSE)
+    r = W^2/(W^2 + V)
+    lABF = 0.5 * (log(1 - r) + (r * z^2))
+    ret <- data.frame(V, z, r, lABF)
+    return(ret)
 }
 
 #' Posterior probabilities of causality from p-values
@@ -26,25 +26,25 @@ approx.bf.p <- function(pvals, f, type, N, s, W = 0.2){
 #' @title pvals_pp
 #' @param pvals p-values of SNPs
 #' @param f Minor allele frequencies
-#' @param type Type of experiment ("quant" or "cc")
+#' @param type Type of experiment ('quant' or 'cc')
 #' @param N Total sample size
-#' @param s Proportion of cases (N1/N0+N1), ignored if type=="quant"
+#' @param s Proportion of cases (N1/N0+N1), ignored if type=='quant'
 #' @param W Prior for the standard deviation of the effect size parameter, beta (W = 0.2 default)
 #' @return Posterior probabilities of null model (no genetic effect) and causality for each SNP
 #' @export
 #' @author Anna Hutchinson
-pvals_pp <- function(pvals, f, type, N, s, W = 0.2){
-  V = 1/(2 * N * f * (1 - f) * s * (1 - s))
-  z = stats::qnorm(0.5 * pvals, lower.tail = FALSE)
-  r = W^2/(W^2 + V)
-  lABF = 0.5 * (log(1 - r) + (r * z^2))
-  p1 <- 1e-04 # hard coded
-  nsnps <- length(lABF)
-  prior <- c(1-nsnps*p1,rep(p1,nsnps))
-  tmp <- c(1,lABF) # add on extra for null model
-  my.denom <- coloc:::logsum(tmp + prior)
-  tmp1 <- exp(tmp+prior - my.denom)
-  tmp1/sum(tmp1)
+pvals_pp <- function(pvals, f, type, N, s, W = 0.2) {
+    V = 1/(2 * N * f * (1 - f) * s * (1 - s))
+    z = stats::qnorm(0.5 * pvals, lower.tail = FALSE)
+    r = W^2/(W^2 + V)
+    lABF = 0.5 * (log(1 - r) + (r * z^2))
+    p1 <- 1e-04  # hard coded
+    nsnps <- length(lABF)
+    prior <- c(1 - nsnps * p1, rep(p1, nsnps))
+    tmp <- c(1, lABF)  # add on extra for null model
+    my.denom <- coloc:::logsum(tmp + prior)
+    tmp1 <- exp(tmp + prior - my.denom)
+    tmp1/sum(tmp1)
 }
 
 #' Posterior probabilities of causality from marginal Z-scores with prior SD as a parameter
@@ -53,24 +53,24 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2){
 #' @title z0_pp
 #' @param z Marginal Z-scores of SNPs
 #' @param f Minor allele frequencies
-#' @param type Type of experiment ("quant" or "cc")
+#' @param type Type of experiment ('quant' or 'cc')
 #' @param N Total sample size
-#' @param s Proportion of cases (N1/N0+N1), ignored if type=="quant"
+#' @param s Proportion of cases (N1/N0+N1), ignored if type=='quant'
 #' @param W Prior for the standard deviation of the effect size parameter beta
 #' @return Posterior probabilities of null model (no genetic effect) and causality for each SNP
 #' @export
 #' @author Anna Hutchinson
-z0_pp <- function(z, f, type, N, s, W = 0.2){
-  V = 1/(2 * N * f * (1 - f) * s * (1 - s))
-  r = W^2/(W^2 + V)
-  lABF = 0.5 * (log(1 - r) + (r * z^2))
-  p1 <- 1e-04 # hard coded
-  nsnps <- length(lABF)
-  prior <- c(1-nsnps*p1,rep(p1,nsnps))
-  tmp <- c(1,lABF) # add on extra for null model
-  my.denom <- coloc:::logsum(tmp + prior)
-  tmp1 <- exp(tmp+prior - my.denom)
-  tmp1 / sum(tmp1)
+z0_pp <- function(z, f, type, N, s, W = 0.2) {
+    V = 1/(2 * N * f * (1 - f) * s * (1 - s))
+    r = W^2/(W^2 + V)
+    lABF = 0.5 * (log(1 - r) + (r * z^2))
+    p1 <- 1e-04  # hard coded
+    nsnps <- length(lABF)
+    prior <- c(1 - nsnps * p1, rep(p1, nsnps))
+    tmp <- c(1, lABF)  # add on extra for null model
+    my.denom <- coloc:::logsum(tmp + prior)
+    tmp1 <- exp(tmp + prior - my.denom)
+    tmp1/sum(tmp1)
 }
 
 #' Posterior probabilities of causality from marginal Z-scores
@@ -85,11 +85,11 @@ z0_pp <- function(z, f, type, N, s, W = 0.2){
 #' @export
 #' @return Vector of posterior probabilities
 ppfunc <- function(z, V, W = 0.2) {
-  r = W^2/(W^2 + V)
-  bf = 0.5 * (log(1 - r) + (r * z^2))
-  denom = coloc:::logsum(bf)
-  pp.tmp = exp(bf - denom) # convert back from log scale
-  pp.tmp / sum(pp.tmp)
+    r = W^2/(W^2 + V)
+    bf = 0.5 * (log(1 - r) + (r * z^2))
+    denom = coloc:::logsum(bf)
+    pp.tmp = exp(bf - denom)  # convert back from log scale
+    pp.tmp/sum(pp.tmp)
 }
 
 ##' Bayesian finemapping analysis
@@ -117,7 +117,7 @@ ppfunc <- function(z, V, W = 0.2) {
 ##'
 ##' \item{varbeta}{variance of beta}
 ##'
-##' \item{type}{the type of data in dataset 1 - either "quant" or "cc" to denote quantitative or case-control}
+##' \item{type}{the type of data in dataset 1 - either 'quant' or 'cc' to denote quantitative or case-control}
 ##'
 ##' \item{s}{for a case control dataset, the proportion of samples in dataset 1 that are cases}
 ##'
@@ -130,9 +130,9 @@ ppfunc <- function(z, V, W = 0.2) {
 ##' Some of these items may be missing, but you must give
 ##' \itemize{
 ##' \item{always}{\code{type}}
-##' \item{if \code{type}=="cc"}{\code{s}}
-##' \item{if \code{type}=="quant" and \code{sdY} known}{\code{sdY}}
-##' \item{if \code{type}=="quant" and \code{sdY} unknown}{\code{beta}, \code{varbeta}, \code{N}, \code{MAF}}
+##' \item{if \code{type}=='cc'}{\code{s}}
+##' \item{if \code{type}=='quant' and \code{sdY} known}{\code{sdY}}
+##' \item{if \code{type}=='quant' and \code{sdY} unknown}{\code{beta}, \code{varbeta}, \code{N}, \code{MAF}}
 ##' and then either
 ##' \item{}{\code{pvalues}, \code{MAF}}
 ##' \item{}{\code{beta}, \code{varbeta}}
@@ -146,31 +146,26 @@ ppfunc <- function(z, V, W = 0.2) {
 ##' }
 ##' @author Chris Wallace
 ##' @export
-finemap.abf <- function(dataset, p1=1e-4) {
-
-  if(!is.list(dataset))
-    stop("dataset must be a list.")
-
-  df <- process.dataset(d=dataset, suffix="")
-  nsnps <- nrow(df)
-  dfnull <- df[1,]
-  for(nm in colnames(df))
-    dfnull[,nm] <- NA
-  dfnull[,"snp"] <- "null"
-  dfnull[,"lABF."] <- 1
-  df <- rbind(df,dfnull)
-  ## data.frame("V."=NA,
-  ##            z.=NA,
-  ##            r.=NA,
-  ##            lABF.=1,
-  ##            snp="null"))
-  df$prior <- c(rep(p1,nsnps),1-nsnps*p1)
-
-  ## add SNP.PP.H4 - post prob that each SNP is THE causal variant for a shared signal
-  my.denom.log.abf <- logsum(df$lABF + df$prior)
-  df$SNP.PP <- exp(df$lABF - my.denom.log.abf)
-
-  return(df)
+finemap.abf <- function(dataset, p1 = 1e-04) {
+    
+    if (!is.list(dataset)) 
+        stop("dataset must be a list.")
+    
+    df <- process.dataset(d = dataset, suffix = "")
+    nsnps <- nrow(df)
+    dfnull <- df[1, ]
+    for (nm in colnames(df)) dfnull[, nm] <- NA
+    dfnull[, "snp"] <- "null"
+    dfnull[, "lABF."] <- 1
+    df <- rbind(df, dfnull)
+    ## data.frame('V.'=NA, z.=NA, r.=NA, lABF.=1, snp='null'))
+    df$prior <- c(rep(p1, nsnps), 1 - nsnps * p1)
+    
+    ## add SNP.PP.H4 - post prob that each SNP is THE causal variant for a shared signal
+    my.denom.log.abf <- logsum(df$lABF + df$prior)
+    df$SNP.PP <- exp(df$lABF - my.denom.log.abf)
+    
+    return(df)
 }
 
 #' Posterior probabilities of causality from matrix of marginal Z-scores (1 simulation per row)
@@ -185,10 +180,10 @@ finemap.abf <- function(dataset, p1=1e-4) {
 #' @return Matrix of posterior probabilities of causality
 #' @export
 #' @author Chris Wallace
-ppfunc.mat <- function(zstar, V, W=0.2){
-  r = matrix(W^2/(W^2 + V), nrow=nrow(zstar), ncol=ncol(zstar), byrow=TRUE) # see wakefield paper
-  bf = 0.5 * (log(1 - r) + (r * zstar^2))
-  denom = apply(bf, 1, coloc:::logsum) # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
-  pp.tmp = exp(bf - matrix(denom, nrow=nrow(bf),ncol=ncol(bf))) # convert back from log scale
-  pp.tmp / rowSums(pp.tmp)
+ppfunc.mat <- function(zstar, V, W = 0.2) {
+    r = matrix(W^2/(W^2 + V), nrow = nrow(zstar), ncol = ncol(zstar), byrow = TRUE)  # see wakefield paper
+    bf = 0.5 * (log(1 - r) + (r * zstar^2))
+    denom = apply(bf, 1, coloc:::logsum)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+    pp.tmp = exp(bf - matrix(denom, nrow = nrow(bf), ncol = ncol(bf)))  # convert back from log scale
+    pp.tmp/rowSums(pp.tmp)
 }

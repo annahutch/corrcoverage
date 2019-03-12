@@ -32,9 +32,9 @@ credset <- function(pp, CV, thr) {
 #' @useDynLib corrcoverage
 #' @importFrom Rcpp sourceCpp
 #' @export
-credsetC <- function(pp, CV=iCV, thr=0.6) {
-  ret  <-  credsetmat(pp, CV, thr) ## list 1 = wh, 2 = size, 3=contained
-  data.frame(claimed.cov=ret[[2]], covered=ret[[3]], nvar=ret[[1]])
+credsetC <- function(pp, CV = iCV, thr = 0.6) {
+    ret <- credsetmat(pp, CV, thr)  ## list 1 = wh, 2 = size, 3=contained
+    data.frame(claimed.cov = ret[[2]], covered = ret[[3]], nvar = ret[[1]])
 }
 
 #' Obtain a corrected coverage estimate of the causal variant in the credible set
@@ -52,42 +52,42 @@ credsetC <- function(pp, CV=iCV, thr=0.6) {
 #' @export
 #' @return Corrected coverage estimate
 corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
-
-  nsnps = length(pp0)
-
-  # form joint z-score vectors
-  temp = diag(x = mu, nrow = nsnps, ncol = nsnps)
-  zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
-
-  # simulate ERR matrix
-  ERR = mvtnorm:::rmvnorm(nrep,rep(0,ncol(Sigma)),Sigma)
-  r = W^2/(W^2 + V)
-
-  pp_ERR = function(Zj, nrep, Sigma){
-    exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
-    zstar = mexp.zm+ERR
-    bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
-    pp.tmp = exp(bf - denom)  # convert back from log scale
-    pp.tmp / rowSums(pp.tmp)
-  }
-
-  # simulate pp systems
-  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
-
-  # consider different CV as causal in each list
-  n_pps <- length(pps)
-  args <- 1:nsnps
-
-  # obtain credible set for each simulation
-  d5 <- lapply(1:n_pps, function(x) {
-    credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
-  })
-
-  prop_cov <- lapply(d5, prop_cov) %>% unlist()
-
-  sum(prop_cov * pp0)
+    
+    nsnps = length(pp0)
+    
+    # form joint z-score vectors
+    temp = diag(x = mu, nrow = nsnps, ncol = nsnps)
+    zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+    
+    # simulate ERR matrix
+    ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+    r = W^2/(W^2 + V)
+    
+    pp_ERR = function(Zj, nrep, Sigma) {
+        exp.zm = Zj %*% Sigma
+        mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
+        zstar = mexp.zm + ERR
+        bf = 0.5 * (log(1 - r) + (r * zstar^2))
+        denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+        pp.tmp = exp(bf - denom)  # convert back from log scale
+        pp.tmp/rowSums(pp.tmp)
+    }
+    
+    # simulate pp systems
+    pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
+    
+    # consider different CV as causal in each list
+    n_pps <- length(pps)
+    args <- 1:nsnps
+    
+    # obtain credible set for each simulation
+    d5 <- lapply(1:n_pps, function(x) {
+        credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
+    })
+    
+    prop_cov <- lapply(d5, prop_cov) %>% unlist()
+    
+    sum(prop_cov * pp0)
 }
 
 
@@ -107,56 +107,56 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
 #' @export
 #' @return Corrected coverage estimate
 corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
-  varbeta = 1/(2 * (N0+N1) * f * (1 - f) * (N1/(N0+N1)) * (1 - (N1/(N0+N1))))
-  r = W^2/(W^2 + varbeta)
-  bf = 0.5 * (log(1 - r) + (r * z^2))
-  p1 = 1e-04 # hard code
-  nsnps = length(bf)
-  prior = c(1-nsnps*p1, rep(p1,nsnps))
-  tmp = c(1,bf) # add on extra for null model
-  my.denom = coloc:::logsum(tmp + prior)
-  tmp1 = exp(tmp+prior - my.denom)
-  ph0.tmp = tmp1/sum(tmp1)
-
-  ph0 = ph0.tmp[1]  # prob of the null
-  pp0dash = ph0.tmp[-1]  # pps of variants
-
-  # posterior probs of true system
-  pp.tmp = exp(bf - coloc:::logsum(bf))
-  pp0 = pp.tmp / sum(pp.tmp)
-
-  # estimate mu
-  muhat = mean(c(sum(abs(z)*pp0dash),(1-ph0)*max(abs(z))))
-
-  ####  corrected coverage
-  temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
-  zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
-  # simulate ERR matrix
-
-  ERR = mvtnorm:::rmvnorm(nrep,rep(0,ncol(Sigma)),Sigma)
-  pp_ERR = function(Zj, nrep, Sigma){
-    exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
-    zstar = mexp.zm+ERR
-    bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
-    pp.tmp = exp(bf - denom)  # convert back from log scale
-    pp.tmp / rowSums(pp.tmp)
-  }
-  # simulate pp systems
-  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
-  # consider different CV as causal in each list
-  n_pps <- length(pps)
-  args <- 1:nsnps
-
-  # obtain credible set for each simulation
-  d5 <- lapply(1:n_pps, function(x) {
-    credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
-  })
-
-  prop_cov <- lapply(d5, prop_cov) %>% unlist()
-
-  sum(prop_cov * pp0)
+    varbeta = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
+    r = W^2/(W^2 + varbeta)
+    bf = 0.5 * (log(1 - r) + (r * z^2))
+    p1 = 1e-04  # hard code
+    nsnps = length(bf)
+    prior = c(1 - nsnps * p1, rep(p1, nsnps))
+    tmp = c(1, bf)  # add on extra for null model
+    my.denom = coloc:::logsum(tmp + prior)
+    tmp1 = exp(tmp + prior - my.denom)
+    ph0.tmp = tmp1/sum(tmp1)
+    
+    ph0 = ph0.tmp[1]  # prob of the null
+    pp0dash = ph0.tmp[-1]  # pps of variants
+    
+    # posterior probs of true system
+    pp.tmp = exp(bf - coloc:::logsum(bf))
+    pp0 = pp.tmp/sum(pp.tmp)
+    
+    # estimate mu
+    muhat = mean(c(sum(abs(z) * pp0dash), (1 - ph0) * max(abs(z))))
+    
+    #### corrected coverage
+    temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
+    zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+    # simulate ERR matrix
+    
+    ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+    pp_ERR = function(Zj, nrep, Sigma) {
+        exp.zm = Zj %*% Sigma
+        mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
+        zstar = mexp.zm + ERR
+        bf = 0.5 * (log(1 - r) + (r * zstar^2))
+        denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+        pp.tmp = exp(bf - denom)  # convert back from log scale
+        pp.tmp/rowSums(pp.tmp)
+    }
+    # simulate pp systems
+    pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
+    # consider different CV as causal in each list
+    n_pps <- length(pps)
+    args <- 1:nsnps
+    
+    # obtain credible set for each simulation
+    d5 <- lapply(1:n_pps, function(x) {
+        credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
+    })
+    
+    prop_cov <- lapply(d5, prop_cov) %>% unlist()
+    
+    sum(prop_cov * pp0)
 }
 
 #' Obtain corrected coverage estimate using estimated effect sizes (beta hats) and their standard errors
@@ -176,56 +176,56 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
 #' @export
 #'
 corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
-  z <- bhat/sqrt(V)
-  r <- W^2/(W^2 + V)
-  bf = 0.5 * (log(1 - r) + (r * z^2))
-  p1 = 1e-04 # hard code
-  nsnps = length(bf)
-  prior = c(1-nsnps*p1, rep(p1,nsnps))
-  tmp = c(1,bf) # add on extra for null model
-  my.denom = coloc:::logsum(tmp + prior)
-  tmp1 = exp(tmp+prior - my.denom)
-  ph0.tmp = tmp1/sum(tmp1)
-
-  ph0 = ph0.tmp[1]  # prob of the null
-  pp0dash = ph0.tmp[-1]  # pps of variants
-
-  # posterior probs of true system
-  pp.tmp = exp(bf - coloc:::logsum(bf))
-  pp0 = pp.tmp / sum(pp.tmp)
-
-  # estimate mu
-  muhat = mean(c(sum(abs(z)*pp0dash),(1-ph0)*max(abs(z))))
-
-  ####  corrected coverage
-  temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
-  zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
-  # simulate ERR matrix
-
-  ERR = mvtnorm:::rmvnorm(nrep,rep(0,ncol(Sigma)),Sigma)
-  pp_ERR = function(Zj, nrep, Sigma){
-    exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
-    zstar = mexp.zm+ERR
-    bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
-    pp.tmp = exp(bf - denom)  # convert back from log scale
-    pp.tmp / rowSums(pp.tmp)
-  }
-  # simulate pp systems
-  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
-  # consider different CV as causal in each list
-  n_pps <- length(pps)
-  args <- 1:nsnps
-
-  # obtain credible set for each simulation
-  d5 <- lapply(1:n_pps, function(x) {
-    credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
-  })
-
-  prop_cov <- lapply(d5, prop_cov) %>% unlist()
-
-  sum(prop_cov * pp0)
+    z <- bhat/sqrt(V)
+    r <- W^2/(W^2 + V)
+    bf = 0.5 * (log(1 - r) + (r * z^2))
+    p1 = 1e-04  # hard code
+    nsnps = length(bf)
+    prior = c(1 - nsnps * p1, rep(p1, nsnps))
+    tmp = c(1, bf)  # add on extra for null model
+    my.denom = coloc:::logsum(tmp + prior)
+    tmp1 = exp(tmp + prior - my.denom)
+    ph0.tmp = tmp1/sum(tmp1)
+    
+    ph0 = ph0.tmp[1]  # prob of the null
+    pp0dash = ph0.tmp[-1]  # pps of variants
+    
+    # posterior probs of true system
+    pp.tmp = exp(bf - coloc:::logsum(bf))
+    pp0 = pp.tmp/sum(pp.tmp)
+    
+    # estimate mu
+    muhat = mean(c(sum(abs(z) * pp0dash), (1 - ph0) * max(abs(z))))
+    
+    #### corrected coverage
+    temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
+    zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+    # simulate ERR matrix
+    
+    ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+    pp_ERR = function(Zj, nrep, Sigma) {
+        exp.zm = Zj %*% Sigma
+        mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
+        zstar = mexp.zm + ERR
+        bf = 0.5 * (log(1 - r) + (r * zstar^2))
+        denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+        pp.tmp = exp(bf - denom)  # convert back from log scale
+        pp.tmp/rowSums(pp.tmp)
+    }
+    # simulate pp systems
+    pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
+    # consider different CV as causal in each list
+    n_pps <- length(pps)
+    args <- 1:nsnps
+    
+    # obtain credible set for each simulation
+    d5 <- lapply(1:n_pps, function(x) {
+        credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
+    })
+    
+    prop_cov <- lapply(d5, prop_cov) %>% unlist()
+    
+    sum(prop_cov * pp0)
 }
 
 #' Uses simulated posterior probability systems to quickly find corrected coverage estimate
@@ -237,16 +237,16 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
 #'
 #' @return Corrected coverage estimate
 #' @export
-quick_corrcov <- function(thr, simulated.pps, pp){
-  n_pps <- length(simulated.pps)
-  args <- 1:nsnps
-
-  d5 <- lapply(1:n_pps, function(x) {
-    credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
-  })
-
-  prop_cov <- lapply(d5, prop_cov) %>% unlist()
-  sum(prop_cov * pp)
+quick_corrcov <- function(thr, simulated.pps, pp) {
+    n_pps <- length(simulated.pps)
+    args <- 1:nsnps
+    
+    d5 <- lapply(1:n_pps, function(x) {
+        credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
+    })
+    
+    prop_cov <- lapply(d5, prop_cov) %>% unlist()
+    sum(prop_cov * pp)
 }
 
 #' quick_corrcov_cs
@@ -259,20 +259,20 @@ quick_corrcov <- function(thr, simulated.pps, pp){
 #' @return A list of the credible set obtained using the specified threshold, the corrected coverage estimate of this credible set, the threshold the user specified and the size of the credible set (the sum of the pps of the variants)
 #' @export
 #'
-quick_corrcov_cs <- function(thr, simulated.pps, pp){
-  n_pps <- length(simulated.pps)
-  args <- 1:nsnps
-
-  d5 <- lapply(1:n_pps, function(x) {
-    credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
-  })
-
-  prop_cov <- lapply(d5, prop_cov) %>% unlist()
-  corr_cov <- sum(prop_cov * pp)
-
-  o <- order(pp, decreasing = TRUE)
-  cumpp <- cumsum(pp[o])
-  wh <- which(cumpp > thr)[1]
-  list(credset = names(pp)[o[1:wh]], corr.cov = corr_cov, thr = thr, size = cumpp[wh])
+quick_corrcov_cs <- function(thr, simulated.pps, pp) {
+    n_pps <- length(simulated.pps)
+    args <- 1:nsnps
+    
+    d5 <- lapply(1:n_pps, function(x) {
+        credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
+    })
+    
+    prop_cov <- lapply(d5, prop_cov) %>% unlist()
+    corr_cov <- sum(prop_cov * pp)
+    
+    o <- order(pp, decreasing = TRUE)
+    cumpp <- cumsum(pp[o])
+    wh <- which(cumpp > thr)[1]
+    list(credset = names(pp)[o[1:wh]], corr.cov = corr_cov, thr = thr, size = cumpp[wh])
 }
 

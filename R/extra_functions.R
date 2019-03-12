@@ -62,7 +62,7 @@ pred_logit <- function(x, size) {
 #' @export
 #' @author Anna Hutchinson
 prop_cov <- function(x) {
-  sum(x$covered)/length(x$covered)
+    sum(x$covered)/length(x$covered)
 }
 
 #' Estimate the true effect at the causal variant
@@ -77,20 +77,20 @@ prop_cov <- function(x) {
 #' @export
 #'
 #' @author Anna Hutchinson
-est_mu <- function(z, f, N0, N1, W = 0.2){
-  V = 1/(2 * (N0+N1) * f * (1 - f) * (N1/(N0+N1)) * (1 - (N1/(N0+N1))))
-  r = W^2/(W^2 + V)
-  lABF = 0.5 * (log(1 - r) + (r * z^2))
-  p1 <- 1e-04 # hard coded
-  nsnps <- length(lABF)
-  prior <- c(1-nsnps*p1,rep(p1,nsnps))
-  tmp <- c(1,lABF) # add on extra for null model
-  my.denom <- coloc:::logsum(tmp + prior)
-  tmp1 <- exp(tmp+prior - my.denom)
-  ph0.tmp <- tmp1 / sum(tmp1)
-
-  ph0 = ph0.tmp[1] # prob of the null
-  mean(c(sum(abs(z)*ph0.tmp[-1]),(1-ph0.tmp[1])*max(abs(z))))
+est_mu <- function(z, f, N0, N1, W = 0.2) {
+    V = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
+    r = W^2/(W^2 + V)
+    lABF = 0.5 * (log(1 - r) + (r * z^2))
+    p1 <- 1e-04  # hard coded
+    nsnps <- length(lABF)
+    prior <- c(1 - nsnps * p1, rep(p1, nsnps))
+    tmp <- c(1, lABF)  # add on extra for null model
+    my.denom <- coloc:::logsum(tmp + prior)
+    tmp1 <- exp(tmp + prior - my.denom)
+    ph0.tmp <- tmp1/sum(tmp1)
+    
+    ph0 = ph0.tmp[1]  # prob of the null
+    mean(c(sum(abs(z) * ph0.tmp[-1]), (1 - ph0.tmp[1]) * max(abs(z))))
 }
 
 #' Estimate the true effect at the causal variant
@@ -105,17 +105,17 @@ est_mu <- function(z, f, N0, N1, W = 0.2){
 #' @export
 #'
 #' @author Anna Hutchinson
-est_mu_bhat <- function(bhat, V, N0, N1, W = 0.2){
-  z = bhat/sqrt(V)
-  r = W^2/(W^2 + V)
-  lABF = 0.5 * (log(1 - r) + (r * z^2))
-  p1 = 1e-04 # hard coded
-  nsnps = length(lABF)
-  prior = c(1-nsnps*p1,rep(p1,nsnps))
-  tmp = c(1,lABF) # add on extra for null model
-  my.denom = coloc:::logsum(tmp + prior)
-  tmp1 = exp(tmp+prior - my.denom)
-  ph0.tmp = tmp1 / sum(tmp1)
-  ph0 = ph0.tmp[1] # prob of the null
-  mean(c(sum(abs(z)*ph0.tmp[-1]),(1-ph0.tmp[1])*max(abs(z))))
+est_mu_bhat <- function(bhat, V, N0, N1, W = 0.2) {
+    z = bhat/sqrt(V)
+    r = W^2/(W^2 + V)
+    lABF = 0.5 * (log(1 - r) + (r * z^2))
+    p1 = 1e-04  # hard coded
+    nsnps = length(lABF)
+    prior = c(1 - nsnps * p1, rep(p1, nsnps))
+    tmp = c(1, lABF)  # add on extra for null model
+    my.denom = coloc:::logsum(tmp + prior)
+    tmp1 = exp(tmp + prior - my.denom)
+    ph0.tmp = tmp1/sum(tmp1)
+    ph0 = ph0.tmp[1]  # prob of the null
+    mean(c(sum(abs(z) * ph0.tmp[-1]), (1 - ph0.tmp[1]) * max(abs(z))))
 }

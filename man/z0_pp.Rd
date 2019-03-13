@@ -11,11 +11,11 @@ z0_pp(z, f, type, N, s, W = 0.2)
 
 \item{f}{Minor allele frequencies}
 
-\item{type}{Type of experiment ("quant" or "cc")}
+\item{type}{Type of experiment ('quant' or 'cc')}
 
 \item{N}{Total sample size}
 
-\item{s}{Proportion of cases (N1/N0+N1), ignored if type=="quant"}
+\item{s}{Proportion of cases (N1/N0+N1), ignored if type=='quant'}
 
 \item{W}{Prior for the standard deviation of the effect size parameter beta}
 }

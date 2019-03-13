@@ -4,7 +4,7 @@
 \alias{corrected_cs}
 \title{corrected_cs}
 \usage{
-corrected_cs(z, f, N0, N1, lower, upper, desired.cov, acc = 5e-04,
+corrected_cs(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0.005,
   max.iter = 20)
 }
 \arguments{
@@ -16,13 +16,15 @@ corrected_cs(z, f, N0, N1, lower, upper, desired.cov, acc = 5e-04,
 
 \item{N1}{Number of cases}
 
+\item{Sigma}{Correlation matrix of SNPs}
+
 \item{lower}{Lower threshold}
 
 \item{upper}{Upper threshold}
 
 \item{desired.cov}{The desired coverage of the causal variant in the credible set}
 
-\item{acc}{Accuracy of corrected coverage to desired coverage (default = 0.0005)}
+\item{acc}{Accuracy of corrected coverage to desired coverage (default = 0.005)}
 
 \item{max.iter}{Maximum iterations (default = 20)}
 }

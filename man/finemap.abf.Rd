@@ -20,7 +20,7 @@ finemap.abf(dataset, p1 = 1e-04)
 
 \item{varbeta}{variance of beta}
 
-\item{type}{the type of data in dataset 1 - either "quant" or "cc" to denote quantitative or case-control}
+\item{type}{the type of data in dataset 1 - either 'quant' or 'cc' to denote quantitative or case-control}
 
 \item{s}{for a case control dataset, the proportion of samples in dataset 1 that are cases}
 
@@ -33,9 +33,9 @@ finemap.abf(dataset, p1 = 1e-04)
 Some of these items may be missing, but you must give
 \itemize{
 \item{always}{\code{type}}
-\item{if \code{type}=="cc"}{\code{s}}
-\item{if \code{type}=="quant" and \code{sdY} known}{\code{sdY}}
-\item{if \code{type}=="quant" and \code{sdY} unknown}{\code{beta}, \code{varbeta}, \code{N}, \code{MAF}}
+\item{if \code{type}=='cc'}{\code{s}}
+\item{if \code{type}=='quant' and \code{sdY} known}{\code{sdY}}
+\item{if \code{type}=='quant' and \code{sdY} unknown}{\code{beta}, \code{varbeta}, \code{N}, \code{MAF}}
 and then either
 \item{}{\code{pvalues}, \code{MAF}}
 \item{}{\code{beta}, \code{varbeta}}

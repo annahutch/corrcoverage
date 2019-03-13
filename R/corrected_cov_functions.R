@@ -52,18 +52,18 @@ credsetC <- function(pp, CV = iCV, thr = 0.6) {
 #' @export
 #' @return Corrected coverage estimate
 corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
-    
+
     nsnps = length(pp0)
-    
+
     # form joint z-score vectors
     temp = diag(x = mu, nrow = nsnps, ncol = nsnps)
     zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
-    
+
     # simulate ERR matrix
     ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
     r = W^2/(W^2 + V)
-    
-    pp_ERR = function(Zj, nrep, Sigma) {
+
+    pp_ERR = function(Zj) {
         exp.zm = Zj %*% Sigma
         mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
         zstar = mexp.zm + ERR
@@ -72,21 +72,21 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
         pp.tmp = exp(bf - denom)  # convert back from log scale
         pp.tmp/rowSums(pp.tmp)
     }
-    
+
     # simulate pp systems
-    pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
-    
+    pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+
     # consider different CV as causal in each list
     n_pps <- length(pps)
     args <- 1:nsnps
-    
+
     # obtain credible set for each simulation
     d5 <- lapply(1:n_pps, function(x) {
-        credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
+        credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thresh)
     })
-    
+
     prop_cov <- lapply(d5, prop_cov) %>% unlist()
-    
+
     sum(prop_cov * pp0)
 }
 
@@ -117,24 +117,24 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
     my.denom = coloc:::logsum(tmp + prior)
     tmp1 = exp(tmp + prior - my.denom)
     ph0.tmp = tmp1/sum(tmp1)
-    
+
     ph0 = ph0.tmp[1]  # prob of the null
     pp0dash = ph0.tmp[-1]  # pps of variants
-    
+
     # posterior probs of true system
     pp.tmp = exp(bf - coloc:::logsum(bf))
     pp0 = pp.tmp/sum(pp.tmp)
-    
+
     # estimate mu
     muhat = mean(c(sum(abs(z) * pp0dash), (1 - ph0) * max(abs(z))))
-    
+
     #### corrected coverage
     temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
     zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
     # simulate ERR matrix
-    
+
     ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
-    pp_ERR = function(Zj, nrep, Sigma) {
+    pp_ERR = function(Zj) {
         exp.zm = Zj %*% Sigma
         mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
         zstar = mexp.zm + ERR
@@ -144,18 +144,18 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
         pp.tmp/rowSums(pp.tmp)
     }
     # simulate pp systems
-    pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
+    pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
     # consider different CV as causal in each list
     n_pps <- length(pps)
     args <- 1:nsnps
-    
+
     # obtain credible set for each simulation
     d5 <- lapply(1:n_pps, function(x) {
         credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
     })
-    
+
     prop_cov <- lapply(d5, prop_cov) %>% unlist()
-    
+
     sum(prop_cov * pp0)
 }
 
@@ -186,24 +186,24 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
     my.denom = coloc:::logsum(tmp + prior)
     tmp1 = exp(tmp + prior - my.denom)
     ph0.tmp = tmp1/sum(tmp1)
-    
+
     ph0 = ph0.tmp[1]  # prob of the null
     pp0dash = ph0.tmp[-1]  # pps of variants
-    
+
     # posterior probs of true system
     pp.tmp = exp(bf - coloc:::logsum(bf))
     pp0 = pp.tmp/sum(pp.tmp)
-    
+
     # estimate mu
     muhat = mean(c(sum(abs(z) * pp0dash), (1 - ph0) * max(abs(z))))
-    
+
     #### corrected coverage
     temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
     zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
     # simulate ERR matrix
-    
+
     ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
-    pp_ERR = function(Zj, nrep, Sigma) {
+    pp_ERR = function(Zj) {
         exp.zm = Zj %*% Sigma
         mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
         zstar = mexp.zm + ERR
@@ -212,19 +212,20 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
         pp.tmp = exp(bf - denom)  # convert back from log scale
         pp.tmp/rowSums(pp.tmp)
     }
+
     # simulate pp systems
-    pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = nrep, Sigma = Sigma), SIMPLIFY = FALSE)
+    pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
     # consider different CV as causal in each list
     n_pps <- length(pps)
     args <- 1:nsnps
-    
+
     # obtain credible set for each simulation
     d5 <- lapply(1:n_pps, function(x) {
         credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
     })
-    
+
     prop_cov <- lapply(d5, prop_cov) %>% unlist()
-    
+
     sum(prop_cov * pp0)
 }
 
@@ -240,11 +241,11 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
 quick_corrcov <- function(thr, simulated.pps, pp) {
     n_pps <- length(simulated.pps)
     args <- 1:nsnps
-    
+
     d5 <- lapply(1:n_pps, function(x) {
         credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
     })
-    
+
     prop_cov <- lapply(d5, prop_cov) %>% unlist()
     sum(prop_cov * pp)
 }
@@ -262,14 +263,14 @@ quick_corrcov <- function(thr, simulated.pps, pp) {
 quick_corrcov_cs <- function(thr, simulated.pps, pp) {
     n_pps <- length(simulated.pps)
     args <- 1:nsnps
-    
+
     d5 <- lapply(1:n_pps, function(x) {
         credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
     })
-    
+
     prop_cov <- lapply(d5, prop_cov) %>% unlist()
     corr_cov <- sum(prop_cov * pp)
-    
+
     o <- order(pp, decreasing = TRUE)
     cumpp <- cumsum(pp[o])
     wh <- which(cumpp > thr)[1]

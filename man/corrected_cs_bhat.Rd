@@ -4,8 +4,8 @@
 \alias{corrected_cs_bhat}
 \title{corrected_cs_bhat}
 \usage{
-corrected_cs_bhat(bhat, V, N0, N1, lower, upper, desired.cov,
-  acc = 5e-04, max.iter = 20)
+corrected_cs_bhat(bhat, V, N0, N1, Sigma, lower, upper, desired.cov,
+  acc = 0.005, max.iter = 20)
 }
 \arguments{
 \item{bhat}{Estimated effect sizes}
@@ -16,13 +16,15 @@ corrected_cs_bhat(bhat, V, N0, N1, lower, upper, desired.cov,
 
 \item{N1}{Number of cases}
 
+\item{Sigma}{Correlation matrix of SNPs}
+
 \item{lower}{Lower threshold}
 
 \item{upper}{Upper threshold}
 
 \item{desired.cov}{The desired coverage of the causal variant in the credible set}
 
-\item{acc}{Accuracy of corrected coverage to desired coverage (default = 0.0005)}
+\item{acc}{Accuracy of corrected coverage to desired coverage (default = 0.005)}
 
 \item{max.iter}{Maximum iterations (default = 20)}
 }

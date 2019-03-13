@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cs.R
 \name{corrected_cs}
 \alias{corrected_cs}
-\title{corrected_cs}
+\title{Get new credible set with desired coverage of the CV}
 \usage{
 corrected_cs(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0.005,
   max.iter = 20)
@@ -32,5 +32,5 @@ corrected_cs(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0.005,
 list of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 }
 \description{
-corrected_cs
+Get new credible set with desired coverage of the CV
 }

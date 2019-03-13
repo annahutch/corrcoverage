@@ -141,12 +141,13 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
   nsnps = length(pp)
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
+  nrep = 1000
+  
   # simulate ERR matrix
-
-  ERR = mvtnorm:::rmvnorm(1000,rep(0,ncol(Sigma)),Sigma)
-  pp_ERR = function(Zj, nrep = 1000, Sigma){
+  ERR = mvtnorm:::rmvnorm(nrep, rep(0,ncol(Sigma)), Sigma)
+  pp_ERR = function(Zj){
     exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, 1000, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
+    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
     zstar = mexp.zm+ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
     denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
@@ -154,7 +155,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
     pp.tmp / rowSums(pp.tmp)
   }
   # simulate pp systems
-  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = 1000, Sigma = Sigma), SIMPLIFY = FALSE)
+  pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
 
   n_pps <- length(pps)
   args <- 1:length(pp)

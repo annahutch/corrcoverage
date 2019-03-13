@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{pvals_pp}
 \alias{pvals_pp}
-\title{pvals_pp}
+\title{Find posterior probabilities of causality}
 \usage{
 pvals_pp(pvals, f, type, N, s, W = 0.2)
 }

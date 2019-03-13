@@ -2,7 +2,7 @@
 % Please edit documentation in R/z_simulation_functions.R
 \name{z_sim}
 \alias{z_sim}
-\title{z_sim}
+\title{Simulate marginal from joint Z-score vector}
 \usage{
 z_sim(Zj, Sigma, nrep)
 }

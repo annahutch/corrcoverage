@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{credsetC}
 \alias{credsetC}
-\title{credsetC}
+\title{Get credible set of variants from matrix of pps (Rcpp)}
 \usage{
 credsetC(pp, CV = iCV, thr = 0.6)
 }

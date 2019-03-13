@@ -2,7 +2,7 @@
 % Please edit documentation in R/extra_functions.R
 \name{Var.data.cc}
 \alias{Var.data.cc}
-\title{Var.data.cc}
+\title{Variance of the estimated effect size for case-control data}
 \usage{
 Var.data.cc(f, N, s)
 }

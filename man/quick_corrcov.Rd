@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{quick_corrcov}
 \alias{quick_corrcov}
-\title{Uses simulated posterior probability systems to quickly find corrected coverage estimate}
+\title{Use simulated pps to find corrected coverage estimate}
 \usage{
 quick_corrcov(thr, simulated.pps, pp)
 }
@@ -17,5 +17,5 @@ quick_corrcov(thr, simulated.pps, pp)
 Corrected coverage estimate
 }
 \description{
-Uses simulated posterior probability systems to quickly find corrected coverage estimate
+Use simulated pps to find corrected coverage estimate
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{ppfunc.mat}
 \alias{ppfunc.mat}
-\title{ppfunc.mat}
+\title{Find posterior probabilities of causality from matrix of Z-scores}
 \usage{
 ppfunc.mat(zstar, V, W = 0.2)
 }

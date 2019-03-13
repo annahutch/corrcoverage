@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{corrected_cov}
 \alias{corrected_cov}
-\title{corrected_cov}
+\title{Obtain a corrected coverage estimate of the causal variant in the credible set}
 \usage{
 corrected_cov(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000)
 }

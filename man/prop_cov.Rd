@@ -2,7 +2,7 @@
 % Please edit documentation in R/extra_functions.R
 \name{prop_cov}
 \alias{prop_cov}
-\title{prop_cov}
+\title{Proportion of credible sets containing the causal variant}
 \usage{
 prop_cov(x)
 }

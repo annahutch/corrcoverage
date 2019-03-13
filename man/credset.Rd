@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{credset}
 \alias{credset}
-\title{credset}
+\title{Get credible set of variants}
 \usage{
 credset(pp, CV, thr)
 }
@@ -17,7 +17,7 @@ credset(pp, CV, thr)
 list of the variants in the credible set, the claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)
 }
 \description{
-Obtain a credible set using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008)).
+Get credible set of variants
 }
 \details{
 If the CV parameter is supplied (index of causal variant) then the

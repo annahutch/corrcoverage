@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{ppfunc}
 \alias{ppfunc}
-\title{ppfunc}
+\title{Find posterior probabilities of causality}
 \usage{
 ppfunc(z, V, W = 0.2)
 }

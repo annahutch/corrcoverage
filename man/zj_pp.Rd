@@ -2,7 +2,7 @@
 % Please edit documentation in R/z_simulation_functions.R
 \name{zj_pp}
 \alias{zj_pp}
-\title{zj_pp}
+\title{Simulate marginal from joint Z-score vector}
 \usage{
 zj_pp(Zj, V, nrep = 5000, W = 0.2, Sigma)
 }

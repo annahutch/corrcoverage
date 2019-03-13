@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>corrected_cs_bhat — corrected_cs_bhat • corrcoverage</title>
+<title>Get new credible set with desired coverage of the CV — corrected_cs_bhat • corrcoverage</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="corrected_cs_bhat — corrected_cs_bhat" />
+<meta property="og:title" content="Get new credible set with desired coverage of the CV — corrected_cs_bhat" />
 
-<meta property="og:description" content="corrected_cs_bhat" />
+<meta property="og:description" content="Get new credible set with desired coverage of the CV" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -52,7 +52,7 @@
   <body>
     <div class="container template-reference-topic">
       <header>
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
@@ -109,19 +109,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>corrected_cs_bhat</h1>
+    <h1>Get new credible set with desired coverage of the CV</h1>
     
     <div class="hidden name"><code>corrected_cs_bhat.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>corrected_cs_bhat</p>
+    <p>Get new credible set with desired coverage of the CV</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>corrected_cs_bhat</span>(<span class='no'>bhat</span>, <span class='no'>V</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>lower</span>, <span class='no'>upper</span>, <span class='no'>desired.cov</span>,
-  <span class='kw'>acc</span> <span class='kw'>=</span> <span class='fl'>5e-04</span>, <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>20</span>)</pre>
+    <pre class="usage"><span class='fu'>corrected_cs_bhat</span>(<span class='no'>bhat</span>, <span class='no'>V</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='no'>lower</span>, <span class='no'>upper</span>, <span class='no'>desired.cov</span>,
+  <span class='kw'>acc</span> <span class='kw'>=</span> <span class='fl'>0.005</span>, <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>20</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,6 +143,10 @@
       <td><p>Number of cases</p></td>
     </tr>
     <tr>
+      <th>Sigma</th>
+      <td><p>Correlation matrix of SNPs</p></td>
+    </tr>
+    <tr>
       <th>lower</th>
       <td><p>Lower threshold</p></td>
     </tr>
@@ -156,7 +160,7 @@
     </tr>
     <tr>
       <th>acc</th>
-      <td><p>Accuracy of corrected coverage to desired coverage (default = 0.0005)</p></td>
+      <td><p>Accuracy of corrected coverage to desired coverage (default = 0.005)</p></td>
     </tr>
     <tr>
       <th>max.iter</th>

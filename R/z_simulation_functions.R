@@ -1,7 +1,7 @@
 #' Simulate marginal z-scores (\eqn{Z_m}) from the joint z-scores (\eqn{Z_j}) using \eqn{E(Z_m) = Z_j \times \Sigma} and
 #' \eqn{Z* \sim MVN(E(Z_m), \Sigma)}
 #'
-#' @title z_sim
+#' @title Simulate marginal from joint Z-score vector
 #' @param Zj Vector of joint Z-scores (a vector of 0s except at the causal variant)
 #' @param Sigma SNP correlation matrix
 #' @param nrep Number of Z-score systems to simulate
@@ -17,7 +17,7 @@ z_sim <- function(Zj, Sigma, nrep) {
 #' Simulate nrep marginal Z-scores from joint Z-scores and convert these to posterior probabilities of causality
 #'
 #' Does not include posterior probabilities for null model s.t the output will sum to 1
-#' @title zj_pp
+#' @title Simulate marginal from joint Z-score vector
 #' @param Zj Vector of joint z-scores (0s except at CV)
 #' @param V Variance of the estimated effect size (can be obtained using var.beta.cc function)
 #' @param nrep Number of marginal z-scores to simulate

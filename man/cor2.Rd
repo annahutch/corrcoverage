@@ -2,7 +2,7 @@
 % Please edit documentation in R/extra_functions.R
 \name{cor2}
 \alias{cor2}
-\title{cor2}
+\title{Correlation matrix of SNPS}
 \usage{
 cor2(x)
 }

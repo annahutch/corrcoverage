@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{z0_pp}
 \alias{z0_pp}
-\title{z0_pp}
+\title{Find posterior probabilities of causality}
 \usage{
 z0_pp(z, f, type, N, s, W = 0.2)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{quick_corrcov_cs}
 \alias{quick_corrcov_cs}
-\title{quick_corrcov_cs}
+\title{Use simulated pps to find corrected coverage estimate and cred set}
 \usage{
 quick_corrcov_cs(thr, simulated.pps, pp)
 }
@@ -17,5 +17,5 @@ quick_corrcov_cs(thr, simulated.pps, pp)
 A list of the credible set obtained using the specified threshold, the corrected coverage estimate of this credible set, the threshold the user specified and the size of the credible set (the sum of the pps of the variants)
 }
 \description{
-quick_corrcov_cs
+Use simulated pps to find corrected coverage estimate and cred set
 }

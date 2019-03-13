@@ -1,4 +1,4 @@
-#' corrected_cs
+#' @title Get new credible set with desired coverage of the CV
 #'
 #' @param z Z-scores
 #' @param f Minor allele frequencies
@@ -25,12 +25,13 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
   nsnps = length(pp)
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
-  # simulate ERR matrix
+  nrep = 1000
 
-  ERR = mvtnorm:::rmvnorm(1000,rep(0,ncol(Sigma)),Sigma)
-  pp_ERR = function(Zj, nrep = 1000, Sigma){
+  # simulate ERR matrix
+  ERR = mvtnorm:::rmvnorm(nrep, rep(0,ncol(Sigma)), Sigma)
+  pp_ERR = function(Zj){
     exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, 1000, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
+    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
     zstar = mexp.zm+ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
     denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
@@ -38,7 +39,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
     pp.tmp / rowSums(pp.tmp)
   }
   # simulate pp systems
-  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = 1000, Sigma = Sigma), SIMPLIFY = FALSE)
+  pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
 
   n_pps <- length(pps)
   args <- 1:length(pp)
@@ -82,7 +83,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
   list(credset = names(pp)[o[1:wh]], req.thr = c, corr.cov = desired.cov + fc, size = cumpp[wh])
 }
 
-#' corrected_cs_bhat
+#' @title Get new credible set with desired coverage of the CV
 #'
 #' @param bhat Estimated effect sizes
 #' @param V Prior variance of estimated effect sizes
@@ -108,12 +109,13 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov,
   nsnps = length(pp)
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
-  # simulate ERR matrix
+  nrep = 1000
 
-  ERR = mvtnorm:::rmvnorm(1000,rep(0,ncol(Sigma)),Sigma)
-  pp_ERR = function(Zj, nrep = 1000, Sigma){
+  # simulate ERR matrix
+  ERR = mvtnorm:::rmvnorm(nrep, rep(0,ncol(Sigma)), Sigma)
+  pp_ERR = function(Zj){
     exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, 1000, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
+    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
     zstar = mexp.zm+ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
     denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
@@ -121,7 +123,7 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov,
     pp.tmp / rowSums(pp.tmp)
   }
   # simulate pp systems
-  pps <- mapply(pp_ERR, zj, MoreArgs = list(nrep = 1000, Sigma = Sigma), SIMPLIFY = FALSE)
+  pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
 
   n_pps <- length(pps)
   args <- 1:length(pp)

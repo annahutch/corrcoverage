@@ -1,6 +1,6 @@
 #' Variance of the estimated effect size for case-control data
 #'
-#' @title Var.data.cc
+#' @title Variance of the estimated effect size for case-control data
 #' @param f Minor allele frequencies
 #' @param N Total sample size
 #' @param s Proportion of cases (N1/N0+N1)
@@ -27,7 +27,7 @@ logsum <- function(x) {
 #' Correlation matrix of SNPS
 #'
 #' A quick function to find a correlation matrix
-#' @title cor2
+#' @title Correlation matrix of SNPS
 #' @param x Phased haplotype matrix, rows as samples and columns as SNPs
 #' @return Correlation matrix
 #' @export
@@ -45,7 +45,6 @@ cor2 <- function(x) {
 #' @title pred_logit
 #' @param x data.frame with column for 'covered' and 'logit.claim'
 #' @param size size of the credible set to correct (sum of the posterior probabilities of causality of the variants)
-#' @export
 #' @return Predicted probability of covered
 #' @author Anna Hutchinson
 pred_logit <- function(x, size) {
@@ -56,7 +55,7 @@ pred_logit <- function(x, size) {
 #' Proportion of simulated credible sets containing the causal variant
 #'
 #' @rdname prop_cov
-#' @title prop_cov
+#' @title Proportion of credible sets containing the causal variant
 #' @param x data.frame with a binary 'covered' column
 #' @return Proportion of x with x = 1
 #' @export
@@ -65,7 +64,7 @@ prop_cov <- function(x) {
     sum(x$covered)/length(x$covered)
 }
 
-#' Estimate the true effect at the causal variant
+#' @title Estimate the true effect at the causal variant
 #'
 #' @param z Vector of marginal Z-scores
 #' @param f Minor allele frequencies
@@ -88,12 +87,12 @@ est_mu <- function(z, f, N0, N1, W = 0.2) {
     my.denom <- coloc:::logsum(tmp + prior)
     tmp1 <- exp(tmp + prior - my.denom)
     ph0.tmp <- tmp1/sum(tmp1)
-    
+
     ph0 = ph0.tmp[1]  # prob of the null
     mean(c(sum(abs(z) * ph0.tmp[-1]), (1 - ph0.tmp[1]) * max(abs(z))))
 }
 
-#' Estimate the true effect at the causal variant
+#' @title Estimate the true effect at the causal variant
 #'
 #' @param bhat Vector of estimated effect sizes
 #' @param V Prior variance for estimated effect sizes

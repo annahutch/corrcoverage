@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{approx.bf.p}
 \alias{approx.bf.p}
-\title{approx.bf.p}
+\title{Find approx. Bayes factors}
 \usage{
 approx.bf.p(pvals, f, type, N, s, W = 0.2)
 }

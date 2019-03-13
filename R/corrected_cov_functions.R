@@ -1,8 +1,8 @@
-#' Obtain a credible set using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008)).
+#' Get credible set of variants
 #'
 #' If the CV parameter is supplied (index of causal variant) then the
 #' output includes a binary indicator of whether the CV is contained in the set
-#' @title credset
+#' @title Get credible set of variants
 #' @param pp Vector of posterior probabilities of causality
 #' @param CV Optional parameter: Index of CV
 #' @param thr Minimum threshold for credible set size
@@ -23,7 +23,7 @@ credset <- function(pp, CV, thr) {
 
 #' Quicker credset function for matrix of posterior probabilities (using RCpp)
 #'
-#' @title credsetC
+#' @title Get credible set of variants from matrix of pps (Rcpp)
 #' @param pp Matrix of posterior probabilities of causality (one row per system)
 #' @param CV Vector of CV indices (one per system/row)
 #' @param thr Minimum threshold for credible set size
@@ -41,7 +41,7 @@ credsetC <- function(pp, CV = iCV, thr = 0.6) {
 #'
 #' Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)
 #' @rdname corrected_cov
-#' @title corrected_cov
+#' @title Obtain a corrected coverage estimate of the causal variant in the credible set
 #' @param mu The true effect at the CV
 #' @param V Variance of the estimated effect size (can be obtained using Var.beta.cc function)
 #' @param W Prior for the standard deviation of the effect size parameter beta (W=0.2 default)
@@ -95,7 +95,7 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
 #'
 #' This function only requires the marginal summary statistics from GWAS
 #' @rdname corrcov
-#' @title corrcov
+#' @title Obtain corrected coverage estimate using Z-scores and mafs
 #' @param z Marginal Z-scores
 #' @param f Minor allele frequencies
 #' @param N0 Number of controls
@@ -159,11 +159,11 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
     sum(prop_cov * pp0)
 }
 
-#' Obtain corrected coverage estimate using estimated effect sizes (beta hats) and their standard errors
+#' Obtain corrected coverage estimate using estimated effect sizes and their standard errors
 #'
 #' This function only requires the marginal summary statistics from GWAS
 #' @rdname corrcov_bhat
-#' @title corrcov_bhat
+#' @title Obtain corrected coverage estimate using estimated effect sizes and their standard errors
 #' @param bhat Estimated effect sizes from single-SNP logistic regressions
 #' @param V Variance of estimated effect sizes
 #' @param N0 Number of controls
@@ -229,7 +229,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
     sum(prop_cov * pp0)
 }
 
-#' Uses simulated posterior probability systems to quickly find corrected coverage estimate
+#' @title Use simulated pps to find corrected coverage estimate
 #'
 #' @rdname quick_corrcov
 #' @param thr Threshold value to exceed
@@ -250,7 +250,7 @@ quick_corrcov <- function(thr, simulated.pps, pp) {
     sum(prop_cov * pp)
 }
 
-#' quick_corrcov_cs
+#' @title Use simulated pps to find corrected coverage estimate and cred set
 #'
 #' @rdname quick_corrcov_cs
 #' @param thr Threshold value to exceed

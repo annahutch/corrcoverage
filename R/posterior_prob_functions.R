@@ -2,7 +2,7 @@
 #'
 #' ([Wakefield et al. 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359)
 #' This function converts p-values to log ABFs, also reporting intermediate calculations
-#' @title approx.bf.p
+#' @title Find approx. Bayes factors
 #' @param pvals p-values
 #' @param f Minor allele frequencies
 #' @param type Type of experiment ('quant' or 'cc')
@@ -23,7 +23,7 @@ approx.bf.p <- function(pvals, f, type, N, s, W = 0.2) {
 #' Posterior probabilities of causality from p-values
 #'
 #' This function converts p-values to posterior probabilities of causality, including the null model of no genetic effects
-#' @title pvals_pp
+#' @title Find posterior probabilities of causality
 #' @param pvals p-values of SNPs
 #' @param f Minor allele frequencies
 #' @param type Type of experiment ('quant' or 'cc')
@@ -50,7 +50,7 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2) {
 #' Posterior probabilities of causality from marginal Z-scores with prior SD as a parameter
 #'
 #' This function converts Z-scores to posterior probabilities of causality, including the null model of no genetic effects
-#' @title z0_pp
+#' @title Find posterior probabilities of causality
 #' @param z Marginal Z-scores of SNPs
 #' @param f Minor allele frequencies
 #' @param type Type of experiment ('quant' or 'cc')
@@ -78,7 +78,7 @@ z0_pp <- function(z, f, type, N, s, W = 0.2) {
 #' This function converts Z-scores to posterior probabilities of causality
 #' i.e. not including the null model of no genetic effects,
 #' so that the sum of the posterior probabilities for all variants is 1
-#' @title ppfunc
+#' @title Find posterior probabilities of causality
 #' @param z Vector of marginal Z-scores
 #' @param V Variance of the estimated effect size (can be obtained using Var.beta.cc function)
 #' @param W Prior for the standard deviation of the effect size parameter, beta (W = 0.2 default)
@@ -147,10 +147,10 @@ ppfunc <- function(z, V, W = 0.2) {
 ##' @author Chris Wallace
 ##' @export
 finemap.abf <- function(dataset, p1 = 1e-04) {
-    
-    if (!is.list(dataset)) 
+
+    if (!is.list(dataset))
         stop("dataset must be a list.")
-    
+
     df <- process.dataset(d = dataset, suffix = "")
     nsnps <- nrow(df)
     dfnull <- df[1, ]
@@ -160,11 +160,11 @@ finemap.abf <- function(dataset, p1 = 1e-04) {
     df <- rbind(df, dfnull)
     ## data.frame('V.'=NA, z.=NA, r.=NA, lABF.=1, snp='null'))
     df$prior <- c(rep(p1, nsnps), 1 - nsnps * p1)
-    
+
     ## add SNP.PP.H4 - post prob that each SNP is THE causal variant for a shared signal
     my.denom.log.abf <- logsum(df$lABF + df$prior)
     df$SNP.PP <- exp(df$lABF - my.denom.log.abf)
-    
+
     return(df)
 }
 
@@ -173,7 +173,7 @@ finemap.abf <- function(dataset, p1 = 1e-04) {
 #' This function converts a matrix of Z-scores (one row per simulation) to posterior probabilities of causality,
 #' not including the null model of no genetic effects,
 #' so that the sum of the posterior probabilities for each simulation (each row) is 1.
-#' @title ppfunc.mat
+#' @title Find posterior probabilities of causality from matrix of Z-scores
 #' @param zstar Matrix of marginal z-scores, one replicate per row
 #' @param V Variance of the estimated effect size, one element per column of zstar
 #' @param W Prior for the standard deviation of the effect size parameter, beta

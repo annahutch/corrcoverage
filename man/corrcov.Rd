@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{corrcov}
 \alias{corrcov}
-\title{corrcov}
+\title{Obtain corrected coverage estimate using Z-scores and mafs}
 \usage{
 corrcov(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000)
 }

@@ -5,10 +5,10 @@
 #' @title Get credible set of variants
 #' @param pp Vector of posterior probabilities of causality
 #' @param CV Optional parameter: Index of CV
-#' @param thr Minimum threshold for credible set size
+#' @param thr Minimum threshold for credible set size (default is 0.95)
 #' @export
 #' @return list of the variants in the credible set, the claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)
-credset <- function(pp, CV, thr) {
+credset <- function(pp, CV, thr = 0.95) {
     o <- order(pp, decreasing = TRUE)  # order index for true pp
     cumpp <- cumsum(pp[o])  # cum sums of ordered pps
     wh <- which(cumpp > thr)[1]  # how many needed to exceed thr
@@ -26,13 +26,13 @@ credset <- function(pp, CV, thr) {
 #' @title Get credible set of variants from matrix of pps (Rcpp)
 #' @param pp Matrix of posterior probabilities of causality (one row per system)
 #' @param CV Vector of CV indices (one per system/row)
-#' @param thr Minimum threshold for credible set size
+#' @param thr Minimum threshold for credible set size (default is 0.95)
 #'
 #' @return Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants (nvar).
 #' @useDynLib corrcoverage
 #' @importFrom Rcpp sourceCpp
 #' @export
-credsetC <- function(pp, CV = iCV, thr = 0.6) {
+credsetC <- function(pp, CV = iCV, thr = 0.95) {
     ret <- credsetmat(pp, CV, thr)  ## list 1 = wh, 2 = size, 3=contained
     data.frame(claimed.cov = ret[[2]], covered = ret[[3]], nvar = ret[[1]])
 }
@@ -47,11 +47,11 @@ credsetC <- function(pp, CV = iCV, thr = 0.6) {
 #' @param W Prior for the standard deviation of the effect size parameter beta (W=0.2 default)
 #' @param Sigma SNP correlation matrix
 #' @param pp0 Posterior probabilities of system of interest
-#' @param thresh Minimum threshold for fine-mapping experiment
+#' @param thresh Minimum threshold for fine-mapping experiment (default is 0.95)
 #' @param nrep Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)
 #' @export
 #' @return Corrected coverage estimate
-corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
+corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh = 0.95, nrep = 1000) {
 
     nsnps = length(pp0)
 
@@ -101,12 +101,12 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh, nrep = 1000) {
 #' @param N0 Number of controls
 #' @param N1 Number of cases
 #' @param Sigma SNP correlation matrix
-#' @param thr Minimum threshold for fine-mapping experiment
+#' @param thr Minimum threshold for fine-mapping experiment (default is 0.95)
 #' @param W Prior for the standard deviation of the effect size parameter beta
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)
 #' @export
 #' @return Corrected coverage estimate
-corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
+corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
     varbeta = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
     r = W^2/(W^2 + varbeta)
     bf = 0.5 * (log(1 - r) + (r * z^2))
@@ -169,13 +169,13 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
 #' @param N0 Number of controls
 #' @param N1 Number of cases
 #' @param Sigma SNP correlation matrix
-#' @param thr Minimum threshold for fine-mapping experiment
+#' @param thr Minimum threshold for fine-mapping experiment (default is 0.95)
 #' @param W Prior for the standard deviation of the effect size parameter beta
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)
 #' @return Corrected coverage estimate
 #' @export
 #'
-corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
+corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
     z <- bhat/sqrt(V)
     r <- W^2/(W^2 + V)
     bf = 0.5 * (log(1 - r) + (r * z^2))
@@ -232,13 +232,13 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000) {
 #' @title Use simulated pps to find corrected coverage estimate
 #'
 #' @rdname quick_corrcov
-#' @param thr Threshold value to exceed
+#' @param thr Threshold value to exceed (default is 0.95)
 #' @param simulated.pps A list of matrices of simulated posterior probabilities (1 simulation per row) where each list element is for the corresponding SNP considered causal
 #' @param pp The posterior probabilities of the original system
 #'
 #' @return Corrected coverage estimate
 #' @export
-quick_corrcov <- function(thr, simulated.pps, pp) {
+quick_corrcov <- function(thr = 0.95, simulated.pps, pp) {
     n_pps <- length(simulated.pps)
     args <- 1:nsnps
 
@@ -253,14 +253,14 @@ quick_corrcov <- function(thr, simulated.pps, pp) {
 #' @title Use simulated pps to find corrected coverage estimate and cred set
 #'
 #' @rdname quick_corrcov_cs
-#' @param thr Threshold value to exceed
+#' @param thr Threshold value to exceed (default is 0.95)
 #' @param simulated.pps A list of matrices of simulated posterior probabilities (1 simulation per row) where each list element is for the corresponding SNP considered causal
 #' @param pp The posterior probabilities of the original system
 #'
 #' @return A list of the credible set obtained using the specified threshold, the corrected coverage estimate of this credible set, the threshold the user specified and the size of the credible set (the sum of the pps of the variants)
 #' @export
 #'
-quick_corrcov_cs <- function(thr, simulated.pps, pp) {
+quick_corrcov_cs <- function(thr = 0.95, simulated.pps, pp) {
     n_pps <- length(simulated.pps)
     args <- 1:nsnps
 

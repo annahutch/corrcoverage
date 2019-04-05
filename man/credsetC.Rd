@@ -4,14 +4,14 @@
 \alias{credsetC}
 \title{Get credible set of variants from matrix of pps (Rcpp)}
 \usage{
-credsetC(pp, CV = iCV, thr = 0.6)
+credsetC(pp, CV = iCV, thr = 0.95)
 }
 \arguments{
 \item{pp}{Matrix of posterior probabilities of causality (one row per system)}
 
 \item{CV}{Vector of CV indices (one per system/row)}
 
-\item{thr}{Minimum threshold for credible set size}
+\item{thr}{Minimum threshold for credible set size (default is 0.95)}
 }
 \value{
 Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants (nvar).

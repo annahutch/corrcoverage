@@ -77,7 +77,7 @@
 </h1>
                         <h4 class="author">Anna Hutchinson</h4>
             
-            <h4 class="date">2019-03-13</h4>
+            <h4 class="date">2019-04-05</h4>
       
       
       <div class="hidden name"><code>my-vignette.Rmd</code></div>
@@ -87,7 +87,7 @@
     
     
 <hr>
-<p>This guide will show users how to use the <code>corrcoverage</code> package for statistical fine-mapping analyses, including obtaining an accurate coverage estimate for the causal variant in a credible set. This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. <a href="https://www.ncbi.nlm.nih.gov/pubmed/23104008">here</a>, which utilises Bayes factors for genetic association studies described by Wakefield <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359">here</a>.</p>
+<p>This guide will show users how the <code>corrcoverage</code> package can be used for statistical fine-mapping, including obtaining an accurate coverage estimate for the causal variant in a credible set (corrected coverage estimate). This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. <a href="https://www.ncbi.nlm.nih.gov/pubmed/23104008">here</a>, which utilities Bayes factors for genetic association studies described by Wakefield <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359">here</a>.</p>
 <p>The <code>corrcoverage</code> package uses GWAS summary statistics to provides an accurate estimate of the probability that the true causal variant is contained within a credible set derived for a given threshold. It also provides functions so that users can move freely between joint Z-scores, marginal Z-scores, asymptotic Bayes factors and posterior probabilities of causality.</p>
 <hr>
 <p>Load the library.</p>
@@ -98,9 +98,9 @@
 <h2 class="hasAnchor">
 <a href="#simulate-gwas-summary-statistics" class="anchor"></a>Simulate GWAS summary statistics</h2>
 <hr>
-<p><strong>This package is intended for use on summary statistics obtained from GWAS, such as observed <span class="math inline">\(Z\)</span> scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the <a href="https://github.com/chr1swallace/simGWAS">simGWAS</a> package. Please refer to the walkthrough guide <a href="https://chr1swallace.github.io/simGWAS/articles/intro.html">here</a> from which the following is taken.</strong></p>
+<p><strong>This package is intended for use on summary statistics obtained from GWAS, such as observed <span class="math inline">\(Z\)</span>-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the <a href="https://github.com/chr1swallace/simGWAS">simGWAS</a> package. Please refer to the walkthrough guide <a href="https://chr1swallace.github.io/simGWAS/articles/intro.html">here</a> from which the following is taken.</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simGWAS)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Simulate reference haplotypes</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Simulate reference haplotypes</span>
 nsnps &lt;-<span class="st"> </span><span class="dv">200</span>
 nhaps &lt;-<span class="st"> </span><span class="dv">1000</span>
 lag &lt;-<span class="st"> </span><span class="dv">5</span> <span class="co"># genotypes are correlated between neighbouring variants</span>
@@ -115,12 +115,15 @@ freq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocume
 freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(freq)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(freq<span class="op">$</span>Probability)</code></pre></div>
 <pre><code>## [1] 1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MAF &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(freq[,snps]<span class="op">-</span><span class="dv">1</span>)</code></pre></div>
-<p>Specify the causal variant and it’s effect on disease, as odds ratio. One causal variant is chosen since the Bayesian approach to fine-mapping relies on the assumption of one causal variant per region. We choose a CV from the column names in <code>freq</code> and a value for the odds ratio.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MAF &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(freq[,snps]<span class="op">-</span><span class="dv">1</span>)
+
+<span class="co"># SNP correlation matrix</span>
+LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps)</code></pre></div>
+<p>We specify the causal variant (CV) and it’s effect on disease, as an odds ratio. One causal variant is chosen since the Bayesian approach to fine-mapping relies on the assumption of one causal variant per region, which is typed in the study.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(snps[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(haps)<span class="op">&gt;</span><span class="fl">0.1</span>)],<span class="dv">1</span>)
 iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV) <span class="co"># index of cv</span>
 OR &lt;-<span class="st"> </span><span class="fl">1.1</span></code></pre></div>
-<p>Then simulate marginal <span class="math inline">\(Z\)</span> scores. Here, we consider a GWAS with 5000 cases and 5000 controls.</p>
+<p>Then, we simulate marginal <span class="math inline">\(Z\)</span>-scores. Here, we consider a (fairly small) GWAS with 5000 cases and 5000 controls.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span>
               <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span>
               <span class="dt">snps=</span>snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span>
@@ -130,17 +133,17 @@ OR &lt;-<span class="st"> </span><span class="fl">1.1</span></code></pre></div>
               )</code></pre></div>
 <hr>
 </div>
-<div id="obtain-a-credible-set" class="section level2">
+<div id="find-a-credible-set" class="section level2">
 <h2 class="hasAnchor">
-<a href="#obtain-a-credible-set" class="anchor"></a>Obtain a credible set</h2>
+<a href="#find-a-credible-set" class="anchor"></a>Find a credible set</h2>
 <hr>
 <p>We now use the <code>credset</code> function in the <code>corrcoverage</code> package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows the standard steps from Maller’s approach:</p>
 <ol style="list-style-type: decimal">
-<li>Order variants in descending order of posterior probabilities.</li>
+<li>Order variants into descending order of posterior probabilities.</li>
 <li>Cumulatively sum these variants until the specified threshold is exceeded.</li>
 <li>Group these variants to form the credible set.</li>
 </ol>
-<p>The function requires posterior probabilities of causality as an input, and so we use the <code>ppfunc</code> function to convert the marginal <span class="math inline">\(Z\)</span> scores to posterior probabilties of causality. The <code>ppfunc</code> function also requires a value for <span class="math inline">\(V\)</span>, the variance of the estimated effect size, which can be easily calculated using the <code><a href="https://www.rdocumentation.org/packages/coloc/topics/Var.data.cc">coloc::Var.data.cc</a></code> function. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.</p>
+<p>The function requires posterior probabilities of causality as an input, and so we use the <code>ppfunc</code> function to convert the marginal <span class="math inline">\(Z\)</span>-scores to posterior probabilities of causality. The <code>ppfunc</code> function also requires a value for <span class="math inline">\(V\)</span>, the variance of the estimated effect size, which can be easily calculated using the <code><a href="https://www.rdocumentation.org/packages/coloc/topics/Var.data.cc">coloc::Var.data.cc</a></code> function. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N0 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of controls</span>
 N1 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of cases</span>
 
@@ -148,17 +151,15 @@ varbeta &lt;-<span class="st"> </span>coloc<span class="op">:::</span><span clas
 
 postprobs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.html">ppfunc</a></span>(<span class="dt">z =</span> z0, <span class="dt">V =</span> varbeta)
 
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(postprobs, <span class="dt">main =</span> <span class="st">"Posterior probabilities of causality"</span>, <span class="dt">xlab =</span> <span class="st">"SNP index"</span>, <span class="dt">ylab =</span> <span class="st">"Posterior probabilty"</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(postprobs, <span class="dt">main =</span> <span class="st">"Posterior probabilities of causality"</span>, <span class="dt">xlab =</span> <span class="st">"SNP index"</span>, <span class="dt">ylab =</span> <span class="st">"Posterior probability"</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> iCV, <span class="dt">col =</span> <span class="dv">2</span>)</code></pre></div>
 <p><img src="my-vignette_files/figure-html/unnamed-chunk-6-1.png" width="384"></p>
 <p>The posterior probability plot shows the location of the causal variant (red line). Notice that the causal variant is not the variant with the largest posterior probability. This is not rare in fine-mapping analyses and occurs due to linkage disequilibrium patterns (correlation between SNPs).</p>
-<p>The <code>credset</code> function reports the variants in the credible set, the claimed coverage <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> (the cumulative sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set. If the <code>CV</code> parameter is supplied by the user (e.g. in simulation studies when the CV is known), then the output also includes a binary indicator of whether the causal variant was contained in the credible set.</p>
+<p>The <code>credset</code> function reports the variants in the credible set, the claimed coverage<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> (the sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set (nvar). If the <code>CV</code> parameter is supplied by the user (e.g. in simulation studies where the CV is known), then the output also includes a binary indicator of whether the causal variant was contained in the credible set.</p>
+<p>We use the <code>credset</code> function to obtain a 90% credible set.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">thresh &lt;-<span class="st"> </span><span class="fl">0.9</span>
 
-credibleset &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs,
-              <span class="dt">CV =</span> iCV,
-             <span class="dt">thr =</span> thresh 
-       ) 
+credibleset &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)
 
 credibleset</code></pre></div>
 <pre><code>## $credset
@@ -174,19 +175,30 @@ credibleset</code></pre></div>
 ## $nvar
 ## s30 
 ## 114</code></pre>
-<p>Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9008649% and contains the true causal variant. In literature, authors would commonly report that they have found a 90% credible set containing 114 variants, which they are at least 90% confident contains the true causal variant.</p>
+<p>Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9009 and contains the true causal variant. In literature, authors would commonly report that they have found a 90% credible set containing 114 variants which they are at least 90% confident contains the true causal variant.</p>
+<p>Note that if the variants are named in the <code>pp</code> vector, then the <code>$credset</code> output would contain variant names rather than indices.</p>
 <hr>
 </div>
 <div id="corrected-coverage-estimate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#corrected-coverage-estimate" class="anchor"></a>Corrected coverage estimate</h2>
-<p>Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability of the causal variant using this fancy new package. The only parameters we need to supply to the <code>corrcov</code> function are <code>z0</code> (marginal <span class="math inline">\(Z\)</span> scores), <code>f</code> (minor allele frequencies), <code>N0</code> (number of controls), <code>N1</code> (number of cases), <code>Sigma</code> (SNP correlation matrix) and the threshold used to derive the credible set.</p>
-<p>Side note: If the estimated effect size coefficients (<code>bhat</code>) and their standard errors (<code><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt(V)</a></code>) are known instead of <span class="math inline">\(Z\)</span>-scores and minor allele frequencies, then the <code>corrcov_bhat</code> function can be used instead.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps) <span class="co"># correlation between SNPs</span>
-
-corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrcov.html">corrcov</a></span>(z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</code></pre></div>
-<pre><code>##     Corrected.Coverage Claimed.Coverage Threshold
-## s30          0.9736372        0.9008649       0.9</code></pre>
+<p>Suppose we are suspicious of this coverage estimate (90% in our example) and wish to find a more accurate estimate using this fancy new package. The <code>corrcov</code> function can be used, which requires the following parameters:</p>
+<ul>
+<li>
+<code>z</code> (marginal <span class="math inline">\(Z\)</span>-scores)</li>
+<li>
+<code>f</code> (minor allele frequencies)</li>
+<li>
+<code>N0</code>, <code>N1</code> (number of controls and cases respectively)</li>
+<li>
+<code>Sigma</code> (SNP correlation matrix)</li>
+<li>
+<code>thr</code> (threshold used to derive the credible set)</li>
+</ul>
+<p>Side note: If the estimated effect size coefficients (<code>bhat</code>) and their standard errors (<code><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt(V)</a></code>) are known instead of <span class="math inline">\(Z\)</span>-scores and minor allele frequencies, then the <code>corrcov_bhat</code> function can be used analogously.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrcov.html">corrcov</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</code></pre></div>
+<pre><code>##  Corrected.Coverage Claimed.Coverage Threshold
+##           0.9736372        0.9008649       0.9</code></pre>
 <p>In this example, the 90% credible set may in actual fact have nearer to 97.4% coverage of the causal variant in the credible set.</p>
 <hr>
 </div>
@@ -209,14 +221,14 @@ true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www
 true.cov.est</code></pre></div>
 <pre><code>## [1] 0.9764</code></pre>
 <p>The estimated empirical coverage is found to be approximately 97.6%, so our estimate of ~97.4% is very accurate - far more so than the standard ‘claimed coverage’ of ~90.09%.</p>
-<pre><code>##     Empirical.Coverage Corrected.Coverage Claimed.Coverage Threshold
-## s30             0.9764          0.9736372        0.9008649       0.9</code></pre>
+<pre><code>##  Empirical.Coverage Corrected.Coverage Claimed.Coverage Threshold
+##              0.9764          0.9736372        0.9008649       0.9</code></pre>
 <hr>
 </div>
 <div id="so-what" class="section level2">
 <h2 class="hasAnchor">
 <a href="#so-what" class="anchor"></a>So what?</h2>
-<p>This vignette has shown readers how to use the <code>corrcoverage</code> package to obtain more accurate coverage estimates of the causal variant in the credible set. Obtaining accurate coverage estimates will allow researchers to adjust their credible set to achieve the true desired coverage - for example narrowing down a 95% credible set of 10 variants to just 5 variants. Moreover, reporting an accurate coverage estimate of the causal variant in a credible set will allow for more efficient allocation and expenditure of resources in the laborious follow-up wet lab analyses of the variants in the credible set. Altogether, this procedure will improve the efficiency of determining the genes and pathways which play a role in human disease, ultimately helping to untangle the complex relationship between genetic variants and disease.</p>
+<p>This vignette has shown readers how to use the <code>corrcoverage</code> package to obtain a more accurate coverage estimate of the causal variant in a credible set. Obtaining accurate coverage estimates will allow researchers to adjust their credible set to achieve the true desired coverage - for example narrowing down a 95% credible set of 10 variants to just 5 variants. Moreover, reporting an accurate coverage estimate of the causal variant in a credible set will allow for more efficient allocation and expenditure of resources in the laborious follow-up wet lab analyses of the variants in the credible set. Altogether, this procedure will improve the efficiency of determining the genes and pathways which play a role in human disease, ultimately helping to untangle the complex relationship between genetic variants and disease.</p>
 <hr>
 </div>
 <div id="references" class="section level2">
@@ -228,7 +240,7 @@ true.cov.est</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">session_info</a></span>()</code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  setting  value                       
-##  version  R version 3.5.1 (2018-07-02)
+##  version  R version 3.5.3 (2019-03-11)
 ##  os       macOS High Sierra 10.13.6   
 ##  system   x86_64, darwin15.6.0        
 ##  ui       X11                         
@@ -236,7 +248,7 @@ true.cov.est</code></pre></div>
 ##  collate  en_GB.UTF-8                 
 ##  ctype    en_GB.UTF-8                 
 ##  tz       Europe/London               
-##  date     2019-03-13                  
+##  date     2019-04-05                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  package      * version    date       lib source                                 
@@ -246,7 +258,8 @@ true.cov.est</code></pre></div>
 ##  BMA            3.18.9     2018-09-14 [1] CRAN (R 3.5.0)                         
 ##  callr          3.1.1      2018-12-21 [1] CRAN (R 3.5.0)                         
 ##  cli            1.0.1      2018-09-25 [1] CRAN (R 3.5.0)                         
-##  cluster        2.0.7-1    2018-04-13 [1] CRAN (R 3.5.1)                         
+##  cluster        2.0.7-1    2018-04-13 [1] CRAN (R 3.5.3)                         
+##  codetools      0.2-16     2018-12-24 [1] CRAN (R 3.5.3)                         
 ##  coloc          3.1        2018-02-24 [1] CRAN (R 3.5.0)                         
 ##  colorspace     1.4-0      2019-01-13 [1] CRAN (R 3.5.2)                         
 ##  combinat       0.0-8      2012-10-29 [1] CRAN (R 3.5.0)                         
@@ -254,6 +267,7 @@ true.cov.est</code></pre></div>
 ##  corpcor        1.6.9      2017-04-01 [1] CRAN (R 3.5.0)                         
 ##  corrcoverage * 0.1.0      2019-03-11 [1] Github (annahutch/corrcoverage@756486c)
 ##  crayon         1.3.4      2017-09-16 [1] CRAN (R 3.5.0)                         
+##  data.table   * 1.12.0     2019-01-13 [1] CRAN (R 3.5.2)                         
 ##  DEoptimR       1.0-8      2016-11-19 [1] CRAN (R 3.5.0)                         
 ##  desc           1.2.0      2018-05-01 [1] CRAN (R 3.5.0)                         
 ##  devtools       2.0.1      2018-10-26 [1] CRAN (R 3.5.1)                         
@@ -261,18 +275,19 @@ true.cov.est</code></pre></div>
 ##  dplyr          0.8.0.1    2019-02-15 [1] CRAN (R 3.5.2)                         
 ##  evaluate       0.13       2019-02-12 [1] CRAN (R 3.5.2)                         
 ##  fs             1.2.6      2018-08-23 [1] CRAN (R 3.5.0)                         
-##  ggplot2        3.1.0      2018-10-25 [1] CRAN (R 3.5.0)                         
+##  ggplot2      * 3.1.0      2018-10-25 [1] CRAN (R 3.5.0)                         
 ##  glue           1.3.0      2018-07-17 [1] CRAN (R 3.5.0)                         
+##  gridExtra    * 2.3        2017-09-09 [1] CRAN (R 3.5.0)                         
 ##  gtable         0.2.0      2016-02-26 [1] CRAN (R 3.5.0)                         
 ##  htmltools      0.3.6      2017-04-28 [1] CRAN (R 3.5.0)                         
 ##  inline         0.3.15     2018-05-18 [1] CRAN (R 3.5.0)                         
 ##  knitr          1.22       2019-03-08 [1] CRAN (R 3.5.1)                         
-##  lattice        0.20-38    2018-11-04 [1] CRAN (R 3.5.0)                         
+##  lattice        0.20-38    2018-11-04 [1] CRAN (R 3.5.3)                         
 ##  lazyeval       0.2.1      2017-10-29 [1] CRAN (R 3.5.0)                         
 ##  leaps          3.0        2017-01-10 [1] CRAN (R 3.5.0)                         
 ##  magrittr       1.5        2014-11-22 [1] CRAN (R 3.5.0)                         
-##  MASS           7.3-51.1   2018-11-01 [1] CRAN (R 3.5.0)                         
-##  Matrix         1.2-14     2018-04-13 [1] CRAN (R 3.5.1)                         
+##  MASS           7.3-51.1   2018-11-01 [1] CRAN (R 3.5.3)                         
+##  Matrix         1.2-15     2018-11-01 [1] CRAN (R 3.5.3)                         
 ##  memoise        1.1.0      2017-04-21 [1] CRAN (R 3.5.0)                         
 ##  munsell        0.5.0      2018-06-12 [1] CRAN (R 3.5.0)                         
 ##  mvtnorm        1.0-10     2019-03-05 [1] CRAN (R 3.5.2)                         
@@ -304,7 +319,7 @@ true.cov.est</code></pre></div>
 ##  snpStats       1.32.0     2018-10-30 [1] Bioconductor                           
 ##  stringi        1.3.1      2019-02-13 [1] CRAN (R 3.5.2)                         
 ##  stringr        1.4.0      2019-02-10 [1] CRAN (R 3.5.2)                         
-##  survival       2.43-3     2018-11-26 [1] CRAN (R 3.5.0)                         
+##  survival       2.43-3     2018-11-26 [1] CRAN (R 3.5.3)                         
 ##  testthat       2.0.1      2018-10-13 [1] CRAN (R 3.5.0)                         
 ##  tibble         2.0.1      2019-01-12 [1] CRAN (R 3.5.2)                         
 ##  tidyselect     0.2.5      2018-10-11 [1] CRAN (R 3.5.0)                         
@@ -320,7 +335,7 @@ true.cov.est</code></pre></div>
 <div class="footnotes">
 <hr>
 <ol>
-<li id="fn1"><p>Researchers commonly use the size of the credible set as an estimate of the coverage probabiltiy of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (claimed coverage &gt; threshold).<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p>Researchers commonly use the size of the credible set as an estimate of the coverage probability of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (claimed coverage &gt; threshold by virtue of the method).<a href="#fnref1">↩</a></p></li>
 </ol>
 </div>
   </div>
@@ -331,7 +346,7 @@ true.cov.est</code></pre></div>
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#simulate-gwas-summary-statistics">Simulate GWAS summary statistics</a></li>
-      <li><a href="#obtain-a-credible-set">Obtain a credible set</a></li>
+      <li><a href="#find-a-credible-set">Find a credible set</a></li>
       <li><a href="#corrected-coverage-estimate">Corrected coverage estimate</a></li>
       <li><a href="#compare-with-estimate-of-true-coverage">Compare with estimate of ‘true’ coverage</a></li>
       <li><a href="#so-what">So what?</a></li>

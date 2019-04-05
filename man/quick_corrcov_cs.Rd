@@ -4,10 +4,10 @@
 \alias{quick_corrcov_cs}
 \title{Use simulated pps to find corrected coverage estimate and cred set}
 \usage{
-quick_corrcov_cs(thr, simulated.pps, pp)
+quick_corrcov_cs(thr = 0.95, simulated.pps, pp)
 }
 \arguments{
-\item{thr}{Threshold value to exceed}
+\item{thr}{Threshold value to exceed (default is 0.95)}
 
 \item{simulated.pps}{A list of matrices of simulated posterior probabilities (1 simulation per row) where each list element is for the corresponding SNP considered causal}
 

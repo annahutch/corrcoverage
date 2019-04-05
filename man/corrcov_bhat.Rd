@@ -4,7 +4,8 @@
 \alias{corrcov_bhat}
 \title{Obtain corrected coverage estimate using estimated effect sizes and their standard errors}
 \usage{
-corrcov_bhat(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000)
+corrcov_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
+  nrep = 1000)
 }
 \arguments{
 \item{bhat}{Estimated effect sizes from single-SNP logistic regressions}
@@ -17,7 +18,7 @@ corrcov_bhat(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000)
 
 \item{Sigma}{SNP correlation matrix}
 
-\item{thr}{Minimum threshold for fine-mapping experiment}
+\item{thr}{Minimum threshold for fine-mapping experiment (default is 0.95)}
 
 \item{W}{Prior for the standard deviation of the effect size parameter beta}
 

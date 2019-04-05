@@ -4,7 +4,7 @@
 \alias{corrcov}
 \title{Obtain corrected coverage estimate using Z-scores and mafs}
 \usage{
-corrcov(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000)
+corrcov(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000)
 }
 \arguments{
 \item{z}{Marginal Z-scores}
@@ -17,7 +17,7 @@ corrcov(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000)
 
 \item{Sigma}{SNP correlation matrix}
 
-\item{thr}{Minimum threshold for fine-mapping experiment}
+\item{thr}{Minimum threshold for fine-mapping experiment (default is 0.95)}
 
 \item{W}{Prior for the standard deviation of the effect size parameter beta}
 

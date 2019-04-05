@@ -15,9 +15,16 @@ knitr::opts_chunk$set(
 
 # corrcoverage
 
-The `corrcoverage` R package can be used to obtain an accurate coverage estimate of the causal variant in a credible set that has been acquired using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008), [Wakefield, 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359).).
-
 Webpage: https://annahutch.github.io/corrcoverage/
+
+The `corrcoverage` R package uses a computationally efficient algorithm to find accurate coverage estimates of the causal variant in credible sets obtained using the Bayesian approach for fine-mapping ([Maller et al., 2012](https://www.ncbi.nlm.nih.gov/pubmed/23104008), [Wakefield, 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359).).
+
+The package only requires GWAS summary statistics and can be used to:
+
+* Perform Bayesian fine-mapping
+* Estimate the true genetic effect at the causal variant
+* Obtain an accurate coverage estimate of the causal variant in a credible set (corrected coverage estimate)
+* Find the smallest set of variants such that the coverage estimate exceeds some user-defined threshold (corrected credible set)
 
 ----
 
@@ -34,33 +41,43 @@ devtools::install_github("annahutch/corrcoverage")
 
 ## Examples
 
-For examples and usage, please see the vignettes [http://annahutch.github.io/corrcoverage/articles/my-vignette.html]
+For examples, please see the vignettes on the webpage [here](http://annahutch.github.io/corrcoverage/articles/my-vignette.html). 
+
+The 'Corrected Coverage' vignette [here](https://annahutch.github.io/corrcoverage/articles/my-vignette.html) should be read first. This shows readers how to use the `corrcoverage` package to get an accurate coverage estimate of the causal variant in a credible set.
+
+The 'New Credible Set' vignette [here](https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html) follows on from the 'Corrected Coverage' vignette and shows readers how the `corrcoverage` package can be used to obtain a new credible set with the desired coverage of the causal variant.
 
 ----
 
 ## Conversion Functions
 
-The `corrcoverage` package includes useful functions for converting between p-values, $Z$-scores, asymptotic Bayes factors and posterior probabilities of causality. The following table summarises these functions. 
+The Bayesian method for fine-mapping involves finding the posterior probability of causality for each SNP, before sorting these into descending order and adding variants to a 'credible set' until the combined posterior probabilities of these SNPs exceed some threshold. The supplementary text of Maller's paper (available [here](https://media.nature.com/original/nature-assets/ng/journal/v44/n12/extref/ng.2435-S1.pdf)) shows that these posterior probabilities are normalised Bayes factors. 
 
-Include null model? ^[This refers to whether we include the null model of no genetic effect into the analyses. Note that in the standard Bayesian approach for fine-mapping, this is ignored such that the sum of the posterior probabilities for each variant is 1.] | Input | Output | Function
+Asymptotic Bayes factors ([Wakefield, 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359)) are commonly used in genetic association studies as these only require the specification of $Z$-scores (or equivalently the effect size coefficients, $\beta$, and their standard errors, $V$), the standard errors of the effect sizes ($V$) and the prior variance of the estimated effect size ($W^2$), thus only requiring summary data from genetic association studies. 
+
+Consequently, the `corrcoverage` package contains functions for converting between $P$-values, $Z$-scores, asymptotic Bayes factors (ABFs) and posterior probabilities of causality (PPs). The following table shows what input these conversion functions require and what output they produce. The 'include null model' column is for whether the null model of no genetic effect is included in the calculation (PPs obtained using the standard Bayesian approach ignore this).
+
+Function | Include null model? | Input | Output 
 --- | --- | --- | ---
-YES |  p-values | log(ABF) | `approx.bf.p`
-YES | p-values | Posterior Probabilities | `pvals_pp`
-YES | Marginal $Z$-scores | Posterior Probabilties | `z0_pp`
-NO | Marginal $Z$-scores | Posterior Probabilties | `ppfunc`
-NO | Marginal $Z$-score matrix | Posterior Probabilties | `z0func.mat`
+`approx.bf.p` | YES |  $p$-values | log(ABF) |
+`pvals_pp` | YES | $p$-values | Posterior Probabilities |
+`z0_pp` | YES | Marginal $Z$-scores | Posterior Probabilities |
+`ppfunc` | NO | Marginal $Z$-scores | Posterior Probabilities |
+`z0func.mat` | NO | Marginal $Z$-score matrix | Posterior Probabilities |
 
-Functions are also provided to simulate marginal $Z$-scores from joint $Z$-scores. The joint $Z$-scores are all 0, except at the causal variant where it is the 'true effect', $\mu$. $\mu$ can be estimated using `est_mu` function which required sample sizes, $Z$-scores and minor allele frequencies.
+Functions are also provided to simulate marginal $Z$-scores from joint $Z$-scores. The joint $Z$-scores are all 0, except at the causal variant where it is the 'true effect', $\mu$. 
 
-`z_sim` simulates marginal $Z$-scores from joint $Z$-scores, whilst `zj_pp` can be used to simulate posterior probability systems from a joint $Z$-score vector. These functions work by first calculating $E(Z_m)$,
+$\mu$ can be estimated using the `est_mu` function which required sample sizes, $Z$-scores and minor allele frequencies.
+
+`z_sim` simulates marginal $Z$-scores from joint $Z$-scores, whilst `zj_pp` can be used to simulate posterior probability systems from a joint $Z$-score vector. These functions first calculate $E(Z_m)$,
 $$E(Z_m)=Z_j \times \Sigma$$
 where $\Sigma$ is the correlation matrix between SNPs. 
 
-We can then simulate more $Z$-score systems from a multivariate normal disribution with mean $E(Z_m)$ and variance $\Sigma$. This is a key step in our corrected coverage method.
+We can then simulate more $Z$-score systems from a multivariate normal distribution with mean $E(Z_m)$ and variance $\Sigma$. This is a key step in our corrected coverage method.
 
 ---
 
-Our correction factor works by simulating many more credible sets from 'the same system as the original' and finding what proportion of these contain the true causal variant, whereby each variant is considered causal in turn and the predictions are normalised by that variant's posterior probability of causality. 
+In brief, the correction method includes simulating many credible sets from 'the same system as the original' and finding what proportion of these contain the true causal variant, whereby each variant is considered causal in turn and the predictions are normalised by that variant's posterior probability of causality. 
 
 ----
 

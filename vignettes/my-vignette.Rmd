@@ -16,7 +16,7 @@ options(width = 3000)
 
 ---
 
-This guide will show users how to use the `corrcoverage` package for statistical fine-mapping analyses, including obtaining an accurate coverage estimate for the causal variant in a credible set. This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. [here](https://www.ncbi.nlm.nih.gov/pubmed/23104008), which utilises Bayes factors for genetic association studies described by Wakefield [here](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359).
+This guide will show users how the `corrcoverage` package can be used for statistical fine-mapping, including obtaining an accurate coverage estimate for the causal variant in a credible set (corrected coverage estimate). This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. [here](https://www.ncbi.nlm.nih.gov/pubmed/23104008), which utilities Bayes factors for genetic association studies described by Wakefield [here](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359).
 
 The `corrcoverage` package uses GWAS summary statistics to provides an accurate estimate of the probability that the true causal variant is contained within a credible set derived for a given threshold. It also provides functions so that users can move freely between joint Z-scores, marginal Z-scores, asymptotic Bayes factors and posterior probabilities of causality.
 
@@ -35,14 +35,14 @@ library(corrcoverage)
 
 ---
 
-**This package is intended for use on summary statistics obtained from GWAS, such as observed $Z$ scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the [simGWAS](https://github.com/chr1swallace/simGWAS) package. Please refer to the walkthrough guide [here](https://chr1swallace.github.io/simGWAS/articles/intro.html) from which the following is taken.** 
+**This package is intended for use on summary statistics obtained from GWAS, such as observed $Z$-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the [simGWAS](https://github.com/chr1swallace/simGWAS) package. Please refer to the walkthrough guide [here](https://chr1swallace.github.io/simGWAS/articles/intro.html) from which the following is taken.** 
 
 ```{r}
 library(simGWAS)
 ```
 
 ```{r}
-# Simulate reference haplotypes
+# Simulate reference haplotypes
 nsnps <- 200
 nhaps <- 1000
 lag <- 5 # genotypes are correlated between neighbouring variants
@@ -57,9 +57,12 @@ freq <- as.data.frame(haps+1)
 freq$Probability <- 1/nrow(freq)
 sum(freq$Probability)
 MAF <- colMeans(freq[,snps]-1)
+
+# SNP correlation matrix
+LD <- cor2(haps)
 ```
 
-Specify the causal variant and it's effect on disease, as odds ratio. One causal variant is chosen since the Bayesian approach to fine-mapping relies on the assumption of one causal variant per region. We choose a CV from the column names in `freq` and a value for the odds ratio.
+We specify the causal variant (CV) and it's effect on disease, as an odds ratio. One causal variant is chosen since the Bayesian approach to fine-mapping relies on the assumption of one causal variant per region, which is typed in the study.
 
 ```{r}
 CV <- sample(snps[which(colMeans(haps)>0.1)],1)
@@ -67,7 +70,7 @@ iCV <- sub("s", "", CV) # index of cv
 OR <- 1.1
 ```
 
-Then simulate marginal $Z$ scores. Here, we consider a GWAS with 5000 cases and 5000 controls. 
+Then, we simulate marginal $Z$-scores. Here, we consider a (fairly small) GWAS with 5000 cases and 5000 controls. 
 
 ```{r}
 z0 <- simulated_z_score(N0=5000, # number of controls
@@ -81,17 +84,17 @@ z0 <- simulated_z_score(N0=5000, # number of controls
 
 ----
 
-## Obtain a credible set
+## Find a credible set
 
 ----
 
 We now use the `credset` function in the `corrcoverage` package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows the standard steps from Maller's approach:
 
-1. Order variants in descending order of posterior probabilities. 
+1. Order variants into descending order of posterior probabilities. 
 2. Cumulatively sum these variants until the specified threshold is exceeded.
 3. Group these variants to form the credible set.
 
-The function requires posterior probabilities of causality as an input, and so we use the `ppfunc` function to convert the marginal $Z$ scores to posterior probabilties of causality. The `ppfunc` function also requires a value for $V$, the variance of the estimated effect size, which can be easily calculated using the `coloc::Var.data.cc` function. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.
+The function requires posterior probabilities of causality as an input, and so we use the `ppfunc` function to convert the marginal $Z$-scores to posterior probabilities of causality. The `ppfunc` function also requires a value for $V$, the variance of the estimated effect size, which can be easily calculated using the `coloc::Var.data.cc` function. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.
 
 ```{r warning=FALSE, error=FALSE, fig.width=4}
 N0 <- 5000 # number of controls
@@ -101,44 +104,49 @@ varbeta <- coloc:::Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of
 
 postprobs <- ppfunc(z = z0, V = varbeta)
 
-plot(postprobs, main = "Posterior probabilities of causality", xlab = "SNP index", ylab = "Posterior probabilty")
+plot(postprobs, main = "Posterior probabilities of causality", xlab = "SNP index", ylab = "Posterior probability")
 abline(v = iCV, col = 2)
 ```
 
 The posterior probability plot shows the location of the causal variant (red line). Notice that the causal variant is not the variant with the largest posterior probability. This is not rare in fine-mapping analyses and occurs due to linkage disequilibrium patterns (correlation between SNPs).
 
-The `credset` function reports the variants in the credible set, the claimed coverage ^[Researchers commonly use the size of the credible set as an estimate of the coverage probabiltiy of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (claimed coverage > threshold).] (the cumulative sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set. If the `CV` parameter is supplied by the user (e.g. in simulation studies when the CV is known), then the output also includes a binary indicator of whether the causal variant was contained in the credible set. 
+The `credset` function reports the variants in the credible set, the claimed coverage^[Researchers commonly use the size of the credible set as an estimate of the coverage probability of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (claimed coverage > threshold by virtue of the method).] (the sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set (nvar). If the `CV` parameter is supplied by the user (e.g. in simulation studies where the CV is known), then the output also includes a binary indicator of whether the causal variant was contained in the credible set. 
+
+We use the `credset` function to obtain a 90% credible set.
 
 ```{r warning=FALSE, error=FALSE}
 thresh <- 0.9
 
-credibleset <- credset(pp = postprobs,
-              CV = iCV,
-             thr = thresh 
-       ) 
+credibleset <- credset(pp = postprobs, CV = iCV, thr = thresh)
 
 credibleset
 ```
 
-Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9008649% and contains the true causal variant. In literature, authors would commonly report that they have found a 90% credible set containing 114 variants, which they are at least 90% confident contains the true causal variant. 
+Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9009 and contains the true causal variant. In literature, authors would commonly report that they have found a 90% credible set containing 114 variants which they are at least 90% confident contains the true causal variant. 
+
+Note that if the variants are named in the `pp` vector, then the `$credset` output would contain variant names rather than indices.
 
 ----
   
 ## Corrected coverage estimate
 
+Suppose we are suspicious of this coverage estimate (90% in our example) and wish to find a more accurate estimate using this fancy new package. The `corrcov` function can be used, which requires the following parameters:
 
-Suppose we are suspicious of this coverage estimate and wish to find a more accurate coverage probability of the causal variant using this fancy new package. The only parameters we need to supply to the `corrcov` function are `z0` (marginal $Z$ scores), `f` (minor allele frequencies), `N0` (number of controls), `N1` (number of cases), `Sigma` (SNP correlation matrix) and the threshold used to derive the credible set.
+* `z` (marginal $Z$-scores)
+* `f` (minor allele frequencies)
+* `N0`, `N1` (number of controls and cases respectively)
+* `Sigma` (SNP correlation matrix) 
+* `thr` (threshold used to derive the credible set)
 
-Side note: If the estimated effect size coefficients (`bhat`) and their standard errors (`sqrt(V)`) are known instead of $Z$-scores and minor allele frequencies, then the `corrcov_bhat` function can be used instead.
+Side note: If the estimated effect size coefficients (`bhat`) and their standard errors (`sqrt(V)`) are known instead of $Z$-scores and minor allele frequencies, then the `corrcov_bhat` function can be used analogously.
 
 ```{r cache = TRUE}
-LD <- cor2(haps) # correlation between SNPs
-
-corrected_cov_estimate <- corrcov(z0, f = MAF, N0, N1, Sigma = LD, thr = thresh)
+corrected_cov_estimate <- corrcov(z = z0, f = MAF, N0, N1, Sigma = LD, thr = thresh)
 ```
 
 ```{r echo = FALSE, cache = TRUE}
-data.frame("Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)
+df <- data.frame("Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)
+print(df, row.names = FALSE)
 ```
 
 In this example, the 90% credible set may in actual fact have nearer to 97.4% coverage of the causal variant in the credible set. 
@@ -168,14 +176,15 @@ true.cov.est
 The estimated empirical coverage is found to be approximately 97.6%, so our estimate of ~97.4% is very accurate - far more so than the standard 'claimed coverage' of ~90.09%.
 
 ```{r echo = FALSE, cache = TRUE}
-data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)[1,]
+df.new <- data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)[1,]
+print(df.new, row.names = FALSE)
 ```
 
 ----
 
 ## So what?
 
-This vignette has shown readers how to use the `corrcoverage` package to obtain more accurate coverage estimates of the causal variant in the credible set. Obtaining accurate coverage estimates will allow researchers to adjust their credible set to achieve the true desired coverage - for example narrowing down a 95% credible set of 10 variants to just 5 variants. Moreover, reporting an accurate coverage estimate of the causal variant in a credible set will allow for more efficient allocation and expenditure of resources in the laborious follow-up wet lab analyses of the variants in the credible set. Altogether, this procedure will improve the efficiency of determining the genes and pathways which play a role in human disease, ultimately helping to untangle the complex relationship between genetic variants and disease.
+This vignette has shown readers how to use the `corrcoverage` package to obtain a more accurate coverage estimate of the causal variant in a credible set. Obtaining accurate coverage estimates will allow researchers to adjust their credible set to achieve the true desired coverage - for example narrowing down a 95% credible set of 10 variants to just 5 variants. Moreover, reporting an accurate coverage estimate of the causal variant in a credible set will allow for more efficient allocation and expenditure of resources in the laborious follow-up wet lab analyses of the variants in the credible set. Altogether, this procedure will improve the efficiency of determining the genes and pathways which play a role in human disease, ultimately helping to untangle the complex relationship between genetic variants and disease.
 
 ---
 

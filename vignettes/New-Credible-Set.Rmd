@@ -14,15 +14,13 @@ set.seed(3)
 library(corrcoverage)
 ```
 
----
-
 This vignette will show users how the `corrcoverage` package can be used to obtain a new credible set of variants that contains the true causal variant with some specified desired coverage value whilst containing as few variants as possible.
 
 ---
 
 ## Simulate GWAS data
 
-As in the original vignette, let's begin by simulating some GWAS data using the `simGWAS` package.
+As in the [corrected coverage vignette](https://annahutch.github.io/corrcoverage/articles/my-vignette.html), let's begin by simulating some GWAS data using the `simGWAS` package.
 
 ```{r}
 library(simGWAS)
@@ -84,6 +82,8 @@ muhat
 
 The `corrected_cov` function is used to find the corrected coverage of a credible set with specified threshold, say 0.9.
 
+Note that this function is similar to using `corrcov` as explained in the previous vignette; which would require $Z$-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the `corrcov` function (muhat, varbeta etc.) so we can use `corrected_cov` instead.
+
 ```{r}
 thr = 0.9
 corrcov <- corrected_cov(mu = muhat, V = varbeta, Sigma = LD, pp0 = postprobs, thresh = thr, nrep = 1000)
@@ -91,7 +91,7 @@ cs <- credset(pp = postprobs, thr = thr)
 data.frame(claimed.cov = cs$claimed.cov, corr.cov =  corrcov, nvar = cs$nvar)
 ```
 
-Using the Bayesian approach for statistical fine-mapping we can obtain a 90% credible set consisting of 2 variants. The claimed coverage of this credible set is ~0.90, yet the corrected coverage estimate is ~0.96, suggesting that we can afford to be 'more confident' that we have captured the causal variant in our credible set. 
+Using the Bayesian approach for statistical fine-mapping we obtain a 90% credible set consisting of 2 variants. The claimed coverage of this credible set is ~0.90, yet the corrected coverage estimate is ~0.96, suggesting that we can afford to be 'more confident' that we have captured the causal variant in our credible set. 
 
 ## Empirical Coverage Estimate
 
@@ -99,12 +99,12 @@ Again, for the purpose of this vignette we can investigate how accurate this est
 
 ```{r}
 z0.tmp <- simulated_z_score(N0 = N0, # number of controls
-                        N1 = N1, # number of cases
-                        snps = snps, # column names in freq of SNPs for which Z scores should be generated
-                        W = CV, # causal variants, subset of snps
-                        gamma.W = log(OR), # log odds ratios
-                        freq = freq, # reference haplotypes
-                        nrep = 5000) 
+                            N1 = N1, # number of cases
+                            snps = snps, # column names in freq of SNPs for which Z scores should be generated
+                            W = CV, # causal variants, subset of snps
+                            gamma.W = log(OR), # log odds ratios
+                            freq = freq, # reference haplotypes
+                            nrep = 5000) 
 
 pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta)  # find pps from a matrix of simulations
 cs.cov <- apply(pps, 1, function(x) credset(x, CV = iCV, thr = thr)$cov)
@@ -118,9 +118,9 @@ We see that our corrected coverage value of ~0.962 is a good estimate of the emp
 
 ## Obtain a New Credible Set
 
-Our results suggest that we can remove some variants from the credible set, whilst still achieving the desired coverage of 90%.
+Our results suggest that we may be able to remove some variants from the credible set, whilst still achieving the desired coverage of 90%.
 
-The `corrected_cs` function uses GWAS summary statistics and some user-defined parameters to find the smallest threshold such that the corrected coverage is within some accuracy of the desired coverage. This required threshold is then used in the Bayesian approach for statistical fine-mapping to find a new credible set. 
+The `corrected_cs` function uses GWAS summary statistics and some user-defined parameters to find the smallest credible set such that the coverage estimate is within some accuracy of the desired coverage.
 
 The function requires the $Z$-scores (`z`), minor allele frequencies (`f`), control and case sample sizes (`N0` and `N1` respectively), LD matrix (`Sigma`), some lower threshold value (`lower`), some upper threshold value (`upper`) and the desired coverage (`desired.cov`). 
 
@@ -205,13 +205,13 @@ res <- corrected_cs(z = z0, f = MAF, N0, N1, Sigma = LD, lower = 0.5, upper = 1,
 res
 ```
 
+In this example we see that a threshold of just 0.75 is required to obtain a credible set with 90% coverage of the causal variant. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.
+
 The output is a credible set containing only 1 variant, that has a corrected coverage estimate of 0.9. This suggests that if the user implemented the standard Bayesian approach to statistical fine-mapping, then their 90% credible set would contain 2 variants and actually have nearer to 96% probability of containing the true causal variant. 
 
-By applying the `corrected_cs` function, the user can obtain a new 90% credible set that has 90% probability of containing the true causal variant. 
+By applying the `corrected_cs` function, the user can obtain a new 90% credible set that has 90% probability of containing the true causal variant. This credible set contains only 1 variant, showing that the resolution of the fine-mapping experiment has improved. 
 
-This credible set contains only 1 variant, showing that the resolution of the fine-mapping experiment has improved. 
-
-Finally, we can compare this corrected coverage value to an empirical estimate of the true coverage. 
+Finally, we can compare this coverage estimate of the corrected credible set to an empirical estimate of the true coverage. 
 
 ```{r}
 new.cs.sims <- apply(pps, 1, function(x) credset(x, CV = iCV, thr = res$req.thr)$cov)
@@ -220,12 +220,14 @@ true.cov.est2 <- mean(new.cs.sims)
 
 Original 90% credible set:
 ```{r echo=FALSE}
-data.frame(claimed.cov = round(cs$claimed.cov, 3), corr.cov =  round(corrcov, 3), true.cov = round(true.cov.est, 3), nvar = cs$nvar)
+df1 <- data.frame(claimed.cov = round(cs$claimed.cov, 3), corr.cov =  round(corrcov, 3), true.cov = round(true.cov.est, 3), nvar = cs$nvar)
+print(df1, row.names = FALSE)
 ```
 
 New 90% credible set:
 ```{r echo=FALSE}
-data.frame(claimed.cov = round(res$size, 3), corr.cov = round(res$corr.cov, 3), true.cov = round(true.cov.est2, 3), nvar = length(res$credset))
+df2 <- data.frame(claimed.cov = round(res$size, 3), corr.cov = round(res$corr.cov, 3), true.cov = round(true.cov.est2, 3), nvar = length(res$credset))
+print(df2, row.names = FALSE)
 ```
 
 ---

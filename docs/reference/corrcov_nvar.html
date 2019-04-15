@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Find approx. Bayes factors — approx.bf.p • corrcoverage</title>
+<title>Obtain corrected coverage estimate using Z-scores and mafs — corrcov_nvar • corrcoverage</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Find approx. Bayes factors — approx.bf.p" />
+<meta property="og:title" content="Obtain corrected coverage estimate using Z-scores and mafs — corrcov_nvar" />
 
-<meta property="og:description" content="Wakefield's log asymptotic Bayes factor (lABF) with prior standard deviation of effect size as a parameter" />
+<meta property="og:description" content="Obtain corrected coverage estimate using Z-scores and mafs (limiting simulations used for estimation to those with correct nvar)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,56 +112,68 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Find approx. Bayes factors</h1>
+    <h1>Obtain corrected coverage estimate using Z-scores and mafs</h1>
     
-    <div class="hidden name"><code>approx.bf.p.Rd</code></div>
+    <div class="hidden name"><code>corrcov_nvar.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Wakefield's log asymptotic Bayes factor (lABF) with prior standard deviation of effect size as a parameter</p>
+    <p>Obtain corrected coverage estimate using Z-scores and mafs (limiting simulations used for estimation to those with correct nvar)</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>approx.bf.p</span>(<span class='no'>pvals</span>, <span class='no'>f</span>, <span class='no'>type</span>, <span class='no'>N</span>, <span class='no'>s</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)</pre>
+    <pre class="usage"><span class='fu'>corrcov_nvar</span>(<span class='no'>z</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='no'>nvar</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
+  <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>10000</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>pvals</th>
-      <td><p>p-values</p></td>
+      <th>z</th>
+      <td><p>Marginal Z-scores</p></td>
     </tr>
     <tr>
       <th>f</th>
       <td><p>Minor allele frequencies</p></td>
     </tr>
     <tr>
-      <th>type</th>
-      <td><p>Type of experiment ('quant' or 'cc')</p></td>
+      <th>N0</th>
+      <td><p>Number of controls</p></td>
     </tr>
     <tr>
-      <th>N</th>
-      <td><p>Total sample size</p></td>
+      <th>N1</th>
+      <td><p>Number of cases</p></td>
     </tr>
     <tr>
-      <th>s</th>
-      <td><p>Proportion of cases (N1/N0+N1), ignored if type=='quant'</p></td>
+      <th>Sigma</th>
+      <td><p>SNP correlation matrix</p></td>
+    </tr>
+    <tr>
+      <th>nvar</th>
+      <td><p>The number of variants that simulated credible sets used for estimation should contain</p></td>
+    </tr>
+    <tr>
+      <th>thr</th>
+      <td><p>Minimum threshold for fine-mapping experiment (default is 0.95)</p></td>
     </tr>
     <tr>
       <th>W</th>
-      <td><p>Prior for the standard deviation of the effect size parameter beta (W=0.2 default)</p></td>
+      <td><p>Prior for the standard deviation of the effect size parameter beta</p></td>
+    </tr>
+    <tr>
+      <th>nrep</th>
+      <td><p>The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 10000 default because we trim out the ones without correct nvar)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>data.frame containing lABF and intermediate calculations</p>
+    <p>Corrected coverage estimate</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>([Wakefield et al. 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359)
-This function converts p-values to log ABFs, also reporting intermediate calculations</p>
+    <p>This function requires the marginal summary statistics from GWAS and an nvar value. It should only be used when nvar is very low ($&lt;3$) and there is some evidence to suggest that only simulated credible sets with this nvar value should be used to derive the corrected coverage estimate.</p>
     
 
   </div>

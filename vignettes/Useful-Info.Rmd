@@ -1,0 +1,57 @@
+---
+title: "Useful Info"
+author: "Anna Hutchinson"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette contains supplementary information regarding the usage of the `corrcoverage` R package. 
+
+---
+
+## Key Functions
+
+The two main functions are:
+
+1. `corrcov` (or analogously `corrcov_bhat`): Provides a corrected coverage estimate of credible sets obtained using the Bayesian approach for fine-mapping (see 'Corrected Coverage' vignette). Use `corrcov` for $Z$-scores and MAFs or `corrcov_bhat` for beta hat estimates and their standard errors.
+
+2. `corrected_cs` (or analogously `corrected_cs_bhat`): Finds a new 'corrected' credible set, which is the smallest set of variants such that the corrected coverage is above some user defined 'desired coverage'. Use `corrected_cs` for $Z$-scores and MAFs or `corrected_cs_bhat` for beta hat estimates and their standard errors.
+
+---
+
+## Other Useful Functions
+
+* `corrcov_nvar` (or analogously `corrcov_nvar_bhat`): Finds a corrected coverage estimate whereby the simulated credible sets used to derive the estimate are limited to those which contain a specified number of variants (parameter 'nvar'). These functions should be used with caution and only ever for very small credible sets (fewer than 4 variants).
+
+* `corrcov_CI` (or analogously `corrcov_CI_bhat`): Finds a 'confidence interval' for the corrected coverage estimate. The default is a 95% confidence interval (parameter 'CI' = 0.95), but the 'CI' parameter can be adjusted accordingly. This function involves repeating the correction procedure 100 times and so, depending on the number of SNPs, may take a long time to implement.
+
+----
+
+## Conversion Functions
+
+The Bayesian method for fine-mapping involves finding the posterior probability of causality for each SNP, before sorting these into descending order and adding variants to a 'credible set' until the combined posterior probabilities of these SNPs exceed some threshold. The supplementary text of Maller's paper (available [here](https://media.nature.com/original/nature-assets/ng/journal/v44/n12/extref/ng.2435-S1.pdf)) shows that these posterior probabilities are normalised Bayes factors. 
+
+Asymptotic Bayes factors ([Wakefield, 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359)) are commonly used in genetic association studies as these only require the specification of $Z$-scores (or equivalently the effect size coefficients, $\beta$, and their standard errors, $V$), the standard errors of the effect sizes ($V$) and the prior variance of the estimated effect size ($W^2$), thus only requiring summary data from genetic association studies plus an estimate for the $W$ parameter. 
+
+Consequently, the `corrcoverage` package contains functions for converting between $P$-values, $Z$-scores, asymptotic Bayes factors (ABFs) and posterior probabilities of causality (PPs). The following table shows what input these conversion functions require and what output they produce. The 'include null model' column is for whether the null model of no genetic effect is included in the calculation (PPs obtained using the standard Bayesian approach ignore this).
+
+Function | Include null model? | Input | Output 
+--- | --- | --- | ---
+`approx.bf.p` | YES |  $p$-values | log(ABF) |
+`pvals_pp` | YES | $p$-values | Posterior Probabilities |
+`z0_pp` | YES | Marginal $Z$-scores | Posterior Probabilities |
+`ppfunc` | NO | Marginal $Z$-scores | Posterior Probabilities |
+`z0func.mat` | NO | Marginal $Z$-score matrix | Posterior Probabilities |
+
+Functions are also provided to simulate marginal $Z$-scores from joint $Z$-scores. The joint $Z$-scores are all 0, except at the causal variant where it is the 'true effect', $\mu$. 
+
+$\mu$ can be estimated using the `est_mu` function which required sample sizes, $Z$-scores and minor allele frequencies.
+
+`z_sim` simulates marginal $Z$-scores from joint $Z$-scores, whilst `zj_pp` can be used to simulate posterior probability systems from a joint $Z$-score vector. These functions first calculate $E(Z_m)$,
+$$E(Z_m)=Z_j \times \Sigma$$
+where $\Sigma$ is the correlation matrix between SNPs. 
+
+We can then simulate more $Z$-score systems from a multivariate normal distribution with mean $E(Z_m)$ and variance $\Sigma$. This is a key step in our corrected coverage method.

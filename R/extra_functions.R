@@ -118,3 +118,42 @@ est_mu_bhat <- function(bhat, V, N0, N1, W = 0.2) {
     ph0 = ph0.tmp[1]  # prob of the null
     mean(c(sum(abs(z) * ph0.tmp[-1]), (1 - ph0.tmp[1]) * max(abs(z))))
 }
+
+#' Get credible set of variants
+#'
+#' If the CV parameter is supplied (index of causal variant) then the
+#' output includes a binary indicator of whether the CV is contained in the set
+#' @title Get credible set of variants
+#' @param pp Vector of posterior probabilities of causality
+#' @param CV Optional parameter: Index of CV
+#' @param thr Minimum threshold for credible set size (default is 0.95)
+#' @export
+#' @return list of the variants in the credible set, the claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)
+credset <- function(pp, CV, thr = 0.95) {
+  o <- order(pp, decreasing = TRUE)  # order index for true pp
+  cumpp <- cumsum(pp[o])  # cum sums of ordered pps
+  wh <- which(cumpp > thr)[1]  # how many needed to exceed thr
+  size <- cumpp[wh]
+  if (missing(CV)) {
+    data.frame(claimed.cov = size, nvar = wh)
+  } else {
+    contained = as.numeric(CV %in% o[1:wh])
+    list(credset = o[1:wh], claimed.cov = size, covered = contained, nvar = wh)
+  }
+}
+
+#' Quicker credset function for matrix of posterior probabilities (using RCpp)
+#'
+#' @title Get credible set of variants from matrix of pps (Rcpp)
+#' @param pp Matrix of posterior probabilities of causality (one row per system)
+#' @param CV Vector of CV indices (one per system/row)
+#' @param thr Minimum threshold for credible set size (default is 0.95)
+#'
+#' @return Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants (nvar).
+#' @useDynLib corrcoverage
+#' @importFrom Rcpp sourceCpp
+#' @export
+credsetC <- function(pp, CV = iCV, thr = 0.95) {
+  ret <- credsetmat(pp, CV, thr)  ## list 1 = wh, 2 = size, 3=contained
+  data.frame(claimed.cov = ret[[2]], covered = ret[[3]], nvar = ret[[1]])
+}

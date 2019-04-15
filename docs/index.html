@@ -58,6 +58,9 @@
     <li>
       <a href="articles/New-Credible-Set.html">New Credible Set</a>
     </li>
+    <li>
+      <a href="articles/Useful-Info.html">Useful Info</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -85,9 +88,9 @@
 <p>The package only requires GWAS summary statistics and can be used to:</p>
 <ul>
 <li>Perform Bayesian fine-mapping</li>
-<li>Estimate the true genetic effect at the causal variant</li>
-<li>Obtain an accurate coverage estimate of the causal variant in a credible set (corrected coverage estimate)</li>
-<li>Find the smallest set of variants such that the coverage estimate exceeds some user-defined threshold (corrected credible set)</li>
+<li>Estimate the true genetic effect at the causal variant (see <code>est_mu</code> function).</li>
+<li>Obtain an accurate coverage estimate of the causal variant in a credible set, the ‘corrected coverage estimate’ (see <code>corrcov</code> function and ‘Corrected Coverage’ vignette).</li>
+<li>Find a new ‘corrected’ credible set with the desired coverage (see <code>corrected_cs</code> function and ‘New Credible Set’ vignette).</li>
 </ul>
 <hr>
 <div id="installation" class="section level2">
@@ -104,62 +107,9 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <p>For examples, please see the vignettes on the webpage <a href="http://annahutch.github.io/corrcoverage/articles/my-vignette.html">here</a>.</p>
 <p>The ‘Corrected Coverage’ vignette <a href="https://annahutch.github.io/corrcoverage/articles/my-vignette.html">here</a> should be read first. This shows readers how to use the <code>corrcoverage</code> package to get an accurate coverage estimate of the causal variant in a credible set.</p>
 <p>The ‘New Credible Set’ vignette <a href="https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html">here</a> follows on from the ‘Corrected Coverage’ vignette and shows readers how the <code>corrcoverage</code> package can be used to obtain a new credible set with the desired coverage of the causal variant.</p>
+<p>The ‘Useful Info’ vignette <a href="https://annahutch.github.io/corrcoverage/articles/Useful-Info.html">here</a> provides supplementary information about the usage of the package, including information about other useful functions.</p>
 <hr>
-</div>
-<div id="conversion-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#conversion-functions" class="anchor"></a>Conversion Functions</h2>
-<p>The Bayesian method for fine-mapping involves finding the posterior probability of causality for each SNP, before sorting these into descending order and adding variants to a ‘credible set’ until the combined posterior probabilities of these SNPs exceed some threshold. The supplementary text of Maller’s paper (available <a href="https://media.nature.com/original/nature-assets/ng/journal/v44/n12/extref/ng.2435-S1.pdf">here</a>) shows that these posterior probabilities are normalised Bayes factors.</p>
-<p>Asymptotic Bayes factors (<a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359">Wakefield, 2009</a>) are commonly used in genetic association studies as these only require the specification of <span class="math inline">\(Z\)</span>-scores (or equivalently the effect size coefficients, <span class="math inline">\(\beta\)</span>, and their standard errors, <span class="math inline">\(V\)</span>), the standard errors of the effect sizes (<span class="math inline">\(V\)</span>) and the prior variance of the estimated effect size (<span class="math inline">\(W^2\)</span>), thus only requiring summary data from genetic association studies.</p>
-<p>Consequently, the <code>corrcoverage</code> package contains functions for converting between <span class="math inline">\(P\)</span>-values, <span class="math inline">\(Z\)</span>-scores, asymptotic Bayes factors (ABFs) and posterior probabilities of causality (PPs). The following table shows what input these conversion functions require and what output they produce. The ‘include null model’ column is for whether the null model of no genetic effect is included in the calculation (PPs obtained using the standard Bayesian approach ignore this).</p>
-<table class="table table">
-<thead><tr class="header">
-<th>Function</th>
-<th>Include null model?</th>
-<th>Input</th>
-<th>Output</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>approx.bf.p</code></td>
-<td>YES</td>
-<td>
-<span class="math inline">\(p\)</span>-values</td>
-<td>log(ABF)</td>
-</tr>
-<tr class="even">
-<td><code>pvals_pp</code></td>
-<td>YES</td>
-<td>
-<span class="math inline">\(p\)</span>-values</td>
-<td>Posterior Probabilities</td>
-</tr>
-<tr class="odd">
-<td><code>z0_pp</code></td>
-<td>YES</td>
-<td>Marginal <span class="math inline">\(Z\)</span>-scores</td>
-<td>Posterior Probabilities</td>
-</tr>
-<tr class="even">
-<td><code>ppfunc</code></td>
-<td>NO</td>
-<td>Marginal <span class="math inline">\(Z\)</span>-scores</td>
-<td>Posterior Probabilities</td>
-</tr>
-<tr class="odd">
-<td><code>z0func.mat</code></td>
-<td>NO</td>
-<td>Marginal <span class="math inline">\(Z\)</span>-score matrix</td>
-<td>Posterior Probabilities</td>
-</tr>
-</tbody>
-</table>
-<p>Functions are also provided to simulate marginal <span class="math inline">\(Z\)</span>-scores from joint <span class="math inline">\(Z\)</span>-scores. The joint <span class="math inline">\(Z\)</span>-scores are all 0, except at the causal variant where it is the ‘true effect’, <span class="math inline">\(\mu\)</span>.</p>
-<p><span class="math inline">\(\mu\)</span> can be estimated using the <code>est_mu</code> function which required sample sizes, <span class="math inline">\(Z\)</span>-scores and minor allele frequencies.</p>
-<p><code>z_sim</code> simulates marginal <span class="math inline">\(Z\)</span>-scores from joint <span class="math inline">\(Z\)</span>-scores, whilst <code>zj_pp</code> can be used to simulate posterior probability systems from a joint <span class="math inline">\(Z\)</span>-score vector. These functions first calculate <span class="math inline">\(E(Z_m)\)</span>, <span class="math display">\[E(Z_m)=Z_j \times \Sigma\]</span> where <span class="math inline">\(\Sigma\)</span> is the correlation matrix between SNPs.</p>
-<p>We can then simulate more <span class="math inline">\(Z\)</span>-score systems from a multivariate normal distribution with mean <span class="math inline">\(E(Z_m)\)</span> and variance <span class="math inline">\(\Sigma\)</span>. This is a key step in our corrected coverage method.</p>
-<hr>
-<p>In brief, the correction method includes simulating many credible sets from ‘the same system as the original’ and finding what proportion of these contain the true causal variant, whereby each variant is considered causal in turn and the predictions are normalised by that variant’s posterior probability of causality.</p>
+<p>In brief, the correction method involves simulating many credible sets from ‘the same system as the original’ and finding what proportion of these contain the true causal variant, whereby each variant is considered causal in turn and the predictions are normalised by that variant’s posterior probability of causality.</p>
 <hr>
 </div>
 <div id="abstract" class="section level2">

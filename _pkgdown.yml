@@ -24,6 +24,8 @@ navbar:
         href: articles/my-vignette.html
       - text: New Credible Set
         href: articles/New-Credible-Set.html
+      - text: Useful Info
+        href: articles/Useful-Info.html
 
 articles:
 - title: All vignettes
@@ -31,4 +33,5 @@ articles:
   contents:
   - '`New-Credible-Set`'
   - '`my-vignette`'
+  - '`Useful-Info`'
 

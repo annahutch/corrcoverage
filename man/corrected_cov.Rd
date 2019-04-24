@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{corrected_cov}
 \alias{corrected_cov}
-\title{Obtain a corrected coverage estimate of the causal variant in the credible set}
+\title{Corrected coverage estimate of the causal variant in the credible set}
 \usage{
 corrected_cov(mu, V, W = 0.2, Sigma, pp0, thresh = 0.95, nrep = 1000)
 }
@@ -25,7 +25,7 @@ corrected_cov(mu, V, W = 0.2, Sigma, pp0, thresh = 0.95, nrep = 1000)
 Corrected coverage estimate
 }
 \description{
-Obtain a corrected coverage estimate of the causal variant in the credible set
+Corrected coverage estimate of the causal variant in the credible set
 }
 \details{
 Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)

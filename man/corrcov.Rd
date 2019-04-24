@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{corrcov}
 \alias{corrcov}
-\title{Obtain corrected coverage estimate using Z-scores and mafs}
+\title{Corrected coverage estimate using Z-scores and mafs}
 \usage{
 corrcov(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000)
 }
@@ -27,7 +27,7 @@ corrcov(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000)
 Corrected coverage estimate
 }
 \description{
-Obtain corrected coverage estimate using Z-scores and mafs
+Corrected coverage estimate using Z-scores and mafs
 }
 \details{
 This function only requires the marginal summary statistics from GWAS

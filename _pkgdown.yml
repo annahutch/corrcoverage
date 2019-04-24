@@ -35,3 +35,46 @@ articles:
   - '`my-vignette`'
   - '`Useful-Info`'
 
+
+reference:
+- title: "Corrected Coverage Estimate"
+  desc:  Functions to find the corrected coverage estimate
+  contents:
+  - corrcov
+  - corrcov_bhat
+  - corrected_cov
+- title: "Corrected Credible Set"
+  desc: Functions to find the corrected credible set
+  contents:
+  - corrected_cs
+  - corrected_cs_bhat
+- title: "Confidence Interval for Coverage Estimate"
+  contents:
+  - corrcov_CI
+  - corrcov_CI_bhat
+- title: "Corrected Coverage Estimate Fixing nvar"
+  desc: Only use these functions with prior knowledge of how many variants should be in the credible set
+  contents:
+  - corrcov_nvar
+  - corrcov_nvar_bhat
+- title: "Estimate True Effect at Causal Variant"
+  contents:
+  - est_mu
+  - est_mu_bhat
+- title: "Conversion Functions"
+  contents:
+  - approx.bf.p
+  - ppfunc
+  - pvals_pp
+  - z0_pp
+  - z_sim
+  - zj_pp
+- title: "Other Functions"
+  contents:
+  - Var.data.cc
+  - cor2
+  - credset
+  - credsetC
+  - credsetmat
+  - finemap.abf
+  - prop_cov

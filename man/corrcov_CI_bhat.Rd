@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{corrcov_CI_bhat}
 \alias{corrcov_CI_bhat}
-\title{Obtain confidence interval for corrected coverage estimate using estimated effect sizes and their standard errors}
+\title{Confidence interval for corrected coverage estimate using estimated effect sizes and their standard errors}
 \usage{
 corrcov_CI_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
   nrep = 1000, CI = 0.95)

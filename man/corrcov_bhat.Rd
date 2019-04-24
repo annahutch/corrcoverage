@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{corrcov_bhat}
 \alias{corrcov_bhat}
-\title{Obtain corrected coverage estimate using estimated effect sizes and their standard errors}
+\title{Corrected coverage estimate using estimated effect sizes and their standard errors}
 \usage{
 corrcov_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
   nrep = 1000)
@@ -28,7 +28,7 @@ corrcov_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
 Corrected coverage estimate
 }
 \description{
-Obtain corrected coverage estimate using estimated effect sizes and their standard errors
+Corrected coverage estimate using estimated effect sizes and their standard errors
 }
 \details{
 This function only requires the marginal summary statistics from GWAS

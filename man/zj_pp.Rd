@@ -24,5 +24,5 @@ Matrix of simulated posterior probabilties, one simulation per row
 Simulate nrep marginal Z-scores from joint Z-scores and convert these to posterior probabilities of causality
 }
 \details{
-Does not include posterior probabilities for null model s.t the output will sum to 1
+Does not include posterior probabilities for null model so, the output will sum to 1
 }

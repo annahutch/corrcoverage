@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{corrcov_nvar}
 \alias{corrcov_nvar}
-\title{Obtain corrected coverage estimate using Z-scores and mafs}
+\title{Corrected coverage estimate using Z-scores and mafs (fixing nvar)}
 \usage{
 corrcov_nvar(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
   nrep = 10000)

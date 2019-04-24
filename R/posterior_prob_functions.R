@@ -16,7 +16,7 @@ approx.bf.p <- function(pvals, f, type, N, s, W = 0.2) {
     z = stats::qnorm(0.5 * pvals, lower.tail = FALSE)
     r = W^2/(W^2 + V)
     lABF = 0.5 * (log(1 - r) + (r * z^2))
-    ret <- data.frame(V, z, r, lABF)
+    ret = data.frame(V, z, r, lABF)
     return(ret)
 }
 
@@ -38,12 +38,12 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2) {
     z = stats::qnorm(0.5 * pvals, lower.tail = FALSE)
     r = W^2/(W^2 + V)
     lABF = 0.5 * (log(1 - r) + (r * z^2))
-    p1 <- 1e-04  # hard coded
-    nsnps <- length(lABF)
-    prior <- c(1 - nsnps * p1, rep(p1, nsnps))
-    tmp <- c(1, lABF)  # add on extra for null model
-    my.denom <- coloc:::logsum(tmp + prior)
-    tmp1 <- exp(tmp + prior - my.denom)
+    p1 = 1e-04  # hard coded
+    nsnps = length(lABF)
+    prior = c(1 - nsnps * p1, rep(p1, nsnps))
+    tmp = c(1, lABF)  # add on extra for null model
+    my.denom = coloc:::logsum(tmp + prior)
+    tmp1 = exp(tmp + prior - my.denom)
     tmp1/sum(tmp1)
 }
 
@@ -64,12 +64,12 @@ z0_pp <- function(z, f, type, N, s, W = 0.2) {
     V = 1/(2 * N * f * (1 - f) * s * (1 - s))
     r = W^2/(W^2 + V)
     lABF = 0.5 * (log(1 - r) + (r * z^2))
-    p1 <- 1e-04  # hard coded
-    nsnps <- length(lABF)
-    prior <- c(1 - nsnps * p1, rep(p1, nsnps))
-    tmp <- c(1, lABF)  # add on extra for null model
-    my.denom <- coloc:::logsum(tmp + prior)
-    tmp1 <- exp(tmp + prior - my.denom)
+    p1 = 1e-04  # hard coded
+    nsnps = length(lABF)
+    prior = c(1 - nsnps * p1, rep(p1, nsnps))
+    tmp = c(1, lABF)  # add on extra for null model
+    my.denom = coloc:::logsum(tmp + prior)
+    tmp1 = exp(tmp + prior - my.denom)
     tmp1/sum(tmp1)
 }
 

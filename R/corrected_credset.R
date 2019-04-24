@@ -1,4 +1,4 @@
-#' @title Get new credible set with desired coverage of the CV
+#' @title Corrected credible set with desired coverage of the CV
 #'
 #' @param z Z-scores
 #' @param f Minor allele frequencies
@@ -14,13 +14,11 @@
 #' @return list of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 #' @export
 corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0.005, max.iter = 20){
-  # lower <- 2*desired.cov - 1
-  # upper <- min(1,desired.cov + 0.05)
   s = N1/(N0+N1) # proportion of cases
   V = 1/(2 * (N0+N1) * f * (1 - f) * s * (1 - s))
   W = 0.2
-  r <- W^2/(W^2 + V)
-  pp <- ppfunc(z, V = V) # pp of system in question
+  r = W^2/(W^2 + V)
+  pp = ppfunc(z, V = V) # pp of system in question
   muhat = est_mu(z, f, N0, N1)
   nsnps = length(pp)
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
@@ -34,15 +32,15 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
     zstar = mexp.zm+ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+    denom = coloc:::logsum(bf)
     pp.tmp = exp(bf - denom)  # convert back from log scale
     pp.tmp / rowSums(pp.tmp)
   }
   # simulate pp systems
-  pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+  pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
 
-  n_pps <- length(pps)
-  args <- 1:length(pp)
+  n_pps = length(pps)
+  args = 1:length(pp)
 
   f <- function(thr){ # finds the difference between corrcov and desired.cov
     d5 <- lapply(1:n_pps, function(x) {
@@ -75,11 +73,10 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
       }
       N = N + 1
     }
-    # df <- data.frame(req.thr = c, corr.cov = desired.cov + fc)
   }
-  o <- order(pp, decreasing = TRUE)  # order index for true pp
-  cumpp <- cumsum(pp[o])  # cum sums of ordered pps
-  wh <- which(cumpp > c)[1]  # how many needed to exceed thr
+  o = order(pp, decreasing = TRUE)  # order index for true pp
+  cumpp = cumsum(pp[o])  # cum sums of ordered pps
+  wh = which(cumpp > c)[1]  # how many needed to exceed thr
   list(credset = names(pp)[o[1:wh]], req.thr = c, corr.cov = desired.cov + fc, size = cumpp[wh])
 }
 
@@ -99,11 +96,9 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
 #' @return list of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 #' @export
 corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov, acc = 0.005, max.iter = 20){
-  # lower <- 2*desired.cov - 1
-  # upper <- min(1,desired.cov + 0.05)
   z = bhat/sqrt(V)
   W = 0.2
-  r <- W^2/(W^2 + V)
+  r = W^2/(W^2 + V)
   pp = ppfunc(z, V = V) # pp of system in question
   muhat = est_mu_bhat(bhat, V, N0, N1, W = 0.2)
   nsnps = length(pp)
@@ -118,15 +113,15 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov,
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
     zstar = mexp.zm+ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+    denom = coloc:::logsum(bf)
     pp.tmp = exp(bf - denom)  # convert back from log scale
     pp.tmp / rowSums(pp.tmp)
   }
   # simulate pp systems
-  pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+  pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
 
-  n_pps <- length(pps)
-  args <- 1:length(pp)
+  n_pps = length(pps)
+  args = 1:length(pp)
 
   f <- function(thr){ # finds the difference between corrcov and desired.cov
     d5 <- lapply(1:n_pps, function(x) {
@@ -161,8 +156,8 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov,
     }
     # df <- data.frame(req.thr = c, corr.cov = desired.cov + fc)
   }
-  o <- order(pp, decreasing = TRUE)  # order index for true pp
-  cumpp <- cumsum(pp[o])  # cum sums of ordered pps
-  wh <- which(cumpp > c)[1]  # how many needed to exceed thr
+  o = order(pp, decreasing = TRUE)  # order index for true pp
+  cumpp = cumsum(pp[o])  # cum sums of ordered pps
+  wh = which(cumpp > c)[1]  # how many needed to exceed thr
   list(credset = names(pp)[o[1:wh]], req.thr = c, corr.cov = desired.cov + fc, size = cumpp[wh])
 }

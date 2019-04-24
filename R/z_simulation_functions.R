@@ -16,7 +16,7 @@ z_sim <- function(Zj, Sigma, nrep) {
 
 #' Simulate nrep marginal Z-scores from joint Z-scores and convert these to posterior probabilities of causality
 #'
-#' Does not include posterior probabilities for null model s.t the output will sum to 1
+#' Does not include posterior probabilities for null model so, the output will sum to 1
 #' @title Simulate marginal from joint Z-score vector
 #' @param Zj Vector of joint z-scores (0s except at CV)
 #' @param V Variance of the estimated effect size (can be obtained using var.beta.cc function)

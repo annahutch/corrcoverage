@@ -1,8 +1,8 @@
-#' Obtain a corrected coverage estimate of the causal variant in the credible set
+#' Corrected coverage estimate of the causal variant in the credible set
 #'
 #' Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)
 #' @rdname corrected_cov
-#' @title Obtain a corrected coverage estimate of the causal variant in the credible set
+#' @title Corrected coverage estimate of the causal variant in the credible set
 #' @param mu The true effect at the CV
 #' @param V Variance of the estimated effect size (can be obtained using Var.beta.cc function)
 #' @param W Prior for the standard deviation of the effect size parameter beta (W=0.2 default)
@@ -15,8 +15,6 @@
 corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh = 0.95, nrep = 1000) {
 
     nsnps = length(pp0)
-
-    # form joint z-score vectors
     temp = diag(x = mu, nrow = nsnps, ncol = nsnps)
     zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
 
@@ -29,13 +27,13 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh = 0.95, nrep = 1000
         mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
         zstar = mexp.zm + ERR
         bf = 0.5 * (log(1 - r) + (r * zstar^2))
-        denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+        denom = coloc:::logsum(bf)
         pp.tmp = exp(bf - denom)  # convert back from log scale
         pp.tmp/rowSums(pp.tmp)
     }
 
     # simulate pp systems
-    pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+    pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
 
     # consider different CV as causal in each list
     n_pps <- length(pps)
@@ -47,16 +45,15 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh = 0.95, nrep = 1000
     })
 
     prop_cov <- lapply(d5, prop_cov) %>% unlist()
-
     sum(prop_cov * pp0)
 }
 
 
-#' Obtain corrected coverage estimate using Z-scores and mafs
+#' Corrected coverage estimate using Z-scores and mafs
 #'
 #' This function only requires the marginal summary statistics from GWAS
 #' @rdname corrcov
-#' @title Obtain corrected coverage estimate using Z-scores and mafs
+#' @title Corrected coverage estimate using Z-scores and mafs
 #' @param z Marginal Z-scores
 #' @param f Minor allele frequencies
 #' @param N0 Number of controls
@@ -100,31 +97,31 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
         mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
         zstar = mexp.zm + ERR
         bf = 0.5 * (log(1 - r) + (r * zstar^2))
-        denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+        denom = coloc:::logsum(bf)
         pp.tmp = exp(bf - denom)  # convert back from log scale
         pp.tmp/rowSums(pp.tmp)
     }
     # simulate pp systems
-    pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+    pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
     # consider different CV as causal in each list
-    n_pps <- length(pps)
-    args <- 1:nsnps
+    n_pps = length(pps)
+    args = 1:nsnps
 
     # obtain credible set for each simulation
     d5 <- lapply(1:n_pps, function(x) {
         credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
     })
 
-    prop_cov <- lapply(d5, prop_cov) %>% unlist()
+    prop_cov = lapply(d5, prop_cov) %>% unlist()
 
     sum(prop_cov * pp0)
 }
 
-#' Obtain corrected coverage estimate using estimated effect sizes and their standard errors
+#' Corrected coverage estimate using estimated effect sizes and their standard errors
 #'
 #' This function only requires the marginal summary statistics from GWAS
 #' @rdname corrcov_bhat
-#' @title Obtain corrected coverage estimate using estimated effect sizes and their standard errors
+#' @title Corrected coverage estimate using estimated effect sizes and their standard errors
 #' @param bhat Estimated effect sizes from single-SNP logistic regressions
 #' @param V Variance of estimated effect sizes
 #' @param N0 Number of controls
@@ -137,8 +134,8 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
 #' @export
 #'
 corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
-    z <- bhat/sqrt(V)
-    r <- W^2/(W^2 + V)
+    z = bhat/sqrt(V)
+    r = W^2/(W^2 + V)
     bf = 0.5 * (log(1 - r) + (r * z^2))
     p1 = 1e-04  # hard code
     nsnps = length(bf)
@@ -161,6 +158,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
     #### corrected coverage
     temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
     zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+
     # simulate ERR matrix
 
     ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
@@ -169,23 +167,23 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
         mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
         zstar = mexp.zm + ERR
         bf = 0.5 * (log(1 - r) + (r * zstar^2))
-        denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+        denom = coloc:::logsum(bf)
         pp.tmp = exp(bf - denom)  # convert back from log scale
         pp.tmp/rowSums(pp.tmp)
     }
 
     # simulate pp systems
-    pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+    pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
     # consider different CV as causal in each list
-    n_pps <- length(pps)
-    args <- 1:nsnps
+    n_pps = length(pps)
+    args = 1:nsnps
 
     # obtain credible set for each simulation
     d5 <- lapply(1:n_pps, function(x) {
         credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
     })
 
-    prop_cov <- lapply(d5, prop_cov) %>% unlist()
+    prop_cov = lapply(d5, prop_cov) %>% unlist()
 
     sum(prop_cov * pp0)
 }
@@ -198,20 +196,19 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 #' @param pp The posterior probabilities of the original system
 #'
 #' @return Corrected coverage estimate
-#' @export
 quick_corrcov <- function(thr = 0.95, simulated.pps, pp) {
-    n_pps <- length(simulated.pps)
-    args <- 1:nsnps
+    n_pps = length(simulated.pps)
+    args = 1:nsnps
 
     d5 <- lapply(1:n_pps, function(x) {
         credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
     })
 
-    prop_cov <- lapply(d5, prop_cov) %>% unlist()
+    prop_cov = lapply(d5, prop_cov) %>% unlist()
     sum(prop_cov * pp)
 }
 
-#' @title Use simulated pps to find corrected coverage estimate and cred set
+#' @title Use simulated pps to find corrected coverage estimate and credible set
 #'
 #' @rdname quick_corrcov_cs
 #' @param thr Threshold value to exceed (default is 0.95)
@@ -219,22 +216,21 @@ quick_corrcov <- function(thr = 0.95, simulated.pps, pp) {
 #' @param pp The posterior probabilities of the original system
 #'
 #' @return A list of the credible set obtained using the specified threshold, the corrected coverage estimate of this credible set, the threshold the user specified and the size of the credible set (the sum of the pps of the variants)
-#' @export
 #'
 quick_corrcov_cs <- function(thr = 0.95, simulated.pps, pp) {
-    n_pps <- length(simulated.pps)
-    args <- 1:nsnps
+    n_pps = length(simulated.pps)
+    args = 1:nsnps
 
     d5 <- lapply(1:n_pps, function(x) {
         credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
     })
 
-    prop_cov <- lapply(d5, prop_cov) %>% unlist()
-    corr_cov <- sum(prop_cov * pp)
+    prop_cov = lapply(d5, prop_cov) %>% unlist()
+    corr_cov = sum(prop_cov * pp)
 
-    o <- order(pp, decreasing = TRUE)
-    cumpp <- cumsum(pp[o])
-    wh <- which(cumpp > thr)[1]
+    o = order(pp, decreasing = TRUE)
+    cumpp = cumsum(pp[o])
+    wh = which(cumpp > thr)[1]
     list(credset = names(pp)[o[1:wh]], corr.cov = corr_cov, thr = thr, size = cumpp[wh])
 }
 
@@ -242,7 +238,7 @@ quick_corrcov_cs <- function(thr = 0.95, simulated.pps, pp) {
 #'
 #' This function requires the marginal summary statistics from GWAS and an nvar value. It should only be used when nvar is very low ($<3$) and there is some evidence to suggest that only simulated credible sets with this nvar value should be used to derive the corrected coverage estimate.
 #' @rdname corrcov_nvar
-#' @title Obtain corrected coverage estimate using Z-scores and mafs
+#' @title Corrected coverage estimate using Z-scores and mafs (fixing nvar)
 #' @param z Marginal Z-scores
 #' @param f Minor allele frequencies
 #' @param N0 Number of controls
@@ -292,10 +288,10 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
     pp.tmp/rowSums(pp.tmp)
   }
   # simulate pp systems
-  pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+  pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
   # consider different CV as causal in each list
-  n_pps <- length(pps)
-  args <- 1:nsnps
+  n_pps = length(pps)
+  args = 1:nsnps
 
   # obtain credible set for each simulation
   d5 <- lapply(1:n_pps, function(x) {
@@ -319,7 +315,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 #'
 #' This function requires the marginal summary statistics from GWAS and an nvar value. It should only be used when nvar is very low ($<3$) and there is some evidence to suggest that only simulated credible sets with this nvar value should be used to derive the corrected coverage estimate.
 #' @rdname corrcov_nvar_bhat
-#' @title Obtain corrected coverage estimate using estimated effect sizes and their standard errors
+#' @title Corrected coverage estimate using estimated effect sizes and their standard errors (fixing nvar)
 #' @param bhat Estimated effect sizes from single-SNP logistic regressions
 #' @param V Variance of estimated effect sizes
 #' @param N0 Number of controls
@@ -333,8 +329,8 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 #' @export
 #'
 corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 10000) {
-  z <- bhat/sqrt(V)
-  r <- W^2/(W^2 + V)
+  z = bhat/sqrt(V)
+  r = W^2/(W^2 + V)
   bf = 0.5 * (log(1 - r) + (r * z^2))
   p1 = 1e-04  # hard code
   nsnps = length(bf)
@@ -397,7 +393,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 #' Obtain confidence interval for corrected coverage estimate using Z-scores and mafs
 #'
 #' @rdname corrcov_CI
-#' @title Obtain confidence interval for corrected coverage estimate using Z-scores and mafs
+#' @title Confidence interval for corrected coverage estimate using Z-scores and mafs
 #' @param z Marginal Z-scores
 #' @param f Minor allele frequencies
 #' @param N0 Number of controls
@@ -418,7 +414,7 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI
 #' Obtain confidence interval for corrected coverage estimate using estimated effect sizes and their standard errors
 #'
 #' @rdname corrcov_CI_bhat
-#' @title Obtain confidence interval for corrected coverage estimate using estimated effect sizes and their standard errors
+#' @title Confidence interval for corrected coverage estimate using estimated effect sizes and their standard errors
 #' @param bhat Estimated effect sizes from single-SNP logistic regressions
 #' @param V Variance of estimated effect sizes
 #' @param N0 Number of controls

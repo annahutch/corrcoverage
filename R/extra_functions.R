@@ -36,29 +36,12 @@ cor2 <- function(x) {
     1/(NROW(x) - 1) * crossprod(scale(x, TRUE, TRUE))
 }
 
-#' Build and predict corrected coverage using logistic GAM
-#'
-#' This function builds a GAM model with log(claimed_coverage/(1-claimed_coverage)) (logit(claimed))
-#' as the predictor and the binary covered value as the response.
-#' This model is then used to predict the coverage probability of the causal variant in the credible set
-#' @rdname pred_logit
-#' @title pred_logit
-#' @param x data.frame with column for 'covered' and 'logit.claim'
-#' @param size size of the credible set to correct (sum of the posterior probabilities of causality of the variants)
-#' @return Predicted probability of covered
-#' @author Anna Hutchinson
-pred_logit <- function(x, size) {
-    m = mgcv::gam(covered ~ s(logit.claim), data = x, family = "binomial")
-    invlogit(predict(m, newdata = data.frame(logit.claim = logit(size))))
-}
-
 #' Proportion of simulated credible sets containing the causal variant
 #'
 #' @rdname prop_cov
 #' @title Proportion of credible sets containing the causal variant
 #' @param x data.frame with a binary 'covered' column
 #' @return Proportion of x with x = 1
-#' @export
 #' @author Anna Hutchinson
 prop_cov <- function(x) {
     sum(x$covered)/length(x$covered)
@@ -80,13 +63,13 @@ est_mu <- function(z, f, N0, N1, W = 0.2) {
     V = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
     r = W^2/(W^2 + V)
     lABF = 0.5 * (log(1 - r) + (r * z^2))
-    p1 <- 1e-04  # hard coded
-    nsnps <- length(lABF)
-    prior <- c(1 - nsnps * p1, rep(p1, nsnps))
-    tmp <- c(1, lABF)  # add on extra for null model
-    my.denom <- coloc:::logsum(tmp + prior)
-    tmp1 <- exp(tmp + prior - my.denom)
-    ph0.tmp <- tmp1/sum(tmp1)
+    p1 = 1e-04  # hard coded
+    nsnps = length(lABF)
+    prior = c(1 - nsnps * p1, rep(p1, nsnps))
+    tmp = c(1, lABF)  # add on extra for null model
+    my.denom = coloc:::logsum(tmp + prior)
+    tmp1 = exp(tmp + prior - my.denom)
+    ph0.tmp = tmp1/sum(tmp1)
 
     ph0 = ph0.tmp[1]  # prob of the null
     mean(c(sum(abs(z) * ph0.tmp[-1]), (1 - ph0.tmp[1]) * max(abs(z))))
@@ -130,10 +113,10 @@ est_mu_bhat <- function(bhat, V, N0, N1, W = 0.2) {
 #' @export
 #' @return list of the variants in the credible set, the claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)
 credset <- function(pp, CV, thr = 0.95) {
-  o <- order(pp, decreasing = TRUE)  # order index for true pp
-  cumpp <- cumsum(pp[o])  # cum sums of ordered pps
-  wh <- which(cumpp > thr)[1]  # how many needed to exceed thr
-  size <- cumpp[wh]
+  o = order(pp, decreasing = TRUE)  # order index for true pp
+  cumpp = cumsum(pp[o])  # cum sums of ordered pps
+  wh = which(cumpp > thr)[1]  # how many needed to exceed thr
+  size = cumpp[wh]
   if (missing(CV)) {
     data.frame(claimed.cov = size, nvar = wh)
   } else {
@@ -154,6 +137,6 @@ credset <- function(pp, CV, thr = 0.95) {
 #' @importFrom Rcpp sourceCpp
 #' @export
 credsetC <- function(pp, CV = iCV, thr = 0.95) {
-  ret <- credsetmat(pp, CV, thr)  ## list 1 = wh, 2 = size, 3=contained
+  ret = credsetmat(pp, CV, thr)  ## list 1 = wh, 2 = size, 3=contained
   data.frame(claimed.cov = ret[[2]], covered = ret[[3]], nvar = ret[[1]])
 }

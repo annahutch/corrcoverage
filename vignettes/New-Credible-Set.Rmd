@@ -14,6 +14,12 @@ set.seed(3)
 library(corrcoverage)
 ```
 
+```{r echo = FALSE}
+prop_cov <- function(x) {
+    sum(x$covered)/length(x$covered)
+}
+```
+
 This vignette will show users how the `corrcoverage` package can be used to obtain a new credible set of variants that contains the true causal variant with some specified desired coverage value whilst containing as few variants as possible.
 
 ---

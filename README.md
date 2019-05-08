@@ -1,10 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-<!-- badges: start -->
-[![Travis build
-status](https://travis-ci.org/tidyverse/dplyr.svg?branch=master)](https://travis-ci.org/annahutch/corrcoverage)
-<!-- badges: end -->
+[![Coverage status](https://codecov.io/gh/annahutch/corrcoverage/branch/master/graph/badge.svg)](https://codecov.io/github/annahutch/corrcoverage?branch=master)
 
 corrcoverage
 ============
@@ -16,9 +12,25 @@ The `corrcoverage` R package uses a computationally efficient algorithm to find 
 The package only requires GWAS summary statistics and can be used to:
 
 -   Perform Bayesian fine-mapping
--   Estimate the true genetic effect at the causal variant
--   Obtain an accurate coverage estimate of the causal variant in a credible set (corrected coverage estimate)
--   Find the smallest set of variants such that the coverage estimate exceeds some user-defined threshold (corrected credible set)
+-   Estimate the true genetic effect at the causal variant (see `est_mu` function).
+-   Obtain an accurate coverage estimate of the causal variant in a credible set, the 'corrected coverage estimate' (see `corrcov` function and 'Corrected Coverage' vignette).
+-   Find a new 'corrected' credible set with the desired coverage (see `corrected_cs` function and 'New Credible Set' vignette).
+
+Please see the [flowchart avaliable here](https://annahutch.github.io/PhD/package_flowchart.html) to decide which function is best to solve your problem.
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+package\_flowchart
+</title>
+<meta charset="utf-8"/>
+</head>
+<body>
+
+<script type="text/javascript" src="https://www.draw.io/js/viewer.min.js"></script>
+</body>
+</html>
 
 ------------------------------------------------------------------------
 
@@ -43,38 +55,11 @@ The 'Corrected Coverage' vignette [here](https://annahutch.github.io/corrcoverag
 
 The 'New Credible Set' vignette [here](https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html) follows on from the 'Corrected Coverage' vignette and shows readers how the `corrcoverage` package can be used to obtain a new credible set with the desired coverage of the causal variant.
 
-------------------------------------------------------------------------
-
-Conversion Functions
---------------------
-
-The Bayesian method for fine-mapping involves finding the posterior probability of causality for each SNP, before sorting these into descending order and adding variants to a 'credible set' until the combined posterior probabilities of these SNPs exceed some threshold. The supplementary text of Maller's paper (available [here](https://media.nature.com/original/nature-assets/ng/journal/v44/n12/extref/ng.2435-S1.pdf)) shows that these posterior probabilities are normalised Bayes factors.
-
-Asymptotic Bayes factors ([Wakefield, 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359)) are commonly used in genetic association studies as these only require the specification of *Z*-scores (or equivalently the effect size coefficients, *β*, and their standard errors, *V*), the standard errors of the effect sizes (*V*) and the prior variance of the estimated effect size (*W*<sup>2</sup>), thus only requiring summary data from genetic association studies.
-
-Consequently, the `corrcoverage` package contains functions for converting between *P*-values, *Z*-scores, asymptotic Bayes factors (ABFs) and posterior probabilities of causality (PPs). The following table shows what input these conversion functions require and what output they produce. The 'include null model' column is for whether the null model of no genetic effect is included in the calculation (PPs obtained using the standard Bayesian approach ignore this).
-
-| Function      | Include null model? | Input                     | Output                  |
-|---------------|---------------------|---------------------------|-------------------------|
-| `approx.bf.p` | YES                 | *p*-values                | log(ABF)                |
-| `pvals_pp`    | YES                 | *p*-values                | Posterior Probabilities |
-| `z0_pp`       | YES                 | Marginal *Z*-scores       | Posterior Probabilities |
-| `ppfunc`      | NO                  | Marginal *Z*-scores       | Posterior Probabilities |
-| `z0func.mat`  | NO                  | Marginal *Z*-score matrix | Posterior Probabilities |
-
-Functions are also provided to simulate marginal *Z*-scores from joint *Z*-scores. The joint *Z*-scores are all 0, except at the causal variant where it is the 'true effect', *μ*.
-
-*μ* can be estimated using the `est_mu` function which required sample sizes, *Z*-scores and minor allele frequencies.
-
-`z_sim` simulates marginal *Z*-scores from joint *Z*-scores, whilst `zj_pp` can be used to simulate posterior probability systems from a joint *Z*-score vector. These functions first calculate *E*(*Z*<sub>*m*</sub>),
-*E*(*Z*<sub>*m*</sub>)=*Z*<sub>*j*</sub> × *Σ*
- where *Σ* is the correlation matrix between SNPs.
-
-We can then simulate more *Z*-score systems from a multivariate normal distribution with mean *E*(*Z*<sub>*m*</sub>) and variance *Σ*. This is a key step in our corrected coverage method.
+The 'Useful Info' vignette [here](https://annahutch.github.io/corrcoverage/articles/Useful-Info.html) provides supplementary information about the usage of the package, including information about other useful functions.
 
 ------------------------------------------------------------------------
 
-In brief, the correction method includes simulating many credible sets from 'the same system as the original' and finding what proportion of these contain the true causal variant, whereby each variant is considered causal in turn and the predictions are normalised by that variant's posterior probability of causality.
+In brief, the correction method involves simulating many credible sets from 'the same system as the original' and finding what proportion of these contain the true causal variant, whereby each variant is considered causal in turn and the predictions are normalised by that variant's posterior probability of causality.
 
 ------------------------------------------------------------------------
 

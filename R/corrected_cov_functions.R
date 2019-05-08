@@ -8,11 +8,11 @@
 #' @param W Prior for the standard deviation of the effect size parameter beta (W=0.2 default)
 #' @param Sigma SNP correlation matrix
 #' @param pp0 Posterior probabilities of system of interest
-#' @param thresh Minimum threshold for fine-mapping experiment (default is 0.95)
+#' @param thr Minimum threshold for fine-mapping experiment (default is 0.95)
 #' @param nrep Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)
 #' @export
 #' @return Corrected coverage estimate
-corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh = 0.95, nrep = 1000) {
+corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thr = 0.95, nrep = 1000) {
 
     nsnps = length(pp0)
     temp = diag(x = mu, nrow = nsnps, ncol = nsnps)
@@ -41,7 +41,7 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thresh = 0.95, nrep = 1000
 
     # obtain credible set for each simulation
     d5 <- lapply(1:n_pps, function(x) {
-        credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thresh)
+        credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
     })
 
     prop_cov <- lapply(d5, prop_cov) %>% unlist()

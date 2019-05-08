@@ -4,7 +4,7 @@
 \alias{corrected_cov}
 \title{Corrected coverage estimate of the causal variant in the credible set}
 \usage{
-corrected_cov(mu, V, W = 0.2, Sigma, pp0, thresh = 0.95, nrep = 1000)
+corrected_cov(mu, V, W = 0.2, Sigma, pp0, thr = 0.95, nrep = 1000)
 }
 \arguments{
 \item{mu}{The true effect at the CV}
@@ -17,7 +17,7 @@ corrected_cov(mu, V, W = 0.2, Sigma, pp0, thresh = 0.95, nrep = 1000)
 
 \item{pp0}{Posterior probabilities of system of interest}
 
-\item{thresh}{Minimum threshold for fine-mapping experiment (default is 0.95)}
+\item{thr}{Minimum threshold for fine-mapping experiment (default is 0.95)}
 
 \item{nrep}{Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)}
 }

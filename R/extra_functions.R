@@ -43,6 +43,7 @@ cor2 <- function(x) {
 #' @param x data.frame with a binary 'covered' column
 #' @return Proportion of x with x = 1
 #' @author Anna Hutchinson
+#' @export
 prop_cov <- function(x) {
     sum(x$covered)/length(x$covered)
 }

@@ -56,4 +56,19 @@ test_that("check V in ppfunc", {
   expect_true(all(V>=0))
 })
 
+test_that("ppfunc.mat returns probabilities", {
+  V <- coloc:::Var.data.cc(maf, N, 0.5)
+  zstar <- matrix(rnorm(10000), nrow = 100)
+  res <- ppfunc.mat(zstar, V = V)
+  expect_equal(sum(res[1,]), 1)
+  expect_true(all(dplyr::between(res,0,1)))
+})
+
+test_that("approx.bf.p returns 4 columns", {
+  res <- approx.bf.p(pvals, f = maf, type = "cc", N = N, s = 0.5, W = 0.2)
+  expect_true(dim(res)[2]==4)
+})
+
+
+
 

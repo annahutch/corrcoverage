@@ -73,6 +73,38 @@ test_that("corrcov_CI_bhat returns an appropriate confidence interval", {
   expect_true(dplyr::between(CI[[2]],0,1))
 })
 
+test_that("est_mu and est_mu_bhat return single value", {
+  mu1 <- est_mu(z = z, f = maf, N0 = N, N1 = N, W = 0.2)
+
+  se <- 0.2 # assume all beta hats have same standard error
+  bhats <- z*se
+
+  mu2 <- est_mu_bhat(bhat = bhats, V = V, N0 = N, N1 = N, W = 0.2)
+  expect_true(class(mu1) == "numeric")
+  expect_true(class(mu2) == "numeric")
+})
+
+test_that("corrected_cs reports appropriate list", {
+  skip("takes too long")
+  res <- corrected_cs(z = z, f = maf, N0 = N, N1 = N, Sigma = sigma, lower = 0.8, upper = 1, desired.cov = 0.95)
+  expect_true(length(res) == 4)
+  expect_true(all(dplyr::between(res$corr.cov,0,1)))
+  expect_true(all(dplyr::between(res$req.thr,0,1)))
+  expect_true(all(dplyr::between(res$size,0,1)))
+})
+
+test_that("corrected_cs_bhat reports appropriate list", {
+  skip("takes too long")
+  se <- 0.2 # assume all beta hats have same standard error
+  bhats <- z*se
+  res <- corrected_cs_bhat(bhat = bhats, V = V, N0 = N, N1 = N, Sigma = sigma, lower = 0.8, upper = 1, desired.cov = 0.95)
+  expect_true(length(res) == 4)
+  expect_true(all(dplyr::between(res$corr.cov,0,1)))
+  expect_true(all(dplyr::between(res$req.thr,0,1)))
+  expect_true(all(dplyr::between(res$size,0,1)))
+})
+
+
 
 
 

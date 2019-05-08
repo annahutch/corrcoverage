@@ -18,20 +18,6 @@ The package only requires GWAS summary statistics and can be used to:
 
 Please see the [flowchart avaliable here](https://annahutch.github.io/PhD/package_flowchart.html) to decide which function is best to solve your problem.
 
-<!DOCTYPE html>
-<html>
-<head>
-<title>
-package\_flowchart
-</title>
-<meta charset="utf-8"/>
-</head>
-<body>
-
-<script type="text/javascript" src="https://www.draw.io/js/viewer.min.js"></script>
-</body>
-</html>
-
 ------------------------------------------------------------------------
 
 Installation

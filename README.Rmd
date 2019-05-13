@@ -30,7 +30,7 @@ The package only requires GWAS summary statistics and can be used to:
 
 Please see the flowchart below to decide which function is best to solve your problem. The interactive version (click-to-functions) is [avaliable here](https://annahutch.github.io/PhD/package_flowchart.html)
 
-![Alt text](https://annahutch.github.io/PhD/package_flowchart.svg)
+![](https://annahutch.github.io/PhD/package_flowchart.svg)
 
 ----
 

@@ -16,7 +16,9 @@ The package only requires GWAS summary statistics and can be used to:
 -   Obtain an accurate coverage estimate of the causal variant in a credible set, the 'corrected coverage estimate' (see `corrcov` function and 'Corrected Coverage' vignette).
 -   Find a new 'corrected' credible set with the desired coverage (see `corrected_cs` function and 'New Credible Set' vignette).
 
-Please see the [flowchart avaliable here](https://annahutch.github.io/PhD/package_flowchart.html) to decide which function is best to solve your problem.
+Please see the flowchart below to decide which function is best to solve your problem. The interactive version (click-to-functions) is [avaliable here](https://annahutch.github.io/PhD/package_flowchart.html)
+
+![Alt text](https://annahutch.github.io/PhD/package_flowchart.svg)
 
 ------------------------------------------------------------------------
 

@@ -41,9 +41,9 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2) {
     p1 = 1e-04  # hard coded
     nsnps = length(lABF)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
-    tmp = c(1, lABF)  # add on extra for null model
-    my.denom = coloc:::logsum(tmp + prior)
-    tmp1 = exp(tmp + prior - my.denom)
+    tmp = c(0, lABF)  # add on extra for null model
+    my.denom = coloc:::logsum(tmp + log(prior))
+    tmp1 = exp(tmp + log(prior) - my.denom)
     tmp1/sum(tmp1)
 }
 
@@ -67,9 +67,9 @@ z0_pp <- function(z, f, type, N, s, W = 0.2) {
     p1 = 1e-04  # hard coded
     nsnps = length(lABF)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
-    tmp = c(1, lABF)  # add on extra for null model
-    my.denom = coloc:::logsum(tmp + prior)
-    tmp1 = exp(tmp + prior - my.denom)
+    tmp = c(0, lABF)  # add on extra for null model
+    my.denom = coloc:::logsum(tmp + log(prior))
+    tmp1 = exp(tmp + log(prior) - my.denom)
     tmp1/sum(tmp1)
 }
 

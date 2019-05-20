@@ -50,6 +50,14 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
     sum(prop_cov * pp) - desired.cov
   }
 
+  o = order(pp, decreasing = TRUE)  # order index for true pp
+  cumpp = cumsum(pp[o])  # cum sums of ordered pps
+
+  corrcov.tmp <- f(desired.cov)
+  nvar.tmp <- which(cumpp > desired.cov)[1]
+
+  if(corrcov.tmp > 0 & nvar.tmp == 1) stop("Cannot make credible set smaller")
+
   # initalize
   N=1
   fa = f(lower)
@@ -74,8 +82,6 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0
       N = N + 1
     }
   }
-  o = order(pp, decreasing = TRUE)  # order index for true pp
-  cumpp = cumsum(pp[o])  # cum sums of ordered pps
   wh = which(cumpp > c)[1]  # how many needed to exceed thr
   list(credset = names(pp)[o[1:wh]], req.thr = c, corr.cov = desired.cov + fc, size = cumpp[wh])
 }
@@ -131,6 +137,14 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov,
     sum(prop_cov * pp) - desired.cov
   }
 
+  o = order(pp, decreasing = TRUE)  # order index for true pp
+  cumpp = cumsum(pp[o])  # cum sums of ordered pps
+
+  corrcov.tmp <- f(desired.cov)
+  nvar.tmp <- which(cumpp > desired.cov)[1]
+
+  if(corrcov.tmp > 0 & nvar.tmp == 1) stop("Cannot make credible set smaller")
+
   # initalize
   N=1
   fa = f(lower)
@@ -154,10 +168,7 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov,
       }
       N = N + 1
     }
-    # df <- data.frame(req.thr = c, corr.cov = desired.cov + fc)
   }
-  o = order(pp, decreasing = TRUE)  # order index for true pp
-  cumpp = cumsum(pp[o])  # cum sums of ordered pps
   wh = which(cumpp > c)[1]  # how many needed to exceed thr
   list(credset = names(pp)[o[1:wh]], req.thr = c, corr.cov = desired.cov + fc, size = cumpp[wh])
 }

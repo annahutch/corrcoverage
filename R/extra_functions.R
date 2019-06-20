@@ -119,7 +119,7 @@ credset <- function(pp, CV, thr = 0.95) {
   wh = which(cumpp > thr)[1]  # how many needed to exceed thr
   size = cumpp[wh]
   if (missing(CV)) {
-    data.frame(claimed.cov = size, nvar = wh)
+    list(credset = o[1:wh], claimed.cov = size, nvar = wh)
   } else {
     contained = as.numeric(CV %in% o[1:wh])
     list(credset = o[1:wh], claimed.cov = size, covered = contained, nvar = wh)

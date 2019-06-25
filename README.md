@@ -37,7 +37,7 @@ devtools::install_github("annahutch/corrcoverage")
 Examples
 --------
 
-For examples, please see the vignettes on the webpage [here](http://annahutch.github.io/corrcoverage/articles/my-vignette.html).
+For examples, please see the vignettes on the webpage [here](https://annahutch.github.io/corrcoverage/).
 
 The 'Corrected Coverage' vignette [here](https://annahutch.github.io/corrcoverage/articles/my-vignette.html) should be read first. This shows readers how to use the `corrcoverage` package to get an accurate coverage estimate of the causal variant in a credible set.
 

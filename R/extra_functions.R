@@ -117,7 +117,9 @@ credset <- function(pp, CV, thr = 0.95) {
   o = order(pp, decreasing = TRUE)  # order index for true pp
   cumpp = cumsum(pp[o])  # cum sums of ordered pps
   wh = which(cumpp > thr)[1]  # how many needed to exceed thr
+  names(wh) = NULL
   size = cumpp[wh]
+  names(size) = NULL
   if (missing(CV)) {
     list(credset = o[1:wh], claimed.cov = size, nvar = wh)
   } else {

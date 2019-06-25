@@ -189,8 +189,7 @@ true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www
 ## [1] 0.9036503
 ## 
 ## $size
-##      s180 
-## 0.7680134</code></pre>
+## [1] 0.7680134</code></pre>
 <p>In this example we see that a threshold of just 0.75 is required to obtain a credible set with 90% coverage of the causal variant. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.</p>
 <p>The output is a credible set containing only 1 variant, that has a corrected coverage estimate of 0.9. This suggests that if the user implemented the standard Bayesian approach to statistical fine-mapping, then their 90% credible set would contain 2 variants and actually have nearer to 96% probability of containing the true causal variant.</p>
 <p>By applying the <code>corrected_cs</code> function, the user can obtain a new 90% credible set that has 90% probability of containing the true causal variant. This credible set contains only 1 variant, showing that the resolution of the fine-mapping experiment has improved.</p>

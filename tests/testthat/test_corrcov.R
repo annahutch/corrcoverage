@@ -14,7 +14,7 @@ V <- data$V
 z <- data$z
 
 test_that("credset function has correct dimensions (using CV and not)", {
-  expect_equal(dim(credset(pp, thr = 0.9))[2], 2)
+  expect_equal(length(credset(pp, thr = 0.9)), 3)
   expect_equal(length(credset(pp, CV = 2, thr = 0.9)), 4)
 })
 
@@ -58,14 +58,14 @@ test_that("corrcov_nvar_bhat function returns a probability", {
 })
 
 test_that("corrcov_CI returns an appropriate confidence interval", {
-  skip("takes too long")
+  # skip("takes too long")
   CI <- corrcov_CI(z = z, f = maf, N0 = N, N1 = N, Sigma = sigma)
   expect_true(dplyr::between(CI[[1]],0,1))
   expect_true(dplyr::between(CI[[2]],0,1))
 })
 
 test_that("corrcov_CI_bhat returns an appropriate confidence interval", {
-  skip("takes too long")
+  # skip("takes too long")
   se <- 0.2 # assume all beta hats have same standard error
   bhats <- z*se
   CI <- corrcov_CI_bhat(bhat = bhats, V = V, N0 = N, N1 = N, Sigma = sigma)
@@ -85,7 +85,7 @@ test_that("est_mu and est_mu_bhat return single value", {
 })
 
 test_that("corrected_cs reports appropriate list", {
-  skip("takes too long")
+  # skip("takes too long")
   res <- corrected_cs(z = z, f = maf, N0 = N, N1 = N, Sigma = sigma, lower = 0.8, upper = 1, desired.cov = 0.95)
   expect_true(length(res) == 4)
   expect_true(all(dplyr::between(res$corr.cov,0,1)))
@@ -93,7 +93,7 @@ test_that("corrected_cs reports appropriate list", {
   expect_true(all(dplyr::between(res$size,0,1)))
 })
 
-test_that("corrected_cs_bhat reports appropriate list", {
+test_that("corrected_cs_bhat reports appropriate list", { # get an error.. cannot make it smaller?
   skip("takes too long")
   se <- 0.2 # assume all beta hats have same standard error
   bhats <- z*se

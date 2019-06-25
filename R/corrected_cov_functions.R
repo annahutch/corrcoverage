@@ -208,32 +208,6 @@ quick_corrcov <- function(thr = 0.95, simulated.pps, pp) {
     sum(prop_cov * pp)
 }
 
-#' @title Use simulated pps to find corrected coverage estimate and credible set
-#'
-#' @rdname quick_corrcov_cs
-#' @param thr Threshold value to exceed (default is 0.95)
-#' @param simulated.pps A list of matrices of simulated posterior probabilities (1 simulation per row) where each list element is for the corresponding SNP considered causal
-#' @param pp The posterior probabilities of the original system
-#'
-#' @return A list of the credible set obtained using the specified threshold, the corrected coverage estimate of this credible set, the threshold the user specified and the size of the credible set (the sum of the pps of the variants)
-#'
-quick_corrcov_cs <- function(thr = 0.95, simulated.pps, pp) {
-    n_pps = length(simulated.pps)
-    args = 1:nsnps
-
-    d5 <- lapply(1:n_pps, function(x) {
-        credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
-    })
-
-    prop_cov = lapply(d5, prop_cov) %>% unlist()
-    corr_cov = sum(prop_cov * pp)
-
-    o = order(pp, decreasing = TRUE)
-    cumpp = cumsum(pp[o])
-    wh = which(cumpp > thr)[1]
-    list(credset = names(pp)[o[1:wh]], corr.cov = corr_cov, thr = thr, size = cumpp[wh])
-}
-
 #' Obtain corrected coverage estimate using Z-scores and mafs (limiting simulations used for estimation to those with correct nvar)
 #'
 #' This function requires the marginal summary statistics from GWAS and an nvar value. It should only be used when nvar is very low ($<3$) and there is some evidence to suggest that only simulated credible sets with this nvar value should be used to derive the corrected coverage estimate.

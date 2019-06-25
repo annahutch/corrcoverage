@@ -23,6 +23,23 @@ test_that("cor2 finds correlation matrix", {
   expect_true(all(dplyr::between(cor_matrix,-1,1.0001)))
 })
 
+test_that("z_sim simulates the correct number of marginal Z scores", {
+  zj = rep(0, 100)
+  zj[2] = 5
+  res = z_sim(Zj = zj, Sigma = cor2(h), nrep = 10)
+  expect_true(dim(res)[1] == 10)
+  expect_true(dim(res)[2] == 100)
+})
+
+test_that("zj_pp returns probabilities and has correct dimensions", {
+  zj = rep(0, 100)
+  zj[2] = 5
+  res = zj_pp(Zj = zj, V = var, nrep = 10, W = 0.2, Sigma = cor2(h))
+  expect_true(all( res > 0 & res < 1))
+  expect_true(dim(res)[1] == 10)
+  expect_true(dim(res)[2] == 100)
+})
+
 test_that("length of posterior probs is the same as input (or plus 1 if null model considered)", {
 
   pvals.pp.null <- pvals_pp(pvals, f = maf, type = "cc", N = 10000, s = 0.5)
@@ -68,7 +85,3 @@ test_that("approx.bf.p returns 4 columns", {
   res <- approx.bf.p(pvals, f = maf, type = "cc", N = N, s = 0.5, W = 0.2)
   expect_true(dim(res)[2]==4)
 })
-
-
-
-

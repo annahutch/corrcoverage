@@ -114,7 +114,7 @@ freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span cla
 CV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(snps[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(haps) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.1</span>)], <span class="dv">1</span>)
 iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV)  <span class="co"># index of cv</span>
 LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps) <span class="co"># correlation between SNPs</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OR &lt;-<span class="st"> </span><span class="fl">1.1</span> <span class="co"># odds ratios</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OR &lt;-<span class="st"> </span><span class="fl">1.1</span> <span class="co"># odds ratios</span>
 N0 &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co"># number of controls</span>
 N1 &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co"># number of cases</span>
   

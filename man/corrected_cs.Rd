@@ -4,8 +4,8 @@
 \alias{corrected_cs}
 \title{Corrected credible set with desired coverage of the CV}
 \usage{
-corrected_cs(z, f, N0, N1, Sigma, lower, upper, desired.cov, acc = 0.005,
-  max.iter = 20)
+corrected_cs(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
+  acc = 0.005, max.iter = 20)
 }
 \arguments{
 \item{z}{Z-scores}

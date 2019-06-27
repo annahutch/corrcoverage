@@ -4,6 +4,8 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# corrcoverage  <img src="man/figures/logo.png" align="right" />
+
 [![Coverage status](https://codecov.io/gh/annahutch/corrcoverage/branch/master/graph/badge.svg)](https://codecov.io/github/annahutch/corrcoverage?branch=master)
 [![Build Status](https://travis-ci.org/annahutch/corrcoverage.svg?branch=master)](https://travis-ci.org/annahutch/corrcoverage)
 
@@ -15,8 +17,6 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-
-# corrcoverage
 
 Webpage: https://annahutch.github.io/corrcoverage/
 

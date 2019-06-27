@@ -4,9 +4,10 @@ Title: Provides corrected coverage value for the causal variant in a credible se
 Version: 0.0.1.900
 Author: Anna Hutchinson <anna.hutchinson@mrc-bsu.cam.ac.uk>
 Maintainer: Anna Hutchinson <anna.hutchinson@mrc-bsu.cam.ac.uk>
-Description: A package to obtain an accurate coverage estimate of the causal variant in a credible set obtained using the Bayesian approach to fine-mapping
+Description: A package to obtain an accurate coverage estimate of the causal variant in a credible set obtained using Bayesian fine-mapping
 URL: https://annahutch.github.io/corrcoverage
 License: MIT
+BugReports: https://github.com/annahutch/corrcoverage/issues
 Encoding: UTF-8
 LazyData: true
 Suggests: 

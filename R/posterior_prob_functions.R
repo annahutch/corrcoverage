@@ -42,7 +42,7 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2) {
     nsnps = length(lABF)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
     tmp = c(0, lABF)  # add on extra for null model
-    my.denom = coloc:::logsum(tmp + log(prior))
+    my.denom = logsum(tmp + log(prior))
     tmp1 = exp(tmp + log(prior) - my.denom)
     tmp1/sum(tmp1)
 }
@@ -68,7 +68,7 @@ z0_pp <- function(z, f, type, N, s, W = 0.2) {
     nsnps = length(lABF)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
     tmp = c(0, lABF)  # add on extra for null model
-    my.denom = coloc:::logsum(tmp + log(prior))
+    my.denom = logsum(tmp + log(prior))
     tmp1 = exp(tmp + log(prior) - my.denom)
     tmp1/sum(tmp1)
 }
@@ -87,7 +87,7 @@ z0_pp <- function(z, f, type, N, s, W = 0.2) {
 ppfunc <- function(z, V, W = 0.2) {
     r = W^2/(W^2 + V)
     bf = 0.5 * (log(1 - r) + (r * z^2))
-    denom = coloc:::logsum(bf)
+    denom = logsum(bf)
     pp.tmp = exp(bf - denom)  # convert back from log scale
     pp.tmp/sum(pp.tmp)
 }
@@ -107,7 +107,7 @@ ppfunc <- function(z, V, W = 0.2) {
 ppfunc.mat <- function(zstar, V, W = 0.2) {
     r = matrix(W^2/(W^2 + V), nrow = nrow(zstar), ncol = ncol(zstar), byrow = TRUE)  # see wakefield paper
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = apply(bf, 1, coloc:::logsum)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+    denom = apply(bf, 1, logsum)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
     pp.tmp = exp(bf - matrix(denom, nrow = nrow(bf), ncol = ncol(bf)))  # convert back from log scale
     pp.tmp/rowSums(pp.tmp)
 }

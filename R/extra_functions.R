@@ -68,7 +68,7 @@ est_mu <- function(z, f, N0, N1, W = 0.2) {
     nsnps = length(lABF)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
     tmp = c(1, lABF)  # add on extra for null model
-    my.denom = coloc:::logsum(tmp + prior)
+    my.denom = logsum(tmp + prior)
     tmp1 = exp(tmp + prior - my.denom)
     ph0.tmp = tmp1/sum(tmp1)
 
@@ -96,7 +96,7 @@ est_mu_bhat <- function(bhat, V, N0, N1, W = 0.2) {
     nsnps = length(lABF)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
     tmp = c(1, lABF)  # add on extra for null model
-    my.denom = coloc:::logsum(tmp + prior)
+    my.denom = logsum(tmp + prior)
     tmp1 = exp(tmp + prior - my.denom)
     ph0.tmp = tmp1/sum(tmp1)
     ph0 = ph0.tmp[1]  # prob of the null

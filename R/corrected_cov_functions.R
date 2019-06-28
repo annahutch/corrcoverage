@@ -19,7 +19,7 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thr = 0.95, nrep = 1000) {
     zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
 
     # simulate ERR matrix
-    ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+    ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
     r = W^2/(W^2 + V)
 
     pp_ERR = function(Zj) {
@@ -27,7 +27,7 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thr = 0.95, nrep = 1000) {
         mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
         zstar = mexp.zm + ERR
         bf = 0.5 * (log(1 - r) + (r * zstar^2))
-        denom = coloc:::logsum(bf)
+        denom = logsum(bf)
         pp.tmp = exp(bf - denom)  # convert back from log scale
         pp.tmp/rowSums(pp.tmp)
     }
@@ -72,7 +72,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
     nsnps = length(bf)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
     tmp = c(1, bf)  # add on extra for null model
-    my.denom = coloc:::logsum(tmp + prior)
+    my.denom = logsum(tmp + prior)
     tmp1 = exp(tmp + prior - my.denom)
     ph0.tmp = tmp1/sum(tmp1)
 
@@ -80,7 +80,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
     pp0dash = ph0.tmp[-1]  # pps of variants
 
     # posterior probs of true system
-    pp.tmp = exp(bf - coloc:::logsum(bf))
+    pp.tmp = exp(bf - logsum(bf))
     pp0 = pp.tmp/sum(pp.tmp)
 
     # estimate mu
@@ -91,13 +91,13 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
     zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
     # simulate ERR matrix
 
-    ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+    ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
     pp_ERR = function(Zj) {
         exp.zm = Zj %*% Sigma
         mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
         zstar = mexp.zm + ERR
         bf = 0.5 * (log(1 - r) + (r * zstar^2))
-        denom = coloc:::logsum(bf)
+        denom = logsum(bf)
         pp.tmp = exp(bf - denom)  # convert back from log scale
         pp.tmp/rowSums(pp.tmp)
     }
@@ -141,7 +141,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
     nsnps = length(bf)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
     tmp = c(1, bf)  # add on extra for null model
-    my.denom = coloc:::logsum(tmp + prior)
+    my.denom = logsum(tmp + prior)
     tmp1 = exp(tmp + prior - my.denom)
     ph0.tmp = tmp1/sum(tmp1)
 
@@ -149,7 +149,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
     pp0dash = ph0.tmp[-1]  # pps of variants
 
     # posterior probs of true system
-    pp.tmp = exp(bf - coloc:::logsum(bf))
+    pp.tmp = exp(bf - logsum(bf))
     pp0 = pp.tmp/sum(pp.tmp)
 
     # estimate mu
@@ -161,13 +161,13 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 
     # simulate ERR matrix
 
-    ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+    ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
     pp_ERR = function(Zj) {
         exp.zm = Zj %*% Sigma
         mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
         zstar = mexp.zm + ERR
         bf = 0.5 * (log(1 - r) + (r * zstar^2))
-        denom = coloc:::logsum(bf)
+        denom = logsum(bf)
         pp.tmp = exp(bf - denom)  # convert back from log scale
         pp.tmp/rowSums(pp.tmp)
     }
@@ -186,26 +186,6 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
     prop_cov = lapply(d5, prop_cov) %>% unlist()
 
     sum(prop_cov * pp0)
-}
-
-#' @title Use simulated pps to find corrected coverage estimate
-#'
-#' @rdname quick_corrcov
-#' @param thr Threshold value to exceed (default is 0.95)
-#' @param simulated.pps A list of matrices of simulated posterior probabilities (1 simulation per row) where each list element is for the corresponding SNP considered causal
-#' @param pp The posterior probabilities of the original system
-#'
-#' @return Corrected coverage estimate
-quick_corrcov <- function(thr = 0.95, simulated.pps, pp) {
-    n_pps = length(simulated.pps)
-    args = 1:nsnps
-
-    d5 <- lapply(1:n_pps, function(x) {
-        credsetC(simulated.pps[[x]], CV = rep(args[x], dim(simulated.pps[[x]])[1]), thr = thr)
-    })
-
-    prop_cov = lapply(d5, prop_cov) %>% unlist()
-    sum(prop_cov * pp)
 }
 
 #' Obtain corrected coverage estimate using Z-scores and mafs (limiting simulations used for estimation to those with correct nvar)
@@ -232,7 +212,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
   nsnps = length(bf)
   prior = c(1 - nsnps * p1, rep(p1, nsnps))
   tmp = c(1, bf)  # add on extra for null model
-  my.denom = coloc:::logsum(tmp + prior)
+  my.denom = logsum(tmp + prior)
   tmp1 = exp(tmp + prior - my.denom)
   ph0.tmp = tmp1/sum(tmp1)
 
@@ -240,7 +220,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
   pp0dash = ph0.tmp[-1]  # pps of variants
 
   # posterior probs of true system
-  pp.tmp = exp(bf - coloc:::logsum(bf))
+  pp.tmp = exp(bf - logsum(bf))
   pp0 = pp.tmp/sum(pp.tmp)
 
   # estimate mu
@@ -251,13 +231,13 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
   # simulate ERR matrix
 
-  ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+  ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
   pp_ERR = function(Zj) {
     exp.zm = Zj %*% Sigma
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
     zstar = mexp.zm + ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+    denom = logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
     pp.tmp = exp(bf - denom)  # convert back from log scale
     pp.tmp/rowSums(pp.tmp)
   }
@@ -310,7 +290,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
   nsnps = length(bf)
   prior = c(1 - nsnps * p1, rep(p1, nsnps))
   tmp = c(1, bf)  # add on extra for null model
-  my.denom = coloc:::logsum(tmp + prior)
+  my.denom = logsum(tmp + prior)
   tmp1 = exp(tmp + prior - my.denom)
   ph0.tmp = tmp1/sum(tmp1)
 
@@ -318,7 +298,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
   pp0dash = ph0.tmp[-1]  # pps of variants
 
   # posterior probs of true system
-  pp.tmp = exp(bf - coloc:::logsum(bf))
+  pp.tmp = exp(bf - logsum(bf))
   pp0 = pp.tmp/sum(pp.tmp)
 
   # estimate mu
@@ -329,13 +309,13 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
   # simulate ERR matrix
 
-  ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+  ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
   pp_ERR = function(Zj) {
     exp.zm = Zj %*% Sigma
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
     zstar = mexp.zm + ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+    denom = logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
     pp.tmp = exp(bf - denom)  # convert back from log scale
     pp.tmp/rowSums(pp.tmp)
   }

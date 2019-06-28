@@ -8,7 +8,7 @@
 #' @export
 #' @return Matrix of simulated z-scores, one simulation per row
 z_sim <- function(Zj, Sigma, nrep) {
-    ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+    ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
     exp.zm = Zj %*% Sigma
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
     mexp.zm + ERR  # nrep is rows, nsnps is cols
@@ -26,13 +26,13 @@ z_sim <- function(Zj, Sigma, nrep) {
 #' @export
 #' @return Matrix of simulated posterior probabilties, one simulation per row
 zj_pp <- function(Zj, V, nrep = 5000, W = 0.2, Sigma) {
-    ERR = mvtnorm:::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+    ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
     exp.zm = Zj %*% Sigma
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
     zstar = mexp.zm + ERR
     r = W^2/(W^2 + V)
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = coloc:::logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+    denom = logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
     pp.tmp = exp(bf - denom)  # convert back from log scale
     pp.tmp/rowSums(pp.tmp)
 }

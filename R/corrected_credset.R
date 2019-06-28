@@ -26,13 +26,13 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
   nrep = 1000
 
   # simulate ERR matrix
-  ERR = mvtnorm:::rmvnorm(nrep, rep(0,ncol(Sigma)), Sigma)
+  ERR = mvtnorm::rmvnorm(nrep, rep(0,ncol(Sigma)), Sigma)
   pp_ERR = function(Zj){
     exp.zm = Zj %*% Sigma
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
     zstar = mexp.zm+ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = coloc:::logsum(bf)
+    denom = logsum(bf)
     pp.tmp = exp(bf - denom)  # convert back from log scale
     pp.tmp / rowSums(pp.tmp)
   }
@@ -115,13 +115,13 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower, upper, desired.cov,
   nrep = 1000
 
   # simulate ERR matrix
-  ERR = mvtnorm:::rmvnorm(nrep, rep(0,ncol(Sigma)), Sigma)
+  ERR = mvtnorm::rmvnorm(nrep, rep(0,ncol(Sigma)), Sigma)
   pp_ERR = function(Zj){
     exp.zm = Zj %*% Sigma
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow=TRUE) # matrix of Zj replicated in each row
     zstar = mexp.zm+ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = coloc:::logsum(bf)
+    denom = logsum(bf)
     pp.tmp = exp(bf - denom)  # convert back from log scale
     pp.tmp / rowSums(pp.tmp)
   }

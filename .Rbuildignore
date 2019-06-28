@@ -5,3 +5,6 @@
 ^README\.Rmd$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^docs$
+_pkgdown.yml
+package_flowchart.html

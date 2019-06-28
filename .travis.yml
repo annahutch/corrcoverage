@@ -4,6 +4,32 @@ r_github_packages:
   - r-lib/covr
 after_success:
   - Rscript -e 'covr::codecov()'
-language: R
+
+language: r
+r:
+  - oldrel
+  - release
+  - devel
+
+os:
+  - linux
+  - osx
+
+matrix:
+  exclude:
+    - r: devel
+      os: osx
+
 sudo: false
 cache: packages
+
+before_deploy: Rscript -e 'remotes::install_cran("pkgdown")'
+
+deploy:
+  on:
+      os:     linux
+      r:      release
+      branch: master
+  provider: script
+  script: Rscript -e 'pkgdown::deploy_site_github()'
+  skip_cleanup: true

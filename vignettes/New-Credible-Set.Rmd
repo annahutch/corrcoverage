@@ -3,7 +3,7 @@ title: "New Credible Set: `corrected_cs`"
 author: "Anna Hutchinson"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{New Credible Set: `corrected_cs`}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

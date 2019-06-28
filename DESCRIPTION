@@ -2,11 +2,13 @@ Package: corrcoverage
 Type: Package
 Title: Provides corrected coverage value for the causal variant in a credible set
 Version: 0.0.1.900
-Author: Anna Hutchinson <anna.hutchinson@mrc-bsu.cam.ac.uk>
-Maintainer: Anna Hutchinson <anna.hutchinson@mrc-bsu.cam.ac.uk>
-Description: A package to obtain an accurate coverage estimate of the causal variant in a credible set obtained using Bayesian fine-mapping
+Authors@R: c(
+        person("Anna", "Hutchinson", role = c("aut", "cre"), email = "anna.hutchinson@mrc-bsu.cam.ac.uk")
+    )
+Description: A package to obtain an accurate coverage estimate of the causal variant in a credible set obtained using Bayesian fine-mapping. 
+            Can be used to find corrected coverage estimate and/or a corrected credible set.
 URL: https://annahutch.github.io/corrcoverage
-License: MIT
+License: MIT + file LICENSE
 BugReports: https://github.com/annahutch/corrcoverage/issues
 Encoding: UTF-8
 LazyData: true
@@ -14,9 +16,9 @@ Suggests:
     dplyr,
     knitr,
     mvtnorm,
-    Rcpp,
     rmarkdown,
     testthat,
+    pkgdown,
     covr
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1

@@ -54,13 +54,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/my-vignette.html">Corrected Coverage</a>
-    </li>
-    <li>
-      <a href="../articles/New-Credible-Set.html">New Credible Set</a>
+      <a href="../articles/New-Credible-Set.html">New Credible Set: `corrected_cs`</a>
     </li>
     <li>
       <a href="../articles/Useful-Info.html">Useful Info</a>
+    </li>
+    <li>
+      <a href="../articles/my-vignette.html">Correcting the Coverage of Credible Sets: `corrcov`</a>
     </li>
   </ul>
 </li>
@@ -95,46 +95,46 @@
 <p>The <code>corrcoverage</code> package uses GWAS summary statistics to provides an accurate estimate of the probability that the true causal variant is contained within a credible set derived for a given threshold. It also provides functions so that users can move freely between joint Z-scores, marginal Z-scores, asymptotic Bayes factors and posterior probabilities of causality.</p>
 <hr>
 <p>Load the library.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">2</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(corrcoverage)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(corrcoverage)</a></code></pre></div>
 <hr>
 <div id="simulate-gwas-summary-statistics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#simulate-gwas-summary-statistics" class="anchor"></a>Simulate GWAS summary statistics</h2>
 <hr>
 <p><strong>This package is intended for use on summary statistics obtained from GWAS, such as observed <span class="math inline">\(Z\)</span>-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the <a href="https://github.com/chr1swallace/simGWAS">simGWAS</a> package. Please refer to the walkthrough guide <a href="https://chr1swallace.github.io/simGWAS/articles/intro.html">here</a> from which the following is taken.</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simGWAS)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Simulate reference haplotypes</span>
-nsnps &lt;-<span class="st"> </span><span class="dv">200</span>
-nhaps &lt;-<span class="st"> </span><span class="dv">1000</span>
-lag &lt;-<span class="st"> </span><span class="dv">5</span> <span class="co"># genotypes are correlated between neighbouring variants</span>
-maf &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(nsnps<span class="op">+</span>lag,<span class="fl">0.05</span>,<span class="fl">0.5</span>) <span class="co"># common SNPs</span>
-laghaps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(maf, <span class="cf">function</span>(f) <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(nhaps,<span class="dv">1</span>,f)))
-haps &lt;-<span class="st"> </span>laghaps[,<span class="dv">1</span><span class="op">:</span>nsnps]
-<span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>lag) 
-    haps &lt;-<span class="st"> </span>haps <span class="op">+</span><span class="st"> </span>laghaps[,(<span class="dv">1</span><span class="op">:</span>nsnps)<span class="op">+</span>j]
-haps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(haps<span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(haps,<span class="dv">2</span>,max),nhaps,nsnps,<span class="dt">byrow=</span><span class="ot">TRUE</span>))
-snps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(haps) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"s"</span>,<span class="dv">1</span><span class="op">:</span>nsnps)
-freq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(haps<span class="op">+</span><span class="dv">1</span>)
-freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(freq)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(freq<span class="op">$</span>Probability)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simGWAS)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Simulate reference haplotypes</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">nsnps &lt;-<span class="st"> </span><span class="dv">200</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">nhaps &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">lag &lt;-<span class="st"> </span><span class="dv">5</span> <span class="co"># genotypes are correlated between neighbouring variants</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">maf &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(nsnps<span class="op">+</span>lag,<span class="fl">0.05</span>,<span class="fl">0.5</span>) <span class="co"># common SNPs</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">laghaps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(maf, <span class="cf">function</span>(f) <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(nhaps,<span class="dv">1</span>,f)))</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">haps &lt;-<span class="st"> </span>laghaps[,<span class="dv">1</span><span class="op">:</span>nsnps]</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>lag) </a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">    haps &lt;-<span class="st"> </span>haps <span class="op">+</span><span class="st"> </span>laghaps[,(<span class="dv">1</span><span class="op">:</span>nsnps)<span class="op">+</span>j]</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">haps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(haps<span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(haps,<span class="dv">2</span>,max),nhaps,nsnps,<span class="dt">byrow=</span><span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">snps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(haps) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"s"</span>,<span class="dv">1</span><span class="op">:</span>nsnps)</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">freq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(haps<span class="op">+</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(freq)</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(freq<span class="op">$</span>Probability)</a></code></pre></div>
 <pre><code>## [1] 1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MAF &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(freq[,snps]<span class="op">-</span><span class="dv">1</span>)
-
-<span class="co"># SNP correlation matrix</span>
-LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">MAF &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(freq[,snps]<span class="op">-</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co"># SNP correlation matrix</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps)</a></code></pre></div>
 <p>We specify the causal variant (CV) and it’s effect on disease, as an odds ratio. One causal variant is chosen since the Bayesian approach to fine-mapping relies on the assumption of one causal variant per region, which is typed in the study.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">CV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(snps[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(haps)<span class="op">&gt;</span><span class="fl">0.1</span>)],<span class="dv">1</span>)
-iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV) <span class="co"># index of cv</span>
-OR &lt;-<span class="st"> </span><span class="fl">1.1</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">CV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(snps[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(haps)<span class="op">&gt;</span><span class="fl">0.1</span>)],<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV) <span class="co"># index of cv</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">OR &lt;-<span class="st"> </span><span class="fl">1.1</span></a></code></pre></div>
 <p>Then, we simulate marginal <span class="math inline">\(Z\)</span>-scores. Here, we consider a (fairly small) GWAS with 5000 cases and 5000 controls.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span>
-              <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span>
-              <span class="dt">snps=</span>snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span>
-              <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span>
-              <span class="dt">gamma.W=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span>
-              <span class="dt">freq=</span>freq <span class="co"># reference haplotypes</span>
-              )</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">              <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">              <span class="dt">snps=</span>snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">              <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">              <span class="dt">gamma.W=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">              <span class="dt">freq=</span>freq <span class="co"># reference haplotypes</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">              )</a></code></pre></div>
 <hr>
 </div>
 <div id="find-a-credible-set" class="section level2">
@@ -148,35 +148,35 @@ OR &lt;-<span class="st"> </span><span class="fl">1.1</span></code></pre></div>
 <li>Group these variants to form the credible set.</li>
 </ol>
 <p>The function requires posterior probabilities of causality as an input, and so we use the <code>ppfunc</code> function to convert the marginal <span class="math inline">\(Z\)</span>-scores to posterior probabilities of causality. The <code>ppfunc</code> function also requires a value for <span class="math inline">\(V\)</span>, the variance of the estimated effect size, which can be easily calculated using the <code><a href="https://www.rdocumentation.org/packages/coloc/topics/Var.data.cc">coloc::Var.data.cc</a></code> function. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">N0 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of controls</span>
-N1 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of cases</span>
-
-varbeta &lt;-<span class="st"> </span>coloc<span class="op">:::</span><span class="kw"><a href="../reference/Var.data.cc.html">Var.data.cc</a></span>(<span class="dt">f =</span> MAF, <span class="dt">N =</span> N1<span class="op">+</span>N0, <span class="dt">s =</span> N1<span class="op">/</span>(N0<span class="op">+</span>N1)) <span class="co"># variance of estimated effect size</span>
-
-postprobs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.html">ppfunc</a></span>(<span class="dt">z =</span> z0, <span class="dt">V =</span> varbeta)
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(postprobs, <span class="dt">main =</span> <span class="st">"Posterior probabilities of causality"</span>, <span class="dt">xlab =</span> <span class="st">"SNP index"</span>, <span class="dt">ylab =</span> <span class="st">"Posterior probability"</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> iCV, <span class="dt">col =</span> <span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">N0 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of controls</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">N1 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of cases</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">varbeta &lt;-<span class="st"> </span>coloc<span class="op">:::</span><span class="kw"><a href="../reference/Var.data.cc.html">Var.data.cc</a></span>(<span class="dt">f =</span> MAF, <span class="dt">N =</span> N1<span class="op">+</span>N0, <span class="dt">s =</span> N1<span class="op">/</span>(N0<span class="op">+</span>N1)) <span class="co"># variance of estimated effect size</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">postprobs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.html">ppfunc</a></span>(<span class="dt">z =</span> z0, <span class="dt">V =</span> varbeta)</a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(postprobs, <span class="dt">main =</span> <span class="st">"Posterior probabilities of causality"</span>, <span class="dt">xlab =</span> <span class="st">"SNP index"</span>, <span class="dt">ylab =</span> <span class="st">"Posterior probability"</span>)</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> iCV, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="my-vignette_files/figure-html/unnamed-chunk-6-1.png" width="384"></p>
 <p>The posterior probability plot shows the location of the causal variant (red line). Notice that the causal variant is not the variant with the largest posterior probability. This is not rare in fine-mapping analyses and occurs due to linkage disequilibrium patterns (correlation between SNPs).</p>
-<p>The <code>credset</code> function reports the variants in the credible set, the claimed coverage<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> (the sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set (nvar). If the <code>CV</code> parameter is supplied by the user (e.g. in simulation studies where the CV is known), then the output also includes a binary indicator of whether the causal variant was contained in the credible set.</p>
+<p>The <code>credset</code> function reports the variants in the credible set, the claimed coverage<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> (the sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set (nvar). If the <code>CV</code> parameter is supplied by the user (e.g. in simulation studies where the CV is known), then the output also includes a binary indicator of whether the causal variant was contained in the credible set.</p>
 <p>We use the <code>credset</code> function to obtain a 90% credible set.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">thresh &lt;-<span class="st"> </span><span class="fl">0.9</span>
-
-credibleset &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)
-
-credibleset</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">thresh &lt;-<span class="st"> </span><span class="fl">0.9</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">credibleset &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">credibleset</a></code></pre></div>
 <pre><code>## $credset
-##   [1]  84  16  47 176 191  13  48 141 197 198 194  14 190 196  15  96  28   8  73  66  78 192   7  65   9 162 101 126 135 151  37   1  35 178 167  51  63  50  92 106 103  86 193 142 161  36  49  17  53  62  41  88  69 140 134  23  70 177 187  90  72  24 159  68   6  98 175  18 165 195  83 127 138 149 150  21  12  38 137 170  55  29 119  22 131  33 144  87  67  97  27  82 109 139  71 136 108 102 124 133 189 111   4 174 132 107  26  61 185 158 188 157  80  30
+##   [1]  49  48  46  11 125 126  44  45 153 185 128 107   1 152  10 119 149 190  30  43  12  62  60  61 184  42 154 127 186 180  93  94  53  72 189 124  16  17 123  91  70 106  55 183 130 191 139  24 151 112  97  40  83  57  95  47  58  50  32  69  92 187  52 113 181 175  78  21 111 134 135 179   2 150 129  96   3 195  84  68  90 103 144 146  66  63  51 104 108  18 194  71 147  81  80 188   6 101  27   4  34 174 196 161  67   8 159  26 170 140 109  38  31  87 176
 ## 
 ## $claimed.cov
-## [1] 0.9008649
+## [1] 0.9006078
 ## 
 ## $covered
 ## [1] 1
 ## 
 ## $nvar
-## [1] 114</code></pre>
+## [1] 115</code></pre>
 <p>Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9009 and contains the true causal variant. In literature, authors would commonly report that they have found a 90% credible set containing 114 variants which they are at least 90% confident contains the true causal variant.</p>
 <p>Note that if the variants are named in the <code>pp</code> vector, then the <code>$credset</code> output would contain variant names rather than indices.</p>
 <hr>
@@ -198,7 +198,7 @@ credibleset</code></pre></div>
 <code>thr</code> (threshold used to derive the credible set)</li>
 </ul>
 <p>Side note: If the estimated effect size coefficients (<code>bhat</code>) and their standard errors (<code><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt(V)</a></code>) are known instead of <span class="math inline">\(Z\)</span>-scores and minor allele frequencies, then the <code>corrcov_bhat</code> function can be used analogously.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrcov.html">corrcov</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrcov.html">corrcov</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</a></code></pre></div>
 <pre><code>##  Corrected.Coverage Claimed.Coverage Threshold
 ##           0.9736372        0.9008649       0.9</code></pre>
 <p>In this example, the 90% credible set may in actual fact have nearer to 97.4% coverage of the causal variant in the credible set.</p>
@@ -208,20 +208,20 @@ credibleset</code></pre></div>
 <h2 class="hasAnchor">
 <a href="#compare-with-estimate-of-true-coverage" class="anchor"></a>Compare with estimate of ‘true’ coverage</h2>
 <p>For the purpose of this vignette and to see the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant. This can obviously not be calculated in the ‘real-world’ setting, as the causal variant is unknown.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z0.tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span>
-                            <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span>
-                            <span class="dt">snps=</span>snps, <span class="co"># column names in freq</span>
-                            <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span>
-                            <span class="dt">gamma.W=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span>
-                            <span class="dt">freq=</span>freq, <span class="co"># reference haplotypes</span>
-                            <span class="dt">nrep =</span> <span class="dv">5000</span>
-)
-
-pps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.mat.html">ppfunc.mat</a></span>(<span class="dt">zstar =</span> z0.tmp, <span class="dt">V =</span> varbeta) <span class="co"># find pps from a matrix of simulations</span>
-cs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)<span class="op">$</span>cov)
-true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs)
-true.cov.est</code></pre></div>
-<pre><code>## [1] 0.9764</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">z0.tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">                            <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">                            <span class="dt">snps=</span>snps, <span class="co"># column names in freq</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">                            <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">                            <span class="dt">gamma.W=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">                            <span class="dt">freq=</span>freq, <span class="co"># reference haplotypes</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">                            <span class="dt">nrep =</span> <span class="dv">5000</span></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb13-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">pps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.mat.html">ppfunc.mat</a></span>(<span class="dt">zstar =</span> z0.tmp, <span class="dt">V =</span> varbeta) <span class="co"># find pps from a matrix of simulations</span></a>
+<a class="sourceLine" id="cb13-11" data-line-number="11">cs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)<span class="op">$</span>cov)</a>
+<a class="sourceLine" id="cb13-12" data-line-number="12">true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs)</a>
+<a class="sourceLine" id="cb13-13" data-line-number="13">true.cov.est</a></code></pre></div>
+<pre><code>## [1] 0.9696</code></pre>
 <p>The estimated empirical coverage is found to be approximately 97.6%, so our estimate of ~97.4% is very accurate - far more so than the standard ‘claimed coverage’ of ~90.09%.</p>
 <pre><code>##  Empirical.Coverage Corrected.Coverage Claimed.Coverage Threshold
 ##              0.9764          0.9736372        0.9008649       0.9</code></pre>
@@ -236,13 +236,13 @@ true.cov.est</code></pre></div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<p><a href="https://www.ncbi.nlm.nih.gov/pubmed/23104008">Maller et al., 2013</a> Maller, J. B. et al. Bayesian refinement of association signals for 14 loci in 3 common diseases. Nature Genet. 44, 1294–1301 (2012)</p>
+<p><a href="https://www.ncbi.nlm.nih.gov/pubmed/23104008">Maller et al., 2013</a> Maller, J. B. et al. Bayesian refinement of association signals for 14 loci in 3 common diseases. Nature Genet. 44, 1294–1301 (2012)</p>
 <p><a href="https://github.com/chr1swallace/simGWAS">simGWAS</a>: Mary D Fortune, Chris Wallace; simGWAS: a fast method for simulation of large scale case–control GWAS summary statistics, Bioinformatics, bty898 (2018)</p>
 <p><a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359">Wakefield, 2009</a> Wakefield, J. Bayes factors for genome-wide association studies: comparison with P-values. Genet. Epidemiol. 33, 79–86 (2009)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">session_info</a></span>()</code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">session_info</a></span>()</a></code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  setting  value                       
-##  version  R version 3.5.3 (2019-03-11)
+##  version  R version 3.6.0 (2019-04-26)
 ##  os       macOS High Sierra 10.13.6   
 ##  system   x86_64, darwin15.6.0        
 ##  ui       X11                         
@@ -253,88 +253,89 @@ true.cov.est</code></pre></div>
 ##  date     2019-06-27                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-##  package      * version    date       lib source                                 
-##  assertthat     0.2.1      2019-03-21 [1] CRAN (R 3.5.2)                         
-##  backports      1.1.4      2019-04-10 [1] CRAN (R 3.5.2)                         
-##  BiocGenerics   0.28.0     2018-10-30 [1] Bioconductor                           
-##  BMA            3.18.9     2018-09-14 [1] CRAN (R 3.5.0)                         
-##  callr          3.2.0      2019-03-15 [1] CRAN (R 3.5.2)                         
-##  cli            1.1.0      2019-03-19 [1] CRAN (R 3.5.2)                         
-##  cluster        2.1.0      2019-06-19 [1] CRAN (R 3.5.2)                         
-##  coloc          3.2-1      2019-05-17 [1] CRAN (R 3.5.2)                         
-##  colorspace     1.4-1      2019-03-18 [1] CRAN (R 3.5.2)                         
-##  combinat       0.0-8      2012-10-29 [1] CRAN (R 3.5.0)                         
-##  commonmark     1.7        2018-12-01 [1] CRAN (R 3.5.0)                         
-##  corpcor        1.6.9      2017-04-01 [1] CRAN (R 3.5.0)                         
-##  corrcoverage * 0.0.1.900  2019-06-25 [1] Github (annahutch/corrcoverage@2e5aa66)
-##  crayon         1.3.4      2017-09-16 [1] CRAN (R 3.5.0)                         
-##  DEoptimR       1.0-8      2016-11-19 [1] CRAN (R 3.5.0)                         
-##  desc           1.2.0      2018-05-01 [1] CRAN (R 3.5.0)                         
-##  devtools       2.0.2      2019-04-08 [1] CRAN (R 3.5.2)                         
-##  digest         0.6.19     2019-05-20 [1] CRAN (R 3.5.2)                         
-##  dplyr          0.8.1      2019-05-14 [1] CRAN (R 3.5.2)                         
-##  evaluate       0.14       2019-05-28 [1] CRAN (R 3.5.2)                         
-##  fs             1.3.1      2019-05-06 [1] CRAN (R 3.5.2)                         
-##  ggplot2        3.2.0      2019-06-16 [1] CRAN (R 3.5.3)                         
-##  glue           1.3.1      2019-03-12 [1] CRAN (R 3.5.2)                         
-##  gtable         0.3.0      2019-03-25 [1] CRAN (R 3.5.2)                         
-##  htmltools      0.3.6      2017-04-28 [1] CRAN (R 3.5.0)                         
-##  inline         0.3.15     2018-05-18 [1] CRAN (R 3.5.0)                         
-##  knitr          1.23       2019-05-18 [1] CRAN (R 3.5.2)                         
-##  lattice        0.20-38    2018-11-04 [1] CRAN (R 3.5.3)                         
-##  lazyeval       0.2.2      2019-03-15 [1] CRAN (R 3.5.2)                         
-##  leaps          3.0        2017-01-10 [1] CRAN (R 3.5.0)                         
-##  magrittr       1.5        2014-11-22 [1] CRAN (R 3.5.0)                         
-##  MASS           7.3-51.4   2019-03-31 [1] CRAN (R 3.5.2)                         
-##  Matrix         1.2-17     2019-03-22 [1] CRAN (R 3.5.2)                         
-##  memoise        1.1.0      2017-04-21 [1] CRAN (R 3.5.0)                         
-##  munsell        0.5.0      2018-06-12 [1] CRAN (R 3.5.0)                         
-##  mvtnorm        1.0-11     2019-06-19 [1] CRAN (R 3.5.2)                         
-##  pcaPP          1.9-73     2018-01-14 [1] CRAN (R 3.5.0)                         
-##  pillar         1.4.1      2019-05-28 [1] CRAN (R 3.5.2)                         
-##  pkgbuild       1.0.3      2019-03-20 [1] CRAN (R 3.5.2)                         
-##  pkgconfig      2.0.2      2018-08-16 [1] CRAN (R 3.5.0)                         
-##  pkgdown        1.3.0.9000 2019-02-06 [1] Github (r-lib/pkgdown@7e788c4)         
-##  pkgload        1.0.2      2018-10-29 [1] CRAN (R 3.5.0)                         
-##  plyr           1.8.4      2016-06-08 [1] CRAN (R 3.5.0)                         
-##  prettyunits    1.0.2      2015-07-13 [1] CRAN (R 3.5.0)                         
-##  processx       3.3.1      2019-05-08 [1] CRAN (R 3.5.2)                         
-##  ps             1.3.0      2018-12-21 [1] CRAN (R 3.5.0)                         
-##  purrr          0.3.2      2019-03-15 [1] CRAN (R 3.5.2)                         
-##  R6             2.4.0      2019-02-14 [1] CRAN (R 3.5.2)                         
-##  Rcpp           1.0.1      2019-03-17 [1] CRAN (R 3.5.2)                         
-##  remotes        2.1.0      2019-06-24 [1] CRAN (R 3.5.3)                         
-##  reshape        0.8.8      2018-10-23 [1] CRAN (R 3.5.0)                         
-##  rlang          0.3.4      2019-04-07 [1] CRAN (R 3.5.2)                         
-##  rmarkdown      1.13       2019-05-22 [1] CRAN (R 3.5.2)                         
-##  robustbase     0.93-5     2019-05-12 [1] CRAN (R 3.5.2)                         
-##  roxygen2       6.1.1      2018-11-07 [1] CRAN (R 3.5.0)                         
-##  rprojroot      1.3-2      2018-01-03 [1] CRAN (R 3.5.0)                         
-##  rrcov          1.4-7      2018-11-15 [1] CRAN (R 3.5.0)                         
-##  rstudioapi     0.10       2019-03-19 [1] CRAN (R 3.5.2)                         
-##  scales         1.0.0      2018-08-09 [1] CRAN (R 3.5.0)                         
-##  sessioninfo    1.1.1      2018-11-05 [1] CRAN (R 3.5.0)                         
-##  simGWAS      * 0.2.0-1    2018-11-13 [1] Github (chr1swallace/simGWAS@7ed37da)  
-##  snpStats       1.32.0     2018-10-30 [1] Bioconductor                           
-##  stringi        1.4.3      2019-03-12 [1] CRAN (R 3.5.2)                         
-##  stringr        1.4.0      2019-02-10 [1] CRAN (R 3.5.2)                         
-##  survival       2.44-1.1   2019-04-01 [1] CRAN (R 3.5.2)                         
-##  testthat       2.1.1      2019-04-23 [1] CRAN (R 3.5.2)                         
-##  tibble         2.1.3      2019-06-06 [1] CRAN (R 3.5.2)                         
-##  tidyselect     0.2.5      2018-10-11 [1] CRAN (R 3.5.0)                         
-##  usethis        1.5.0      2019-04-07 [1] CRAN (R 3.5.2)                         
-##  withr          2.1.2      2018-03-15 [1] CRAN (R 3.5.0)                         
-##  xfun           0.8        2019-06-25 [1] CRAN (R 3.5.3)                         
-##  xml2           1.2.0      2018-01-24 [1] CRAN (R 3.5.0)                         
-##  yaml           2.2.0      2018-07-25 [1] CRAN (R 3.5.0)                         
-##  zlibbioc       1.28.0     2018-10-30 [1] Bioconductor                           
+##  package      * version   date       lib source                                 
+##  assertthat     0.2.1     2019-03-21 [1] CRAN (R 3.6.0)                         
+##  backports      1.1.4     2019-04-10 [1] CRAN (R 3.6.0)                         
+##  BiocGenerics   0.30.0    2019-05-02 [1] Bioconductor                           
+##  BMA            3.18.9    2018-09-14 [1] CRAN (R 3.6.0)                         
+##  callr          3.2.0     2019-03-15 [1] CRAN (R 3.6.0)                         
+##  cli            1.1.0     2019-03-19 [1] CRAN (R 3.6.0)                         
+##  cluster        2.1.0     2019-06-19 [1] CRAN (R 3.6.0)                         
+##  coloc          3.2-1     2019-05-17 [1] CRAN (R 3.6.0)                         
+##  colorspace     1.4-1     2019-03-18 [1] CRAN (R 3.6.0)                         
+##  combinat       0.0-8     2012-10-29 [1] CRAN (R 3.6.0)                         
+##  commonmark     1.7       2018-12-01 [1] CRAN (R 3.6.0)                         
+##  corpcor        1.6.9     2017-04-01 [1] CRAN (R 3.6.0)                         
+##  corrcoverage * 0.0.1.900 2019-06-27 [1] Github (annahutch/corrcoverage@48fcb4c)
+##  crayon         1.3.4     2017-09-16 [1] CRAN (R 3.6.0)                         
+##  data.table     1.12.2    2019-04-07 [1] CRAN (R 3.6.0)                         
+##  DEoptimR       1.0-8     2016-11-19 [1] CRAN (R 3.6.0)                         
+##  desc           1.2.0     2018-05-01 [1] CRAN (R 3.6.0)                         
+##  devtools       2.0.2     2019-04-08 [1] CRAN (R 3.6.0)                         
+##  digest         0.6.19    2019-05-20 [1] CRAN (R 3.6.0)                         
+##  dplyr          0.8.1     2019-05-14 [1] CRAN (R 3.6.0)                         
+##  evaluate       0.14      2019-05-28 [1] CRAN (R 3.6.0)                         
+##  fs             1.3.1     2019-05-06 [1] CRAN (R 3.6.0)                         
+##  ggplot2        3.2.0     2019-06-16 [1] CRAN (R 3.6.0)                         
+##  glue           1.3.1     2019-03-12 [1] CRAN (R 3.6.0)                         
+##  gtable         0.3.0     2019-03-25 [1] CRAN (R 3.6.0)                         
+##  htmltools      0.3.6     2017-04-28 [1] CRAN (R 3.6.0)                         
+##  inline         0.3.15    2018-05-18 [1] CRAN (R 3.6.0)                         
+##  knitr          1.23      2019-05-18 [1] CRAN (R 3.6.0)                         
+##  lattice        0.20-38   2018-11-04 [1] CRAN (R 3.6.0)                         
+##  lazyeval       0.2.2     2019-03-15 [1] CRAN (R 3.6.0)                         
+##  leaps          3.0       2017-01-10 [1] CRAN (R 3.6.0)                         
+##  magrittr       1.5       2014-11-22 [1] CRAN (R 3.6.0)                         
+##  MASS           7.3-51.4  2019-03-31 [1] CRAN (R 3.6.0)                         
+##  Matrix         1.2-17    2019-03-22 [1] CRAN (R 3.6.0)                         
+##  memoise        1.1.0     2017-04-21 [1] CRAN (R 3.6.0)                         
+##  munsell        0.5.0     2018-06-12 [1] CRAN (R 3.6.0)                         
+##  mvtnorm        1.0-11    2019-06-19 [1] CRAN (R 3.6.0)                         
+##  pcaPP          1.9-73    2018-01-14 [1] CRAN (R 3.6.0)                         
+##  pillar         1.4.1     2019-05-28 [1] CRAN (R 3.6.0)                         
+##  pkgbuild       1.0.3     2019-03-20 [1] CRAN (R 3.6.0)                         
+##  pkgconfig      2.0.2     2018-08-16 [1] CRAN (R 3.6.0)                         
+##  pkgdown        1.3.0     2018-12-07 [1] CRAN (R 3.6.0)                         
+##  pkgload        1.0.2     2018-10-29 [1] CRAN (R 3.6.0)                         
+##  plyr           1.8.4     2016-06-08 [1] CRAN (R 3.6.0)                         
+##  prettyunits    1.0.2     2015-07-13 [1] CRAN (R 3.6.0)                         
+##  processx       3.3.1     2019-05-08 [1] CRAN (R 3.6.0)                         
+##  ps             1.3.0     2018-12-21 [1] CRAN (R 3.6.0)                         
+##  purrr          0.3.2     2019-03-15 [1] CRAN (R 3.6.0)                         
+##  R6             2.4.0     2019-02-14 [1] CRAN (R 3.6.0)                         
+##  Rcpp           1.0.1     2019-03-17 [1] CRAN (R 3.6.0)                         
+##  remotes        2.1.0     2019-06-24 [1] CRAN (R 3.6.0)                         
+##  reshape        0.8.8     2018-10-23 [1] CRAN (R 3.6.0)                         
+##  rlang          0.4.0     2019-06-25 [1] CRAN (R 3.6.0)                         
+##  rmarkdown      1.13      2019-05-22 [1] CRAN (R 3.6.0)                         
+##  robustbase     0.93-5    2019-05-12 [1] CRAN (R 3.6.0)                         
+##  roxygen2       6.1.1     2018-11-07 [1] CRAN (R 3.6.0)                         
+##  rprojroot      1.3-2     2018-01-03 [1] CRAN (R 3.6.0)                         
+##  rrcov          1.4-7     2018-11-15 [1] CRAN (R 3.6.0)                         
+##  rstudioapi     0.10      2019-03-19 [1] CRAN (R 3.6.0)                         
+##  scales         1.0.0     2018-08-09 [1] CRAN (R 3.6.0)                         
+##  sessioninfo    1.1.1     2018-11-05 [1] CRAN (R 3.6.0)                         
+##  simGWAS      * 0.2.0-1   2019-06-27 [1] Github (chr1swallace/simGWAS@7ed37da)  
+##  snpStats       1.34.0    2019-05-02 [1] Bioconductor                           
+##  stringi        1.4.3     2019-03-12 [1] CRAN (R 3.6.0)                         
+##  stringr        1.4.0     2019-02-10 [1] CRAN (R 3.6.0)                         
+##  survival       2.44-1.1  2019-04-01 [1] CRAN (R 3.6.0)                         
+##  testthat       2.1.1     2019-04-23 [1] CRAN (R 3.6.0)                         
+##  tibble         2.1.3     2019-06-06 [1] CRAN (R 3.6.0)                         
+##  tidyselect     0.2.5     2018-10-11 [1] CRAN (R 3.6.0)                         
+##  usethis        1.5.0     2019-04-07 [1] CRAN (R 3.6.0)                         
+##  withr          2.1.2     2018-03-15 [1] CRAN (R 3.6.0)                         
+##  xfun           0.8       2019-06-25 [1] CRAN (R 3.6.0)                         
+##  xml2           1.2.0     2018-01-24 [1] CRAN (R 3.6.0)                         
+##  yaml           2.2.0     2018-07-25 [1] CRAN (R 3.6.0)                         
+##  zlibbioc       1.30.0    2019-05-02 [1] Bioconductor                           
 ## 
-## [1] /Library/Frameworks/R.framework/Versions/3.5/Resources/library</code></pre>
+## [1] /Library/Frameworks/R.framework/Versions/3.6/Resources/library</code></pre>
 </div>
 <div class="footnotes">
 <hr>
 <ol>
-<li id="fn1"><p>Researchers commonly use the size of the credible set as an estimate of the coverage probability of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (claimed coverage &gt; threshold by virtue of the method).<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p>Researchers commonly use the size of the credible set as an estimate of the coverage probability of the causal variant in the set. It is believed to be a slightly better indicator of coverage than the threshold (claimed coverage &gt; threshold by virtue of the method).<a href="#fnref1" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
   </div>
@@ -362,7 +363,7 @@ true.cov.est</code></pre></div>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>

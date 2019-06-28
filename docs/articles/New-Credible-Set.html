@@ -54,13 +54,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/my-vignette.html">Corrected Coverage</a>
-    </li>
-    <li>
-      <a href="../articles/New-Credible-Set.html">New Credible Set</a>
+      <a href="../articles/New-Credible-Set.html">New Credible Set: `corrected_cs`</a>
     </li>
     <li>
       <a href="../articles/Useful-Info.html">Useful Info</a>
+    </li>
+    <li>
+      <a href="../articles/my-vignette.html">Correcting the Coverage of Credible Sets: `corrcov`</a>
     </li>
   </ul>
 </li>
@@ -95,44 +95,44 @@
 <h2 class="hasAnchor">
 <a href="#simulate-gwas-data" class="anchor"></a>Simulate GWAS data</h2>
 <p>As in the <a href="https://annahutch.github.io/corrcoverage/articles/my-vignette.html">corrected coverage vignette</a>, let’s begin by simulating some GWAS data using the <code>simGWAS</code> package.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simGWAS)
-
-<span class="co">#  Simulate reference haplotypes</span>
-nsnps &lt;-<span class="st"> </span><span class="dv">200</span>
-nhaps &lt;-<span class="st"> </span><span class="dv">1000</span>
-lag &lt;-<span class="st"> </span><span class="dv">30</span>  <span class="co"># genotypes are correlated between neighbouring variants</span>
-maf &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(nsnps <span class="op">+</span><span class="st"> </span>lag, <span class="fl">0.05</span>, <span class="fl">0.5</span>)  <span class="co"># common SNPs</span>
-laghaps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(maf, <span class="cf">function</span>(f) <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(nhaps, <span class="dv">1</span>, f)))
-haps &lt;-<span class="st"> </span>laghaps[, <span class="dv">1</span><span class="op">:</span>nsnps]
-<span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>lag) haps &lt;-<span class="st"> </span>haps <span class="op">+</span><span class="st"> </span>laghaps[, (<span class="dv">1</span><span class="op">:</span>nsnps) <span class="op">+</span><span class="st"> </span>j]
-haps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(haps<span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(haps, <span class="dv">2</span>, max), nhaps, nsnps, <span class="dt">byrow =</span> <span class="ot">TRUE</span>))
-snps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(haps) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"s"</span>, <span class="dv">1</span><span class="op">:</span>nsnps)
-freq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(haps <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)
-freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(freq)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(freq<span class="op">$</span>Probability)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simGWAS)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#  Simulate reference haplotypes</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">nsnps &lt;-<span class="st"> </span><span class="dv">200</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">nhaps &lt;-<span class="st"> </span><span class="dv">1000</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">lag &lt;-<span class="st"> </span><span class="dv">30</span>  <span class="co"># genotypes are correlated between neighbouring variants</span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">maf &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(nsnps <span class="op">+</span><span class="st"> </span>lag, <span class="fl">0.05</span>, <span class="fl">0.5</span>)  <span class="co"># common SNPs</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">laghaps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(maf, <span class="cf">function</span>(f) <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(nhaps, <span class="dv">1</span>, f)))</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">haps &lt;-<span class="st"> </span>laghaps[, <span class="dv">1</span><span class="op">:</span>nsnps]</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>lag) haps &lt;-<span class="st"> </span>haps <span class="op">+</span><span class="st"> </span>laghaps[, (<span class="dv">1</span><span class="op">:</span>nsnps) <span class="op">+</span><span class="st"> </span>j]</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">haps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(haps<span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(haps, <span class="dv">2</span>, max), nhaps, nsnps, <span class="dt">byrow =</span> <span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">snps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(haps) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"s"</span>, <span class="dv">1</span><span class="op">:</span>nsnps)</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">freq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(haps <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(freq)</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(freq<span class="op">$</span>Probability)</a></code></pre></div>
 <pre><code>## [1] 1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MAF &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(freq[, snps] <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)  <span class="co"># minor allele frequencies</span>
-CV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(snps[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(haps) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.1</span>)], <span class="dv">1</span>)
-iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV)  <span class="co"># index of cv</span>
-LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps) <span class="co"># correlation between SNPs</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OR &lt;-<span class="st"> </span><span class="fl">1.1</span> <span class="co"># odds ratios</span>
-N0 &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co"># number of controls</span>
-N1 &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co"># number of cases</span>
-  
-z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0 =</span> N0, <span class="co"># number of controls</span>
-                        <span class="dt">N1 =</span> N1, <span class="co"># number of cases</span>
-                        <span class="dt">snps =</span> snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span>
-                        <span class="dt">W =</span> CV, <span class="co"># causal variants, subset of snps</span>
-                        <span class="dt">gamma.W =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span>
-                        <span class="dt">freq =</span> freq) <span class="co"># reference haplotypes</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">MAF &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(freq[, snps] <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)  <span class="co"># minor allele frequencies</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">CV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(snps[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(haps) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.1</span>)], <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV)  <span class="co"># index of cv</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps) <span class="co"># correlation between SNPs</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">OR &lt;-<span class="st"> </span><span class="fl">1.1</span> <span class="co"># odds ratios</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">N0 &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co"># number of controls</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">N1 &lt;-<span class="st"> </span><span class="dv">10000</span> <span class="co"># number of cases</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">  </a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0 =</span> N0, <span class="co"># number of controls</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">                        <span class="dt">N1 =</span> N1, <span class="co"># number of cases</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">                        <span class="dt">snps =</span> snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">                        <span class="dt">W =</span> CV, <span class="co"># causal variants, subset of snps</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">                        <span class="dt">gamma.W =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">                        <span class="dt">freq =</span> freq) <span class="co"># reference haplotypes</span></a></code></pre></div>
 <p>To calculate <span class="math inline">\(V\)</span>, the prior variance for the estimated effect size, we use <code><a href="https://www.rdocumentation.org/packages/coloc/topics/Var.data.cc">coloc::Var.data.cc</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">varbeta &lt;-<span class="st"> </span>coloc<span class="op">:::</span><span class="kw"><a href="../reference/Var.data.cc.html">Var.data.cc</a></span>(<span class="dt">f =</span> MAF, <span class="dt">N =</span> N1<span class="op">+</span>N0, <span class="dt">s =</span> N1<span class="op">/</span>(N0<span class="op">+</span>N1)) <span class="co"># variance of estimated effect size</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">varbeta &lt;-<span class="st"> </span>coloc<span class="op">:::</span><span class="kw"><a href="../reference/Var.data.cc.html">Var.data.cc</a></span>(<span class="dt">f =</span> MAF, <span class="dt">N =</span> N1<span class="op">+</span>N0, <span class="dt">s =</span> N1<span class="op">/</span>(N0<span class="op">+</span>N1)) <span class="co"># variance of estimated effect size</span></a></code></pre></div>
 <p>We can then use the <code>ppfunc</code> function to calculate the posterior probabilities of causality for each variant.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">postprobs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.html">ppfunc</a></span>(<span class="dt">z =</span> z0, <span class="dt">V =</span> varbeta) </code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">postprobs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.html">ppfunc</a></span>(<span class="dt">z =</span> z0, <span class="dt">V =</span> varbeta) </a></code></pre></div>
 <p>We use the <code>est_mu</code> function to obtain an estimate of the true effect at the causal variant.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">muhat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/est_mu.html">est_mu</a></span>(z0, MAF, N0, N1)
-muhat</code></pre></div>
-<pre><code>## [1] 5.035624</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">muhat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/est_mu.html">est_mu</a></span>(z0, MAF, N0, N1)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">muhat</a></code></pre></div>
+<pre><code>## [1] 6.088106</code></pre>
 <hr>
 </div>
 <div id="corrected-coverage-estimate" class="section level2">
@@ -140,32 +140,32 @@ muhat</code></pre></div>
 <a href="#corrected-coverage-estimate" class="anchor"></a>Corrected Coverage Estimate</h2>
 <p>The <code>corrected_cov</code> function is used to find the corrected coverage of a credible set with specified threshold, say 0.9.</p>
 <p>Note that this function is similar to using <code>corrcov</code> as explained in the previous vignette; which would require <span class="math inline">\(Z\)</span>-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the <code>corrcov</code> function (muhat, varbeta etc.) so we can use <code>corrected_cov</code> instead.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">thr =<span class="st"> </span><span class="fl">0.9</span>
-corrcov &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cov.html">corrected_cov</a></span>(<span class="dt">mu =</span> muhat, <span class="dt">V =</span> varbeta, <span class="dt">Sigma =</span> LD, <span class="dt">pp0 =</span> postprobs, <span class="dt">thr =</span> thr, <span class="dt">nrep =</span> <span class="dv">1000</span>)
-cs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">thr =</span> thr)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">claimed.cov =</span> cs<span class="op">$</span>claimed.cov, <span class="dt">corr.cov =</span>  corrcov, <span class="dt">nvar =</span> cs<span class="op">$</span>nvar)</code></pre></div>
-<pre><code>##   claimed.cov  corr.cov nvar
-## 1   0.9026865 0.9617837    2</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">thr =<span class="st"> </span><span class="fl">0.9</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">corrcov &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cov.html">corrected_cov</a></span>(<span class="dt">mu =</span> muhat, <span class="dt">V =</span> varbeta, <span class="dt">Sigma =</span> LD, <span class="dt">pp0 =</span> postprobs, <span class="dt">thr =</span> thr, <span class="dt">nrep =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">cs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">thr =</span> thr)</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">claimed.cov =</span> cs<span class="op">$</span>claimed.cov, <span class="dt">corr.cov =</span>  corrcov, <span class="dt">nvar =</span> cs<span class="op">$</span>nvar)</a></code></pre></div>
+<pre><code>##   claimed.cov corr.cov nvar
+## 1   0.9736436 0.970987    1</code></pre>
 <p>Using the Bayesian approach for statistical fine-mapping we obtain a 90% credible set consisting of 2 variants. The claimed coverage of this credible set is ~0.90, yet the corrected coverage estimate is ~0.96, suggesting that we can afford to be ‘more confident’ that we have captured the causal variant in our credible set.</p>
 </div>
 <div id="empirical-coverage-estimate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#empirical-coverage-estimate" class="anchor"></a>Empirical Coverage Estimate</h2>
 <p>Again, for the purpose of this vignette we can investigate how accurate this estimate is by simulating many credible sets from the same system, and finding the proportion of these that contain the true causal variant.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z0.tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0 =</span> N0, <span class="co"># number of controls</span>
-                            <span class="dt">N1 =</span> N1, <span class="co"># number of cases</span>
-                            <span class="dt">snps =</span> snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span>
-                            <span class="dt">W =</span> CV, <span class="co"># causal variants, subset of snps</span>
-                            <span class="dt">gamma.W =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span>
-                            <span class="dt">freq =</span> freq, <span class="co"># reference haplotypes</span>
-                            <span class="dt">nrep =</span> <span class="dv">5000</span>) 
-
-pps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.mat.html">ppfunc.mat</a></span>(<span class="dt">zstar =</span> z0.tmp, <span class="dt">V =</span> varbeta)  <span class="co"># find pps from a matrix of simulations</span>
-cs.cov &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thr)<span class="op">$</span>cov)
-true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs.cov)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">claimed.cov =</span> cs<span class="op">$</span>claimed.cov, <span class="dt">corr.cov =</span>  corrcov, <span class="dt">true.cov =</span> true.cov.est, <span class="dt">nvar =</span> cs<span class="op">$</span>nvar)</code></pre></div>
-<pre><code>##   claimed.cov  corr.cov true.cov nvar
-## 1   0.9026865 0.9617837   0.9578    2</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">z0.tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0 =</span> N0, <span class="co"># number of controls</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">                            <span class="dt">N1 =</span> N1, <span class="co"># number of cases</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">                            <span class="dt">snps =</span> snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">                            <span class="dt">W =</span> CV, <span class="co"># causal variants, subset of snps</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">                            <span class="dt">gamma.W =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6">                            <span class="dt">freq =</span> freq, <span class="co"># reference haplotypes</span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7">                            <span class="dt">nrep =</span> <span class="dv">5000</span>) </a>
+<a class="sourceLine" id="cb11-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb11-9" data-line-number="9">pps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.mat.html">ppfunc.mat</a></span>(<span class="dt">zstar =</span> z0.tmp, <span class="dt">V =</span> varbeta)  <span class="co"># find pps from a matrix of simulations</span></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10">cs.cov &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thr)<span class="op">$</span>cov)</a>
+<a class="sourceLine" id="cb11-11" data-line-number="11">true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs.cov)</a>
+<a class="sourceLine" id="cb11-12" data-line-number="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">claimed.cov =</span> cs<span class="op">$</span>claimed.cov, <span class="dt">corr.cov =</span>  corrcov, <span class="dt">true.cov =</span> true.cov.est, <span class="dt">nvar =</span> cs<span class="op">$</span>nvar)</a></code></pre></div>
+<pre><code>##   claimed.cov corr.cov true.cov nvar
+## 1   0.9736436 0.970987   0.9586    1</code></pre>
 <p>We see that our corrected coverage value of ~0.962 is a good estimate of the empirical coverage estimate, ~0.958.</p>
 <hr>
 </div>
@@ -177,32 +177,16 @@ true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www
 <p>The function requires the <span class="math inline">\(Z\)</span>-scores (<code>z</code>), minor allele frequencies (<code>f</code>), control and case sample sizes (<code>N0</code> and <code>N1</code> respectively), LD matrix (<code>Sigma</code>), some lower threshold value (<code>lower</code>), some upper threshold value (<code>upper</code>) and the desired coverage (<code>desired.cov</code>).</p>
 <p>The function uses the <a href="https://en.wikipedia.org/wiki/Root-finding_algorithm#Bisection_method">bisection root finding method</a> to converge to the smallest threshold such that the corrected coverage is larger than the desired coverage. The accuracy parameter is optional (default value set to 0.005) and controls how much greater than the desired coverage the user is happy for the corrected coverage value to lie.</p>
 <p>The function reports the threshold values tested and their corresponding corrected coverage value. The maximum number of iterations for the bisecting root finding algorithm is an optional parameter, with default value 20. The functions stops when either the number of iterations reaches the maximum, or the corrected coverage is within some accuracy of the desired coverage.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cs.html">corrected_cs</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">lower =</span> <span class="fl">0.5</span>, <span class="dt">upper =</span> <span class="dv">1</span>, <span class="dt">desired.cov =</span> <span class="fl">0.9</span>)</code></pre></div>
-<pre><code>## [1] "thr:  0.75 , cov:  0.903650317043572"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res</code></pre></div>
-<pre><code>## $credset
-## [1] "s180"
-## 
-## $req.thr
-## [1] 0.75
-## 
-## $corr.cov
-## [1] 0.9036503
-## 
-## $size
-## [1] 0.7680134</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cs.html">corrected_cs</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">lower =</span> <span class="fl">0.5</span>, <span class="dt">upper =</span> <span class="dv">1</span>, <span class="dt">desired.cov =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">res</a></code></pre></div>
 <p>In this example we see that a threshold of just 0.75 is required to obtain a credible set with 90% coverage of the causal variant. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.</p>
 <p>The output is a credible set containing only 1 variant, that has a corrected coverage estimate of 0.9. This suggests that if the user implemented the standard Bayesian approach to statistical fine-mapping, then their 90% credible set would contain 2 variants and actually have nearer to 96% probability of containing the true causal variant.</p>
 <p>By applying the <code>corrected_cs</code> function, the user can obtain a new 90% credible set that has 90% probability of containing the true causal variant. This credible set contains only 1 variant, showing that the resolution of the fine-mapping experiment has improved.</p>
 <p>Finally, we can compare this coverage estimate of the corrected credible set to an empirical estimate of the true coverage.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">new.cs.sims &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> res<span class="op">$</span>req.thr)<span class="op">$</span>cov)
-true.cov.est2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(new.cs.sims)</code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">new.cs.sims &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> res<span class="op">$</span>req.thr)<span class="op">$</span>cov)</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">true.cov.est2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(new.cs.sims)</a></code></pre></div>
 <p>Original 90% credible set:</p>
-<pre><code>##  claimed.cov corr.cov true.cov nvar
-##        0.903    0.962    0.958    2</code></pre>
 <p>New 90% credible set:</p>
-<pre><code>##  claimed.cov corr.cov true.cov nvar
-##        0.768    0.904    0.888    1</code></pre>
 <hr>
 <p>This vignette has shown 2 things:</p>
 <ol style="list-style-type: decimal">
@@ -233,7 +217,7 @@ true.cov.est2 &lt;-<span class="st"> </span><span class="kw"><a href="https://ww
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>

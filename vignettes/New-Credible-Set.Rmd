@@ -134,7 +134,7 @@ The function uses the [bisection root finding method](https://en.wikipedia.org/w
 
 The function reports the threshold values tested and their corresponding corrected coverage value. The maximum number of iterations for the bisecting root finding algorithm is an optional parameter, with default value 20. The functions stops when either the number of iterations reaches the maximum, or the corrected coverage is within some accuracy of the desired coverage. 
 
-```{r}
+```{r eval = FALSE}
 res <- corrected_cs(z = z0, f = MAF, N0, N1, Sigma = LD, lower = 0.5, upper = 1, desired.cov = 0.9)
 res
 ```
@@ -147,19 +147,19 @@ By applying the `corrected_cs` function, the user can obtain a new 90% credible 
 
 Finally, we can compare this coverage estimate of the corrected credible set to an empirical estimate of the true coverage. 
 
-```{r}
+```{r eval = FALSE}
 new.cs.sims <- apply(pps, 1, function(x) credset(x, CV = iCV, thr = res$req.thr)$cov)
 true.cov.est2 <- mean(new.cs.sims)
 ```
 
 Original 90% credible set:
-```{r echo=FALSE}
+```{r echo=FALSE, eval = FALSE}
 df1 <- data.frame(claimed.cov = round(cs$claimed.cov, 3), corr.cov =  round(corrcov, 3), true.cov = round(true.cov.est, 3), nvar = cs$nvar)
 print(df1, row.names = FALSE)
 ```
 
 New 90% credible set:
-```{r echo=FALSE}
+```{r echo=FALSE, eval = FALSE}
 df2 <- data.frame(claimed.cov = round(res$size, 3), corr.cov = round(res$corr.cov, 3), true.cov = round(true.cov.est2, 3), nvar = length(res$credset))
 print(df2, row.names = FALSE)
 ```

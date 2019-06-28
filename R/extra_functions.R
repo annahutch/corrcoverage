@@ -139,7 +139,7 @@ credset <- function(pp, CV, thr = 0.95) {
 #' @useDynLib corrcoverage
 #' @importFrom Rcpp sourceCpp
 #' @export
-credsetC <- function(pp, CV = iCV, thr = 0.95) {
+credsetC <- function(pp, CV, thr = 0.95) {
   ret = credsetmat(pp, CV, thr)  ## list 1 = wh, 2 = size, 3=contained
   data.frame(claimed.cov = ret[[2]], covered = ret[[3]], nvar = ret[[1]])
 }

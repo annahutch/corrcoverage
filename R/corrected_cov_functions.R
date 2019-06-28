@@ -362,7 +362,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 #'
 corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI = 0.95){
   corrcov_reps = replicate(100, corrcov(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000))
-  quantile(corrcov_reps, probs = c((1-CI)/2, (CI+1)/2))
+  stats::quantile(corrcov_reps, probs = c((1-CI)/2, (CI+1)/2))
 }
 
 #' Obtain confidence interval for corrected coverage estimate using estimated effect sizes and their standard errors
@@ -383,6 +383,6 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI
 #'
 corrcov_CI_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI = 0.95){
   corrcov_reps = replicate(100, corrcov_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000))
-  quantile(corrcov_reps, probs = c((1-CI)/2, (CI+1)/2))
+  stats::quantile(corrcov_reps, probs = c((1-CI)/2, (CI+1)/2))
 }
 

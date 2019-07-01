@@ -26,10 +26,6 @@ cache: packages
 
 before_deploy: Rscript -e 'remotes::install_cran("pkgdown")'
 deploy:
-  on:
-      os:     linux
-      r:      release
-      branch: master
   provider: script
   script: Rscript -e 'pkgdown::deploy_site_github()'
   skip_cleanup: true

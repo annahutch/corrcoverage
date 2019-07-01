@@ -6,6 +6,7 @@
 #' @param s Proportion of cases (N1/N0+N1)
 #' @return Variance of estimated effect size \eqn{\hat{\beta}}, V.
 #' @author Claudia Giambartolomei
+#' @export
 Var.data.cc <- function(f, N, s) {
     1/(2 * N * f * (1 - f) * s * (1 - s))
 }

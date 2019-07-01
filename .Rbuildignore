@@ -16,5 +16,3 @@ pkgdown/
 .Rproj.user
 ^deploy.sh$
 Index.Rmd
-
-

@@ -2,27 +2,56 @@
 % Please edit documentation in R/z_simulation_functions.R
 \name{zj_pp}
 \alias{zj_pp}
-\title{Simulate marginal from joint Z-score vector}
+\title{Simulate posterior probabilities of causality from joint Z-score vector}
 \usage{
 zj_pp(Zj, V, nrep = 5000, W = 0.2, Sigma)
 }
 \arguments{
-\item{Zj}{Vector of joint z-scores (0s except at CV)}
+\item{Zj}{Vector of joint Z-scores (0s except at CV)}
 
-\item{V}{Variance of the estimated effect size (can be obtained using var.beta.cc function)}
+\item{V}{Variance of the estimated effect size (can be obtained using Var.beta.cc function)}
 
-\item{nrep}{Number of marginal z-scores to simulate}
+\item{nrep}{Number of posterior probability systems to simulate}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta}
 
 \item{Sigma}{SNP correlation matrix}
 }
-\value{
-Matrix of simulated posterior probabilties, one simulation per row
-}
 \description{
 Simulate nrep marginal Z-scores from joint Z-scores and convert these to posterior probabilities of causality
 }
 \details{
-Does not include posterior probabilities for null model so, the output will sum to 1
+Does not include posterior probabilities for null model
+}
+\examples{
+
+set.seed(1)
+nsnps <- 100
+Zj <- rep(0, nsnps)
+iCV <- 4 # index of CV
+mu <- 5 # true effect at CV
+Zj[iCV] <- mu
+
+
+## generate example LD matrix (https://chr1swallace.github.io/simGWAS/articles/intro.html)
+nhaps <- 1000
+lag <- 5
+maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
+laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
+haps <- laghaps[,1:nsnps]
+for(j in 1:lag)
+   haps <- haps + laghaps[,(1:nsnps)+j]
+haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
+LD <- cor2(haps)
+maf <- colMeans(haps)
+
+## generate V (variance of estimated effect sizes)
+varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)
+
+zj_pp(Zj, V = varbeta, nrep = 5, W = 0.2, Sigma = LD)
+
+
+}
+\author{
+Anna Hutchinson
 }

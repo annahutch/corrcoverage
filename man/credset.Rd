@@ -2,7 +2,7 @@
 % Please edit documentation in R/extra_functions.R
 \name{credset}
 \alias{credset}
-\title{Get credible set of variants}
+\title{Credible set of genetic variants}
 \usage{
 credset(pp, CV, thr = 0.95)
 }
@@ -17,9 +17,26 @@ credset(pp, CV, thr = 0.95)
 list of the variants in the credible set, the claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)
 }
 \description{
-Get credible set of variants
+Credible set of putative causal variants
 }
 \details{
 If the CV parameter is supplied (index of causal variant) then the
 output includes a binary indicator of whether the CV is contained in the set
+}
+\examples{
+
+set.seed(1)
+nsnps <- 100
+pp <- rnorm(nsnps, 0.2, 0.05)
+pp <- pp/sum(pp)
+
+credset(pp, thr = 0.9)
+
+iCV <- 4
+
+credset(pp, CV = iCV, thr = 0.9)
+
+}
+\author{
+Anna Hutchinson
 }

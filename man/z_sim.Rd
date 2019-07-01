@@ -2,21 +2,46 @@
 % Please edit documentation in R/z_simulation_functions.R
 \name{z_sim}
 \alias{z_sim}
-\title{Simulate marginal from joint Z-score vector}
+\title{Simulate marginal Z-scores from joint Z-score vector}
 \usage{
 z_sim(Zj, Sigma, nrep)
 }
 \arguments{
-\item{Zj}{Vector of joint Z-scores (a vector of 0s except at the causal variant)}
+\item{Zj}{Vector of joint Z-scores (a vector of 0s except at the CV)}
 
 \item{Sigma}{SNP correlation matrix}
 
 \item{nrep}{Number of Z-score systems to simulate}
 }
 \value{
-Matrix of simulated z-scores, one simulation per row
+Matrix of simulated posterior probabilties, one simulation per row
 }
 \description{
 Simulate marginal z-scores (\eqn{Z_m}) from the joint z-scores (\eqn{Z_j}) using \eqn{E(Z_m) = Z_j \times \Sigma} and
 \eqn{Z* \sim MVN(E(Z_m), \Sigma)}
+}
+\examples{
+
+set.seed(1)
+nsnps <- 100
+Zj <- rep(0, nsnps)
+iCV <- 4 # index of CV
+mu <- 5 # true effect at CV
+Zj[iCV] <- mu
+
+## generate example LD matrix (https://chr1swallace.github.io/simGWAS/articles/intro.html)
+lag <- 5 # genotypes are correlated between neighbouring variants
+maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
+laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
+haps <- laghaps[,1:nsnps]
+for(j in 1:lag)
+   haps <- haps + laghaps[,(1:nsnps)+j]
+haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
+LD <- cor2(haps)
+
+z_sim(Zj, Sigma = LD, nrep = 100)
+
+}
+\author{
+Anna Hutchinson
 }

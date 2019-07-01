@@ -2,12 +2,12 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{pvals_pp}
 \alias{pvals_pp}
-\title{Find posterior probabilities of causality}
+\title{Find PPs from P-values and MAFs}
 \usage{
 pvals_pp(pvals, f, type, N, s, W = 0.2)
 }
 \arguments{
-\item{pvals}{p-values of SNPs}
+\item{pvals}{P-values of SNPs}
 
 \item{f}{Minor allele frequencies}
 
@@ -23,10 +23,31 @@ pvals_pp(pvals, f, type, N, s, W = 0.2)
 Posterior probabilities of null model (no genetic effect) and causality for each SNP
 }
 \description{
-Posterior probabilities of causality from p-values
+Posterior probabilities of causality from P-values
 }
 \details{
-This function converts p-values to posterior probabilities of causality, including the null model of no genetic effects
+This function converts p-values to posterior probabilities of causality, including the null model of no genetic effect
+}
+\examples{
+
+set.seed(1)
+N0 = 5000
+N1 = 5000
+z_scores <- rnorm(nsnps, 0, 5)
+p_values <- 2 * pnorm( - abs ( z_scores ) )
+
+nhaps <- 1000
+lag <- 5
+maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
+laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
+haps <- laghaps[,1:nsnps]
+for(j in 1:lag)
+   haps <- haps + laghaps[,(1:nsnps)+j]
+haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
+maf <- colMeans(haps)
+
+pvals_pp(pvals = p_values, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+
 }
 \author{
 Anna Hutchinson

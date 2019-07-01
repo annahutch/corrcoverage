@@ -16,7 +16,7 @@ Correlation matrix
 Correlation matrix of SNPS
 }
 \details{
-A quick function to find a correlation matrix
+Quick function to find a correlation matrix
 }
 \author{
 Chris Wallace

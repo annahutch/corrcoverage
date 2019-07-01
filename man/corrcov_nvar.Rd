@@ -24,7 +24,9 @@ corrcov_nvar(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 
 \item{W}{Prior for the standard deviation of the effect size parameter beta}
 
-\item{nrep}{The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 10000 default because we trim out the ones without correct nvar)}
+\item{nrep}{The number of simulated posterior probability systems to consider for the corrected
+coverage estimate (nrep = 10000 default because we trim out the ones without correct
+nvar so need this to be hugh)}
 }
 \value{
 Corrected coverage estimate
@@ -34,4 +36,29 @@ Obtain corrected coverage estimate using Z-scores and mafs (limiting simulations
 }
 \details{
 This function requires the marginal summary statistics from GWAS and an nvar value. It should only be used when nvar is very low ($<3$) and there is some evidence to suggest that only simulated credible sets with this nvar value should be used to derive the corrected coverage estimate.
+}
+\examples{
+set.seed(1)
+nsnps = 100
+N0 = 5000
+N1 = 5000
+z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+
+# simulate fake haplotypes to obtain MAFs and LD matrix
+nhaps <- 1000
+lag <- 5
+maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
+laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
+haps <- laghaps[,1:nsnps]
+for(j in 1:lag)
+   haps <- haps + laghaps[,(1:nsnps)+j]
+haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
+maf <- colMeans(haps)
+LD <- cor2(haps)
+
+corrcov_nvar(z = z_scores, f = maf, N0, N1, Sigma = LD, nvar = 3)
+
+}
+\author{
+Anna Hutchinson
 }

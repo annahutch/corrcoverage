@@ -2,9 +2,9 @@
 % Please edit documentation in R/extra_functions.R
 \name{credsetC}
 \alias{credsetC}
-\title{Get credible set of variants from matrix of pps (Rcpp)}
+\title{Credible set of variants from matrix of PPs}
 \usage{
-credsetC(pp, CV = iCV, thr = 0.95)
+credsetC(pp, CV, thr = 0.95)
 }
 \arguments{
 \item{pp}{Matrix of posterior probabilities of causality (one row per system)}
@@ -17,5 +17,5 @@ credsetC(pp, CV = iCV, thr = 0.95)
 Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants (nvar).
 }
 \description{
-Quicker credset function for matrix of posterior probabilities (using RCpp)
+Quick credset function for matrix of posterior probabilities (using RCpp)
 }

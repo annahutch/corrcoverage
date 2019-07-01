@@ -18,9 +18,9 @@ corrected_cs(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 
 \item{Sigma}{Correlation matrix of SNPs}
 
-\item{lower}{Lower threshold}
+\item{lower}{Lower threshold (default = 0)}
 
-\item{upper}{Upper threshold}
+\item{upper}{Upper threshold (default = 1)}
 
 \item{desired.cov}{The desired coverage of the causal variant in the credible set}
 
@@ -29,8 +29,43 @@ corrected_cs(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 \item{max.iter}{Maximum iterations (default = 20)}
 }
 \value{
-list of variants in credible set, required threshold, the corrected coverage and the size of the credible set
+List of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 }
 \description{
 Corrected credible set with desired coverage of the CV
+}
+\examples{
+
+# In this example, the function is used to find a corrected 95\% credible set
+# using Z-scores and MAFs, that is the smallest set of variants
+# required such that the resultant credible set has coverage close to (/within
+# some accuracy of) the "desired coverage" (here set to 0.95). Max.iter parameter
+# defines the maximum number of iterations to try in the root bisection algorithm,
+# this should be increased to ensure convergence to the desired coverage, but is set
+# to 2 here for speed (and thus the resultant credible set will not be accurate).
+
+set.seed(1)
+nsnps = 100
+N0 = 5000
+N1 = 5000
+z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+
+# simulate fake haplotypes to obtain MAFs and LD matrix
+nhaps <- 1000
+lag <- 5
+maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
+laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
+haps <- laghaps[,1:nsnps]
+for(j in 1:lag)
+   haps <- haps + laghaps[,(1:nsnps)+j]
+haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
+maf <- colMeans(haps)
+LD <- cor2(haps)
+
+corrected_cs(z = z_scores, f = maf, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 2)
+# max.iter set low for speed, should be set to at least the default to ensure convergence to desired coverage
+
+}
+\author{
+Anna Hutchinson
 }

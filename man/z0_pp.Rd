@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{z0_pp}
 \alias{z0_pp}
-\title{Find posterior probabilities of causality}
+\title{Find PPs from Z-scores and MAFs}
 \usage{
 z0_pp(z, f, type, N, s, W = 0.2)
 }
@@ -27,6 +27,26 @@ Posterior probabilities of causality from marginal Z-scores with prior SD as a p
 }
 \details{
 This function converts Z-scores to posterior probabilities of causality, including the null model of no genetic effects
+}
+\examples{
+
+set.seed(1)
+N0 = 5000
+N1 = 5000
+z_scores <- rnorm(nsnps, 0, 5)
+
+nhaps <- 1000
+lag <- 5
+maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
+laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
+haps <- laghaps[,1:nsnps]
+for(j in 1:lag)
+   haps <- haps + laghaps[,(1:nsnps)+j]
+haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
+maf <- colMeans(haps)
+
+z0_pp(z = z_scores, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+
 }
 \author{
 Anna Hutchinson

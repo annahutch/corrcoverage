@@ -15,13 +15,26 @@ est_mu(z, f, N0, N1, W = 0.2)
 
 \item{N1}{Number of cases}
 
-\item{W}{Prior for the standard deviation of the effect size parameter beta}
+\item{W}{Prior for the standard deviation of the effect size parameter, beta}
 }
 \value{
 Estimate of the true effect at the causal variant
 }
 \description{
 Estimate the true effect at the causal variant
+}
+\examples{
+
+set.seed(1)
+nsnps <- 100
+z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+N0 <- 5000 # number of controls
+N1 <- 5000 # number of cases
+
+maf <- runif(nsnps, 0.05, 0.5)
+
+est_mu(z = z_scores, f = maf, N0 = N0, N1 = N1)
+
 }
 \author{
 Anna Hutchinson

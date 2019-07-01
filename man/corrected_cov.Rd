@@ -7,15 +7,15 @@
 corrected_cov(mu, V, W = 0.2, Sigma, pp0, thr = 0.95, nrep = 1000)
 }
 \arguments{
-\item{mu}{The true effect at the CV}
+\item{mu}{The true effect at the CV (estimate using corrcoverage::mu_est function)}
 
 \item{V}{Variance of the estimated effect size (can be obtained using Var.beta.cc function)}
 
-\item{W}{Prior for the standard deviation of the effect size parameter beta (W=0.2 default)}
+\item{W}{Prior for the standard deviation of the effect size parameter, beta (W=0.2 default)}
 
 \item{Sigma}{SNP correlation matrix}
 
-\item{pp0}{Posterior probabilities of system of interest}
+\item{pp0}{Posterior probabilities of SNPs}
 
 \item{thr}{Minimum threshold for fine-mapping experiment (default is 0.95)}
 
@@ -29,4 +29,35 @@ Corrected coverage estimate of the causal variant in the credible set
 }
 \details{
 Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)
+}
+\examples{
+
+set.seed(1)
+nsnps <- 100
+N0 <- 5000
+N1 <- 5000
+
+## generate example LD matrix (https://chr1swallace.github.io/simGWAS/articles/intro.html)
+nhaps <- 1000
+lag <- 5
+maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
+laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
+haps <- laghaps[,1:nsnps]
+for(j in 1:lag)
+   haps <- haps + laghaps[,(1:nsnps)+j]
+haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
+LD <- cor2(haps)
+maf <- colMeans(haps)
+
+## generate V (variance of estimated effect sizes)
+varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)
+
+pp <- rnorm(nsnps, 0.2, 0.05)
+pp <- pp/sum(pp)
+
+corrected_cov(mu = 7, V = varbeta, Sigma = LD, pp0 = pp, nrep = 100)
+
+}
+\author{
+Anna Hutchinson
 }

@@ -2,12 +2,12 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{approx.bf.p}
 \alias{approx.bf.p}
-\title{Find approx. Bayes factors}
+\title{Find approx. Bayes factors (ABFs)}
 \usage{
 approx.bf.p(pvals, f, type, N, s, W = 0.2)
 }
 \arguments{
-\item{pvals}{p-values}
+\item{pvals}{P-values}
 
 \item{f}{Minor allele frequencies}
 
@@ -28,4 +28,25 @@ Wakefield's log asymptotic Bayes factor (lABF) with prior standard deviation of 
 \details{
 ([Wakefield et al. 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359)
 This function converts p-values to log ABFs, also reporting intermediate calculations
+}
+\examples{
+
+set.seed(1)
+N0 = 5000
+N1 = 5000
+z_scores <- rnorm(nsnps, 0, 5)
+p_values <- 2 * pnorm( - abs ( z_scores ) )
+
+nhaps <- 1000
+lag <- 5
+maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
+laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
+haps <- laghaps[,1:nsnps]
+for(j in 1:lag)
+   haps <- haps + laghaps[,(1:nsnps)+j]
+haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
+maf <- colMeans(haps)
+
+approx.bf.p(pvals = p_values, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+
 }

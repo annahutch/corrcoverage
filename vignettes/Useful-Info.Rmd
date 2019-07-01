@@ -44,7 +44,6 @@ Function | Include null model? | Input | Output
 `pvals_pp` | YES | $p$-values | Posterior Probabilities |
 `z0_pp` | YES | Marginal $Z$-scores | Posterior Probabilities |
 `ppfunc` | NO | Marginal $Z$-scores | Posterior Probabilities |
-`z0func.mat` | NO | Marginal $Z$-score matrix | Posterior Probabilities |
 
 Functions are also provided to simulate marginal $Z$-scores from joint $Z$-scores. The joint $Z$-scores are all 0, except at the causal variant where it is the 'true effect', $\mu$. 
 

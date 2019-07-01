@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{ppfunc}
 \alias{ppfunc}
-\title{Find posterior probabilities of causality}
+\title{Find PPs from Z-scores}
 \usage{
 ppfunc(z, V, W = 0.2)
 }
@@ -23,4 +23,26 @@ Posterior probabilities of causality from marginal Z-scores
 This function converts Z-scores to posterior probabilities of causality
 i.e. not including the null model of no genetic effects,
 so that the sum of the posterior probabilities for all variants is 1
+}
+\examples{
+
+set.seed(1)
+N0 = 5000
+N1 = 5000
+z_scores <- rnorm(nsnps, 0, 5)
+
+nhaps <- 1000
+lag <- 5
+maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
+laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
+haps <- laghaps[,1:nsnps]
+for(j in 1:lag)
+   haps <- haps + laghaps[,(1:nsnps)+j]
+haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
+maf <- colMeans(haps)
+
+varbeta <- Var.data.cc(f = maf, N = N0+N1, s = N1/(N0+N1))
+
+ppfunc(z = z_scores, V = varbeta)
+
 }

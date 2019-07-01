@@ -9,7 +9,7 @@ Var.data.cc(f, N, s)
 \arguments{
 \item{f}{Minor allele frequencies}
 
-\item{N}{Total sample size}
+\item{N}{Total sample size (N0+N1)}
 
 \item{s}{Proportion of cases (N1/N0+N1)}
 }

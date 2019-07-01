@@ -27,7 +27,8 @@ Suggests:
     mvtnorm,
     rmarkdown,
     testthat,
-    pkgdown,
+    simGWAS,
+    pkgdown
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 LinkingTo: 
@@ -35,7 +36,7 @@ LinkingTo:
 Imports: 
     data.table,
     magrittr,
-    simGWAS,
     stats,
     Rcpp
 SystemRequirements: C++11
+Remotes: chr1swallace/simGWAS

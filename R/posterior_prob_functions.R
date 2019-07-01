@@ -187,6 +187,7 @@ ppfunc <- function(z, V, W = 0.2) {
 #' @param W Prior for the standard deviation of the effect size parameter, beta
 #' @return Matrix of posterior probabilities of causality
 #' @author Chris Wallace
+#' @export
 ppfunc.mat <- function(zstar, V, W = 0.2) {
     r = matrix(W^2/(W^2 + V), nrow = nrow(zstar), ncol = ncol(zstar), byrow = TRUE)  # see wakefield paper
     bf = 0.5 * (log(1 - r) + (r * zstar^2))

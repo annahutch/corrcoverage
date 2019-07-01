@@ -14,3 +14,4 @@ _pkgdown.yml
 .Rbuildignore
 /vignette/my-vignette_cache/html
 .Rproj.user
+

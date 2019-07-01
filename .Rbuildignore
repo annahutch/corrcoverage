@@ -9,4 +9,10 @@
 _pkgdown.yml
 package_flowchart.html
 /Vignettes/my-vignette_cache/
-^pkgdown/
+pkgdown/
+/*_cache/
+/cache/
+/vignette/my-vignette_cache/html
+.Rproj.user
+^deploy.sh$
+Index.Rmd

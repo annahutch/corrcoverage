@@ -44,11 +44,11 @@ Get new credible set with desired coverage of the CV
 # this should be increased to ensure convergence to the desired coverage, but is set
 # to 1 here for speed (and thus the resultant credible set will not be accurate).
 
-set.seed(1)
-nsnps <- 100
+set.seed(2)
+nsnps <- 200
 iCV <- 4
-N0 <- 5000 # number of controls
-N1 <- 5000 # number of cases
+N0 <- 1000 # number of controls
+N1 <- 1000 # number of cases
 
 # simulate fake haplotypes to obtain MAFs and LD matrix
 nhaps <- 1000
@@ -71,7 +71,7 @@ bhats <- rnorm(beta, varbeta)
 
 names(bhats) <- seq(1,length(bhats))
 
-corrcov_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 1)
+corrected_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 1)
 # max.iter set low for speed, should be set to at
 # least the default to ensure convergence to desired coverage
 

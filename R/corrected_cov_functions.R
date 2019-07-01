@@ -37,7 +37,7 @@
 #' pp <- rnorm(nsnps, 0.2, 0.05)
 #' pp <- pp/sum(pp)
 #'
-#' corrected_cov(mu = 7, V = varbeta, Sigma = LD, pp0 = pp, nrep = 100)
+#' corrected_cov(mu = 4, V = varbeta, Sigma = LD, pp0 = pp, thr = 0.95, nrep = 100)
 #'
 #' @export
 #' @author Anna Hutchinson
@@ -99,7 +99,7 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thr = 0.95, nrep = 1000) {
 #' nsnps = 100
 #' N0 = 5000
 #' N1 = 5000
-#' z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+#' z_scores <- rnorm(nsnps, 0, 3) # simulate a vector of Z-scores
 #'
 #' # simulate fake haplotypes to obtain MAFs and LD matrix
 #' nhaps <- 1000
@@ -113,7 +113,7 @@ corrected_cov <- function(mu, V, W = 0.2, Sigma, pp0, thr = 0.95, nrep = 1000) {
 #' maf <- colMeans(haps)
 #' LD <- cor2(haps)
 #'
-#' corrcov(z = z_scores, f = maf, N0, N1, Sigma = LD)
+#' corrcov(z = z_scores, f = maf, N0, N1, Sigma = LD, thr = 0.95)
 #'
 #' @export
 #' @author Anna Hutchinson
@@ -189,9 +189,8 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
 #'
 #' set.seed(1)
 #' nsnps <- 100
-#' iCV <- 4
-#' N0 <- 5000 # number of controls
-#' N1 <- 5000 # number of cases
+#' N0 <- 1000 # number of controls
+#' N1 <- 1000 # number of cases
 #'
 #' # simulate fake haplotypes to obtain MAFs and LD matrix
 #' nhaps <- 1000
@@ -207,10 +206,8 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 #'
-#' beta <- rep(0, nsnps)
-#' beta[iCV] <- 5
+#' bhats = rnorm(nsnps, 0, 0.2) # log OR
 #'
-#' bhats <- rnorm(beta, varbeta)
 #'
 #' corrcov_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD)
 #'
@@ -290,11 +287,12 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 #' @return Corrected coverage estimate
 #'
 #' @examples
+#'
 #' set.seed(1)
 #' nsnps = 100
 #' N0 = 5000
 #' N1 = 5000
-#' z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+#' z_scores <- rnorm(nsnps, 0, 3) # simulate a vector of Z-scores
 #'
 #' # simulate fake haplotypes to obtain MAFs and LD matrix
 #' nhaps <- 1000
@@ -308,7 +306,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 #' maf <- colMeans(haps)
 #' LD <- cor2(haps)
 #'
-#' corrcov_nvar(z = z_scores, f = maf, N0, N1, Sigma = LD, nvar = 3)
+#' corrcov_nvar(z = z_scores, f = maf, N0, N1, Sigma = LD, nvar = 1)
 #'
 #' @export
 
@@ -396,7 +394,6 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 #'
 #' set.seed(1)
 #' nsnps <- 100
-#' iCV <- 4
 #' N0 <- 5000 # number of controls
 #' N1 <- 5000 # number of cases
 #'
@@ -414,12 +411,9 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 #'
-#' beta <- rep(0, nsnps)
-#' beta[iCV] <- 5
+#' bhats = rnorm(nsnps,0,0.2) # log OR
 #'
-#' bhats <- rnorm(beta, varbeta)
-#'
-#' corrcov_nvar_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, nvar = 3)
+#' corrcov_nvar_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, nvar = 1)
 #'
 #' @export
 #'
@@ -504,12 +498,13 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 #' @examples
 #'
 #' \dontrun{
+#'
 #'  # this is a long running example
 #' set.seed(1)
 #' nsnps = 100
 #' N0 = 5000
 #' N1 = 5000
-#' z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+#' z_scores <- rnorm(nsnps, 0, 3) # simulate a vector of Z-scores
 #'
 #' # simulate fake haplotypes to obtain MAFs and LD matrix
 #' nhaps <- 1000
@@ -555,7 +550,6 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI
 #'  # this is a long running example
 #' set.seed(1)
 #' nsnps <- 100
-#' iCV <- 4
 #' N0 <- 5000 # number of controls
 #' N1 <- 5000 # number of cases
 #'
@@ -573,10 +567,7 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 #'
-#' beta <- rep(0, nsnps)
-#' beta[iCV] <- 5
-#'
-#' bhats <- rnorm(beta, varbeta)
+#' bhats = rnorm(nsnps,0,0.2) # log OR
 #'
 #' corrcov_CI_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD)
 #' }

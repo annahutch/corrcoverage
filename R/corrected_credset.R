@@ -148,11 +148,10 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 #' # this should be increased to ensure convergence to the desired coverage, but is set
 #' # to 1 here for speed (and thus the resultant credible set will not be accurate).
 #'
-#' set.seed(1)
+#' set.seed(18)
 #' nsnps <- 100
-#' iCV <- 4
-#' N0 <- 5000 # number of controls
-#' N1 <- 5000 # number of cases
+#' N0 <- 500 # number of controls
+#' N1 <- 500 # number of cases
 #'
 #' # simulate fake haplotypes to obtain MAFs and LD matrix
 #' nhaps <- 1000
@@ -168,14 +167,11 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 #'
-#' beta <- rep(0, nsnps)
-#' beta[iCV] <- 5
-#'
-#' bhats <- rnorm(beta, varbeta)
+#' bhats = rnorm(nsnps,0,0.2) # log OR
 #'
 #' names(bhats) <- seq(1,length(bhats))
 #'
-#' corrcov_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 1)
+#' corrected_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.9, max.iter = 1)
 #' # max.iter set low for speed, should be set to at
 #' # least the default to ensure convergence to desired coverage
 #'

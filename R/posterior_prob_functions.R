@@ -17,7 +17,7 @@
 #' nsnps = 100
 #' N0 = 5000
 #' N1 = 5000
-#' z_scores <- rnorm(nsnps, 0, 5)
+#' z_scores <- rnorm(nsnps, 0, 3)
 #' p_values <- 2 * pnorm( - abs ( z_scores ) )
 #'
 #' nhaps <- 1000
@@ -59,7 +59,7 @@ approx.bf.p <- function(pvals, f, type, N, s, W = 0.2) {
 #' set.seed(1)
 #' N0 = 5000
 #' N1 = 5000
-#' z_scores <- rnorm(nsnps, 0, 5)
+#' z_scores <- rnorm(nsnps, 0, 3)
 #' p_values <- 2 * pnorm( - abs ( z_scores ) )
 #'
 #' nhaps <- 1000
@@ -107,7 +107,7 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2) {
 #' set.seed(1)
 #' N0 = 5000
 #' N1 = 5000
-#' z_scores <- rnorm(nsnps, 0, 5)
+#' z_scores <- rnorm(nsnps, 0, 3)
 #'
 #' nhaps <- 1000
 #' lag <- 5
@@ -151,7 +151,7 @@ z0_pp <- function(z, f, type, N, s, W = 0.2) {
 #' set.seed(1)
 #' N0 = 5000
 #' N1 = 5000
-#' z_scores <- rnorm(nsnps, 0, 5)
+#' z_scores <- rnorm(nsnps, 0, 3)
 #'
 #' nhaps <- 1000
 #' lag <- 5

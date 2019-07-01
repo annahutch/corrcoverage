@@ -12,6 +12,7 @@ vignette: >
 ```{r setup, set.seed(2), include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 options(width = 3000)
+set.seed(2)
 ```
 
 ---
@@ -140,11 +141,11 @@ Suppose we are suspicious of this coverage estimate (90% in our example) and wis
 
 Side note: If the estimated effect size coefficients (`bhat`) and their standard errors (`sqrt(V)`) are known instead of $Z$-scores and minor allele frequencies, then the `corrcov_bhat` function can be used analogously.
 
-```{r cache = TRUE}
+```{r}
 corrected_cov_estimate <- corrcov(z = z0, f = MAF, N0, N1, Sigma = LD, thr = thresh)
 ```
 
-```{r echo = FALSE, cache = TRUE}
+```{r echo = FALSE}
 df <- data.frame("Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)
 print(df, row.names = FALSE)
 ```
@@ -175,7 +176,7 @@ true.cov.est
 
 The estimated empirical coverage is found to be approximately 96.9%, so our estimate of ~97.7% is accurate - far more so than the standard 'claimed coverage' of ~90.09%.
 
-```{r echo = FALSE, cache = TRUE}
+```{r echo = FALSE}
 df.new <- data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)[1,]
 print(df.new, row.names = FALSE)
 ```

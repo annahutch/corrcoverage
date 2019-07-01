@@ -122,7 +122,7 @@ credibleset <- credset(pp = postprobs, CV = iCV, thr = thresh)
 credibleset
 ```
 
-Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9009 and contains the true causal variant. In literature, authors would commonly report that they have found a 90% credible set containing 114 variants which they are at least 90% confident contains the true causal variant. 
+Here, the 90% credible set contains 115 (out of 200) variants, has a claimed coverage of 0.9006 and contains the true causal variant. In the literature, authors would typically report that they have found a 90% credible set containing 115 variants which they are at least 90% confident contains the true causal variant. 
 
 Note that if the variants are named in the `pp` vector, then the `$credset` output would contain variant names rather than indices.
 
@@ -149,7 +149,7 @@ df <- data.frame("Corrected Coverage" = corrected_cov_estimate, "Claimed Coverag
 print(df, row.names = FALSE)
 ```
 
-In this example, the 90% credible set may in actual fact have nearer to 97.4% coverage of the causal variant in the credible set. 
+In this example, the 90% credible set may in actual fact have nearer to 97.7% coverage of the causal variant in the credible set. 
 
 ---
 
@@ -173,7 +173,7 @@ true.cov.est <- mean(cs)
 true.cov.est
 ```
 
-The estimated empirical coverage is found to be approximately 97.6%, so our estimate of ~97.4% is very accurate - far more so than the standard 'claimed coverage' of ~90.09%.
+The estimated empirical coverage is found to be approximately 96.9%, so our estimate of ~97.7% is accurate - far more so than the standard 'claimed coverage' of ~90.09%.
 
 ```{r echo = FALSE, cache = TRUE}
 df.new <- data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)[1,]

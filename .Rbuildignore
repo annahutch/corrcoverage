@@ -9,3 +9,4 @@
 _pkgdown.yml
 package_flowchart.html
 /Vignettes/my-vignette_cache/
+^pkgdown/

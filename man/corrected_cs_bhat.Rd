@@ -42,7 +42,7 @@ Get new credible set with desired coverage of the CV
 # some accuracy of) the "desired coverage" (here set to 0.95). Max.iter parameter
 # defines the maximum number of iterations to try in the root bisection algorithm,
 # this should be increased to ensure convergence to the desired coverage, but is set
-# to 2 here for speed (and thus the resultant credible set will not be accurate).
+# to 1 here for speed (and thus the resultant credible set will not be accurate).
 
 set.seed(1)
 nsnps <- 100
@@ -69,7 +69,9 @@ beta[iCV] <- 5
 
 bhats <- rnorm(beta, varbeta)
 
-corrcov_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 2)
+names(bhats) <- seq(1,length(bhats))
+
+corrcov_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 1)
 # max.iter set low for speed, should be set to at
 # least the default to ensure convergence to desired coverage
 

@@ -57,10 +57,10 @@ z0 <- simulated_z_score(N0 = N0, # number of controls
                         freq = freq) # reference haplotypes
 ```
 
-To calculate $V$, the prior variance for the estimated effect size, we use `coloc::Var.data.cc`.
+To calculate $V$, the prior variance for the estimated effect size, we use `Var.data.cc`.
 
 ```{r}
-varbeta <- coloc:::Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of estimated effect size
+varbeta <- Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of estimated effect size
 ```
 
 We can then use the `ppfunc` function to calculate the posterior probabilities of causality for each variant.

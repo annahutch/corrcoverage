@@ -69,12 +69,12 @@ test_that("no missing values", {
 
 test_that("check V in ppfunc", {
   expect_error(ppfunc(z))
-  V <- coloc:::Var.data.cc(maf, N, 0.5)
+  V <- Var.data.cc(f = maf, N, 0.5)
   expect_true(all(V>=0))
 })
 
 test_that("ppfunc.mat returns probabilities", {
-  V <- coloc:::Var.data.cc(maf, N, 0.5)
+  V <- Var.data.cc(maf, N, 0.5)
   zstar <- matrix(rnorm(10000), nrow = 100)
   res <- ppfunc.mat(zstar, V = V)
   expect_equal(sum(res[1,]), 1)

@@ -95,13 +95,13 @@ We now use the `credset` function in the `corrcoverage` package to obtain a cred
 2. Cumulatively sum these variants until the specified threshold is exceeded.
 3. Group these variants to form the credible set.
 
-The function requires posterior probabilities of causality as an input, and so we use the `ppfunc` function to convert the marginal $Z$-scores to posterior probabilities of causality. The `ppfunc` function also requires a value for $V$, the variance of the estimated effect size, which can be easily calculated using the `coloc::Var.data.cc` function. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.
+The function requires posterior probabilities of causality as an input, and so we use the `ppfunc` function to convert the marginal $Z$-scores to posterior probabilities of causality. The `ppfunc` function also requires a value for $V$, the variance of the estimated effect size, which can be easily calculated using the `Var.data.cc` function. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.
 
 ```{r warning=FALSE, error=FALSE, fig.width=4}
 N0 <- 5000 # number of controls
 N1 <- 5000 # number of cases
 
-varbeta <- coloc:::Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of estimated effect size
+varbeta <- Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of estimated effect size
 
 postprobs <- ppfunc(z = z0, V = varbeta)
 

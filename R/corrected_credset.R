@@ -41,7 +41,8 @@
 #' LD <- cor2(haps)
 #'
 #' corrected_cs(z = z_scores, f = maf, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 2)
-#' # max.iter set low for speed, should be set to at least the default to ensure convergence to desired coverage
+#' # max.iter set low for speed, should be set to at least
+#' # the default to ensure convergence to desired coverage
 #'
 #' @export
 #' @author Anna Hutchinson
@@ -171,7 +172,8 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 #' bhats <- rnorm(beta, varbeta)
 #'
 #' corrcov_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 2)
-#' # max.iter set low for speed, should be set to at least the default to ensure convergence to desired coverage
+#' # max.iter set low for speed, should be set to at
+#' # least the default to ensure convergence to desired coverage
 #'
 #' @export
 #' @author Anna Hutchinson

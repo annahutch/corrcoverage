@@ -220,7 +220,6 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
     z = bhat/sqrt(V)
     r = W^2/(W^2 + V)
     bf = 0.5 * (log(1 - r) + (r * z^2))
-    p1 = 1e-04  # hard code
     nsnps = length(bf)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
     tmp = c(1, bf)  # add on extra for null model

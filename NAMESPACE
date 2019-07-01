@@ -2,6 +2,7 @@
 
 export("%>%")
 export(approx.bf.p)
+export(cor2)
 export(corrcov)
 export(corrcov_CI)
 export(corrcov_CI_bhat)

@@ -65,7 +65,6 @@ reference:
   contents:
   - approx.bf.p
   - ppfunc
-  - ppfunc.mat
   - pvals_pp
   - z0_pp
   - z_sim
@@ -75,7 +74,3 @@ reference:
   - Var.data.cc
   - cor2
   - credset
-  - credsetC
-  - credsetmat
-  - finemap.abf
-  - prop_cov

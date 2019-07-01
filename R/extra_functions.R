@@ -31,6 +31,7 @@ logsum <- function(x) {
 #' @param x Phased haplotype matrix, rows as samples and columns as SNPs
 #' @return Correlation matrix
 #' @author Chris Wallace
+#' @export
 cor2 <- function(x) {
     1/(NROW(x) - 1) * crossprod(scale(x, TRUE, TRUE))
 }

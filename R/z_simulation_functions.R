@@ -26,7 +26,8 @@
 #' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
 #' LD <- cor2(haps)
 #'
-#' z_sim(Zj, Sigma = LD, nrep = 100)
+#' res <- z_sim(Zj, Sigma = LD, nrep = 100)
+#' res[c(1:5), c(1:5)]
 #'
 #' @export
 #' @author Anna Hutchinson
@@ -72,7 +73,9 @@ z_sim <- function(Zj, Sigma, nrep) {
 #' ## generate V (variance of estimated effect sizes)
 #' varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)
 #'
-#' zj_pp(Zj, V = varbeta, nrep = 5, W = 0.2, Sigma = LD)
+#' res <- zj_pp(Zj, V = varbeta, nrep = 5, W = 0.2, Sigma = LD)
+#'
+#' res[c(1:5), c(1:5)]
 #'
 #'
 #' @export

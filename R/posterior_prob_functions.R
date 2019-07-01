@@ -73,7 +73,10 @@ approx.bf.p <- function(pvals, f, type, N, s, W = 0.2) {
 #' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
 #' maf <- colMeans(haps)
 #'
-#' pvals_pp(pvals = p_values, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+#' res <- pvals_pp(pvals = p_values, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+#' sum(res)
+#' res
+#'
 #'
 #' @export
 #' @author Anna Hutchinson
@@ -121,7 +124,9 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2) {
 #' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
 #' maf <- colMeans(haps)
 #'
-#' z0_pp(z = z_scores, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+#' res <- z0_pp(z = z_scores, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+#' sum(res)
+#' res
 #'
 #' @export
 #' @author Anna Hutchinson
@@ -168,7 +173,9 @@ z0_pp <- function(z, f, type, N, s, W = 0.2) {
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0+N1, s = N1/(N0+N1))
 #'
-#' ppfunc(z = z_scores, V = varbeta)
+#' res <- ppfunc(z = z_scores, V = varbeta)
+#' sum(res)
+#' res
 #'
 #' @export
 #' @return Vector of posterior probabilities

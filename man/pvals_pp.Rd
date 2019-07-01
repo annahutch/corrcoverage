@@ -47,7 +47,10 @@ for(j in 1:lag)
 haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
 maf <- colMeans(haps)
 
-pvals_pp(pvals = p_values, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+res <- pvals_pp(pvals = p_values, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+sum(res)
+res
+
 
 }
 \author{

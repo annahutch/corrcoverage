@@ -44,6 +44,8 @@ maf <- colMeans(haps)
 
 varbeta <- Var.data.cc(f = maf, N = N0+N1, s = N1/(N0+N1))
 
-ppfunc(z = z_scores, V = varbeta)
+res <- ppfunc(z = z_scores, V = varbeta)
+sum(res)
+res
 
 }

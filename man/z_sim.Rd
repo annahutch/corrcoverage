@@ -40,7 +40,8 @@ for(j in 1:lag)
 haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
 LD <- cor2(haps)
 
-z_sim(Zj, Sigma = LD, nrep = 100)
+res <- z_sim(Zj, Sigma = LD, nrep = 100)
+res[c(1:5), c(1:5)]
 
 }
 \author{

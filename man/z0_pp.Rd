@@ -46,7 +46,9 @@ for(j in 1:lag)
 haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
 maf <- colMeans(haps)
 
-z0_pp(z = z_scores, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+res <- z0_pp(z = z_scores, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
+sum(res)
+res
 
 }
 \author{

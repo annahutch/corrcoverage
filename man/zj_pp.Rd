@@ -51,7 +51,9 @@ maf <- colMeans(haps)
 ## generate V (variance of estimated effect sizes)
 varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)
 
-zj_pp(Zj, V = varbeta, nrep = 5, W = 0.2, Sigma = LD)
+res <- zj_pp(Zj, V = varbeta, nrep = 5, W = 0.2, Sigma = LD)
+
+res[c(1:5), c(1:5)]
 
 
 }

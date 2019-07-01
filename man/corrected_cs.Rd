@@ -48,7 +48,7 @@ set.seed(1)
 nsnps = 100
 N0 = 5000
 N1 = 5000
-z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+z_scores <- rnorm(nsnps, 0, 4) # simulate a vector of Z-scores
 
 # simulate fake haplotypes to obtain MAFs and LD matrix
 nhaps <- 1000
@@ -63,7 +63,8 @@ maf <- colMeans(haps)
 LD <- cor2(haps)
 
 corrected_cs(z = z_scores, f = maf, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 2)
-# max.iter set low for speed, should be set to at least the default to ensure convergence to desired coverage
+# max.iter set low for speed, should be set to at least
+# the default to ensure convergence to desired coverage
 
 }
 \author{

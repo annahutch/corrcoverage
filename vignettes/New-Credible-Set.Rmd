@@ -12,6 +12,9 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 set.seed(18)
 library(corrcoverage)
+Var.data.cc <- function(f, N, s) {
+    1/(2 * N * f * (1 - f) * s * (1 - s))
+}
 ```
 
 This vignette will show users how the `corrcoverage` package can be used to obtain a new credible set of variants that contains the true causal variant with some specified desired coverage value whilst containing as few variants as possible.

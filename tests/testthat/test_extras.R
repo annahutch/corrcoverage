@@ -14,6 +14,7 @@ testdata <- system.file("extdata", "testdata.RDS", package="corrcoverage")
 data <- readRDS(testdata)
 
 test_that("cor2 finds correlation matrix", {
+  skip("")
   r <- 10 # no. samples
   c <- 100 # no. SNPs
   h <- matrix(sample(0:1, r*c, replace=TRUE), r, c) # phased haplotype matrix

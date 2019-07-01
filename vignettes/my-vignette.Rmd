@@ -13,6 +13,9 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 options(width = 3000)
 set.seed(2)
+Var.data.cc <- function(f, N, s) {
+    1/(2 * N * f * (1 - f) * s * (1 - s))
+}
 ```
 
 ---
@@ -198,8 +201,4 @@ This vignette has shown readers how to use the `corrcoverage` package to obtain 
 [simGWAS](https://github.com/chr1swallace/simGWAS): Mary D Fortune, Chris Wallace; simGWAS: a fast method for simulation of large scale case–control GWAS summary statistics, Bioinformatics, bty898 (2018)
 
 [Wakefield, 2009](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359) Wakefield, J. Bayes factors for genome-wide association studies: comparison with P-values. Genet. Epidemiol. 33, 79–86 (2009)
-
-```{r session_info, include=TRUE, echo=TRUE, results='markup'}
-devtools::session_info()
-```
 

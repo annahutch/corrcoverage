@@ -32,6 +32,7 @@ This function converts p-values to log ABFs, also reporting intermediate calcula
 \examples{
 
 set.seed(1)
+nsnps = 100
 N0 = 5000
 N1 = 5000
 z_scores <- rnorm(nsnps, 0, 5)

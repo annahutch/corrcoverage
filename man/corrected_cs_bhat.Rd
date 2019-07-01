@@ -70,7 +70,8 @@ beta[iCV] <- 5
 bhats <- rnorm(beta, varbeta)
 
 corrcov_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 2)
-# max.iter set low for speed, should be set to at least the default to ensure convergence to desired coverage
+# max.iter set low for speed, should be set to at
+# least the default to ensure convergence to desired coverage
 
 }
 \author{

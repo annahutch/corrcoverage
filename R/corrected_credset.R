@@ -22,11 +22,11 @@
 #' # this should be increased to ensure convergence to the desired coverage, but is set
 #' # to 2 here for speed (and thus the resultant credible set will not be accurate).
 #'
-#' set.seed(1)
+#' set.seed(2)
 #' nsnps = 100
 #' N0 = 5000
 #' N1 = 5000
-#' z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+#' z_scores <- rnorm(nsnps, 0, 3) # simulate a vector of Z-scores
 #'
 #' # simulate fake haplotypes to obtain MAFs and LD matrix
 #' nhaps <- 1000

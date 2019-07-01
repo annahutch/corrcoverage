@@ -16,6 +16,7 @@
 #' Zj[iCV] <- mu
 #'
 #' ## generate example LD matrix (https://chr1swallace.github.io/simGWAS/articles/intro.html)
+#' nhaps <- 1000
 #' lag <- 5 # genotypes are correlated between neighbouring variants
 #' maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
 #' laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
@@ -45,7 +46,7 @@ z_sim <- function(Zj, Sigma, nrep) {
 #' @param nrep Number of posterior probability systems to simulate
 #' @param W Prior for the standard deviation of the effect size parameter, beta
 #' @param Sigma SNP correlation matrix
-#' @return Matrix of simulated posterior probabilties, one simulation per row\
+#' @return Matrix of simulated posterior probabilties, one simulation per row
 #' @examples
 #'
 #' set.seed(1)

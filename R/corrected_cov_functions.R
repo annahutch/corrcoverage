@@ -306,7 +306,10 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 #' maf <- colMeans(haps)
 #' LD <- cor2(haps)
 #'
-#' corrcov_nvar(z = z_scores, f = maf, N0, N1, Sigma = LD, nvar = 1)
+#' corrcov_nvar(z = z_scores, f = maf, N0, N1, Sigma = LD, nvar = 1, nrep = 100)
+#'
+#' # note that nrep should be at least the default value (nrep = 10000) but is
+#' # lower here for speed of computation
 #'
 #' @export
 
@@ -413,7 +416,10 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 #'
 #' bhats = rnorm(nsnps,0,0.2) # log OR
 #'
-#' corrcov_nvar_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, nvar = 1)
+#' corrcov_nvar_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, nvar = 1, nrep = 1000)
+#'
+#' # note that nrep should be at least the default value (nrep = 10000) but is
+#' # lower here for speed of computation
 #'
 #' @export
 #'

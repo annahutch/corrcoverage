@@ -13,6 +13,8 @@
 #' @return List of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 #'
 #' @examples
+#' \dontrun{
+#'  # this is a long running example
 #'
 #' # In this example, the function is used to find a corrected 95% credible set
 #' # using Z-scores and MAFs, that is the smallest set of variants
@@ -45,6 +47,7 @@
 #' corrected_cs(z = z_scores, f = maf, N0, N1, Sigma = LD, desired.cov = 0.9, max.iter = 1)
 #' # max.iter set low for speed, should be set to at least
 #' # the default to ensure convergence to desired coverage
+#' }
 #'
 #' @export
 #' @author Anna Hutchinson
@@ -140,6 +143,9 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 #'
 #' @examples
 #'
+#' \dontrun{
+#'  # this is a long running example
+#'
 #' # In this example, the function is used to find a corrected 95% credible set
 #' # using bhats and their standard errors, that is the smallest set of variants
 #' # required such that the resultant credible set has coverage close to (/within
@@ -174,6 +180,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 #' corrected_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.9, max.iter = 1)
 #' # max.iter set low for speed, should be set to at
 #' # least the default to ensure convergence to desired coverage
+#' }
 #'
 #' @export
 #' @author Anna Hutchinson

@@ -41,7 +41,6 @@ This function requires the marginal summary statistics from GWAS and an nvar val
 
 set.seed(1)
 nsnps <- 100
-iCV <- 4
 N0 <- 5000 # number of controls
 N1 <- 5000 # number of cases
 
@@ -59,12 +58,12 @@ LD <- cor2(haps)
 
 varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 
-beta <- rep(0, nsnps)
-beta[iCV] <- 5
+bhats = rnorm(nsnps,0,0.2) # log OR
 
-bhats <- rnorm(beta, varbeta)
+corrcov_nvar_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, nvar = 1, nrep = 1000)
 
-corrcov_nvar_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, nvar = 3)
+# note that nrep should be at least the default value (nrep = 10000) but is
+# lower here for speed of computation
 
 }
 \author{

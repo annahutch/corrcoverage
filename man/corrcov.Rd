@@ -38,7 +38,7 @@ set.seed(1)
 nsnps = 100
 N0 = 5000
 N1 = 5000
-z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+z_scores <- rnorm(nsnps, 0, 3) # simulate a vector of Z-scores
 
 # simulate fake haplotypes to obtain MAFs and LD matrix
 nhaps <- 1000
@@ -52,7 +52,7 @@ haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
 maf <- colMeans(haps)
 LD <- cor2(haps)
 
-corrcov(z = z_scores, f = maf, N0, N1, Sigma = LD)
+corrcov(z = z_scores, f = maf, N0, N1, Sigma = LD, thr = 0.95)
 
 }
 \author{

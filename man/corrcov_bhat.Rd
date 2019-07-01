@@ -37,9 +37,8 @@ This function only requires the marginal summary statistics from GWAS
 
 set.seed(1)
 nsnps <- 100
-iCV <- 4
-N0 <- 5000 # number of controls
-N1 <- 5000 # number of cases
+N0 <- 1000 # number of controls
+N1 <- 1000 # number of cases
 
 # simulate fake haplotypes to obtain MAFs and LD matrix
 nhaps <- 1000
@@ -55,10 +54,8 @@ LD <- cor2(haps)
 
 varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 
-beta <- rep(0, nsnps)
-beta[iCV] <- 5
+bhats = rnorm(nsnps, 0, 0.2) # log OR
 
-bhats <- rnorm(beta, varbeta)
 
 corrcov_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD)
 

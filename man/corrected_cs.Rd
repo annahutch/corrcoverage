@@ -35,6 +35,8 @@ List of variants in credible set, required threshold, the corrected coverage and
 Corrected credible set with desired coverage of the CV
 }
 \examples{
+\dontrun{
+ # this is a long running example
 
 # In this example, the function is used to find a corrected 95\% credible set
 # using Z-scores and MAFs, that is the smallest set of variants
@@ -67,6 +69,7 @@ names(z_scores) <- seq(1,length(z_scores))
 corrected_cs(z = z_scores, f = maf, N0, N1, Sigma = LD, desired.cov = 0.9, max.iter = 1)
 # max.iter set low for speed, should be set to at least
 # the default to ensure convergence to desired coverage
+}
 
 }
 \author{

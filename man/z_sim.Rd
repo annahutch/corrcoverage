@@ -30,6 +30,7 @@ mu <- 5 # true effect at CV
 Zj[iCV] <- mu
 
 ## generate example LD matrix (https://chr1swallace.github.io/simGWAS/articles/intro.html)
+nhaps <- 1000
 lag <- 5 # genotypes are correlated between neighbouring variants
 maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
 laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))

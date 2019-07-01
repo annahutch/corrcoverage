@@ -57,6 +57,7 @@ approx.bf.p <- function(pvals, f, type, N, s, W = 0.2) {
 #' @examples
 #'
 #' set.seed(1)
+#' nsnps = 100
 #' N0 = 5000
 #' N1 = 5000
 #' z_scores <- rnorm(nsnps, 0, 3)
@@ -105,6 +106,7 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2) {
 #' @examples
 #'
 #' set.seed(1)
+#' nsnps = 100
 #' N0 = 5000
 #' N1 = 5000
 #' z_scores <- rnorm(nsnps, 0, 3)
@@ -149,6 +151,7 @@ z0_pp <- function(z, f, type, N, s, W = 0.2) {
 #' @examples
 #'
 #' set.seed(1)
+#' nsnps = 100
 #' N0 = 5000
 #' N1 = 5000
 #' z_scores <- rnorm(nsnps, 0, 3)

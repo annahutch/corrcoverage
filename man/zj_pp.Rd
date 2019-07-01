@@ -17,6 +17,9 @@ zj_pp(Zj, V, nrep = 5000, W = 0.2, Sigma)
 
 \item{Sigma}{SNP correlation matrix}
 }
+\value{
+Matrix of simulated posterior probabilties, one simulation per row
+}
 \description{
 Simulate nrep marginal Z-scores from joint Z-scores and convert these to posterior probabilities of causality
 }

@@ -35,12 +35,13 @@ Obtain confidence interval for corrected coverage estimate using Z-scores and ma
 \examples{
 
 \dontrun{
+
  # this is a long running example
 set.seed(1)
 nsnps = 100
 N0 = 5000
 N1 = 5000
-z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+z_scores <- rnorm(nsnps, 0, 3) # simulate a vector of Z-scores
 
 # simulate fake haplotypes to obtain MAFs and LD matrix
 nhaps <- 1000

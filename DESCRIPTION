@@ -36,7 +36,6 @@ Imports:
     data.table,
     magrittr,
     simGWAS,
-    snpStats,
     stats,
     Rcpp
 SystemRequirements: C++11

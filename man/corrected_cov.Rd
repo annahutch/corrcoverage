@@ -55,7 +55,7 @@ varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)
 pp <- rnorm(nsnps, 0.2, 0.05)
 pp <- pp/sum(pp)
 
-corrected_cov(mu = 7, V = varbeta, Sigma = LD, pp0 = pp, nrep = 100)
+corrected_cov(mu = 4, V = varbeta, Sigma = LD, pp0 = pp, thr = 0.95, nrep = 100)
 
 }
 \author{

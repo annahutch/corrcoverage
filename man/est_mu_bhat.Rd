@@ -27,7 +27,6 @@ Estimate the true effect at the causal variant
 
 set.seed(1)
 nsnps <- 100
-iCV <- 4
 N0 <- 5000 # number of controls
 N1 <- 5000 # number of cases
 
@@ -35,10 +34,7 @@ maf <- runif(nsnps, 0.05, 0.5)
 
 varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 
-beta <- rep(0, nsnps)
-beta[iCV] <- 5
-
-bhats <- rnorm(beta, varbeta)
+bhats = rnorm(nsnps,0,0.2) # log OR
 
 est_mu_bhat(bhat = bhats, V = varbeta, N0 = N0, N1 = N1)
 

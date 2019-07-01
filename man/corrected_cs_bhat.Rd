@@ -36,6 +36,9 @@ Get new credible set with desired coverage of the CV
 }
 \examples{
 
+\dontrun{
+ # this is a long running example
+
 # In this example, the function is used to find a corrected 95\% credible set
 # using bhats and their standard errors, that is the smallest set of variants
 # required such that the resultant credible set has coverage close to (/within
@@ -44,11 +47,10 @@ Get new credible set with desired coverage of the CV
 # this should be increased to ensure convergence to the desired coverage, but is set
 # to 1 here for speed (and thus the resultant credible set will not be accurate).
 
-set.seed(2)
-nsnps <- 200
-iCV <- 4
-N0 <- 1000 # number of controls
-N1 <- 1000 # number of cases
+set.seed(18)
+nsnps <- 100
+N0 <- 500 # number of controls
+N1 <- 500 # number of cases
 
 # simulate fake haplotypes to obtain MAFs and LD matrix
 nhaps <- 1000
@@ -64,16 +66,14 @@ LD <- cor2(haps)
 
 varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 
-beta <- rep(0, nsnps)
-beta[iCV] <- 5
-
-bhats <- rnorm(beta, varbeta)
+bhats = rnorm(nsnps,0,0.2) # log OR
 
 names(bhats) <- seq(1,length(bhats))
 
-corrected_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.95, max.iter = 1)
+corrected_cs_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, desired.cov = 0.9, max.iter = 1)
 # max.iter set low for speed, should be set to at
 # least the default to ensure convergence to desired coverage
+}
 
 }
 \author{

@@ -15,4 +15,5 @@ _pkgdown.yml
 /vignette/my-vignette_cache/html
 .Rproj.user
 docs/*
+*.so
 

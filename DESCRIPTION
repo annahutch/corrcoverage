@@ -3,7 +3,9 @@ Type: Package
 Title: Find Corrected Coverage Estimate of Credible Sets from Bayesian Fine-Mapping
 Version: 0.0.1.900
 Authors@R: c(
-        person("Anna", "Hutchinson", role = c("aut", "cre"), email = "anna.hutchinson@mrc-bsu.cam.ac.uk")
+        person("Anna", "Hutchinson", role = c("aut", "cre"), email = "anna.hutchinson@mrc-bsu.cam.ac.uk"),
+        person("Chris", "Wallace", role = c("aut")),
+        person("Kevin", "Kunzmann", role = c("ctb"))
     )
 Maintainer: Anna Hutchinson <anna.hutchinson@mrc-bsu.cam.ac.uk>
 Description: The package uses a computationally efficient method to find the

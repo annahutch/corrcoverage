@@ -19,6 +19,7 @@ Var.data.cc <- function(f, N, s) {
 ##' @param x numeric vector
 ##' @return max(x) + log(sum(exp(x - max(x))))
 ##' @author Claudia Giambartolomei
+##' @export
 logsum <- function(x) {
     my.max <- max(x)
     my.res <- my.max + log(sum(exp(x - my.max)))

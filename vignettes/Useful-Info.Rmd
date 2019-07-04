@@ -40,17 +40,17 @@ Consequently, the `corrcoverage` package contains functions for converting betwe
 
 Function | Include null model? | Input | Output 
 --- | --- | --- | ---
-`approx.bf.p` | YES |  $p$-values | log(ABF) |
-`pvals_pp` | YES | $p$-values | Posterior Probabilities |
+`approx.bf.p` | YES |  $P$-values | log(ABF) |
+`pvals_pp` | YES | $P$-values | Posterior Probabilities |
 `z0_pp` | YES | Marginal $Z$-scores | Posterior Probabilities |
 `ppfunc` | NO | Marginal $Z$-scores | Posterior Probabilities |
 
-Functions are also provided to simulate marginal $Z$-scores from joint $Z$-scores. The joint $Z$-scores are all 0, except at the causal variant where it is the 'true effect', $\mu$. 
+Functions are also provided to simulate marginal $Z$-scores from joint $Z$-scoresm($Z_j$). The joint $Z$-scores are all 0, except at the causal variant where it is the 'true effect', $\mu$. 
 
 $\mu$ can be estimated using the `est_mu` function which required sample sizes, $Z$-scores and minor allele frequencies.
 
-`z_sim` simulates marginal $Z$-scores from joint $Z$-scores, whilst `zj_pp` can be used to simulate posterior probability systems from a joint $Z$-score vector. These functions first calculate $E(Z_m)$,
-$$E(Z_m)=Z_j \times \Sigma$$
+`z_sim` simulates marginal $Z$-scores from joint $Z$-scores, whilst `zj_pp` can be used to simulate posterior probability systems from a joint $Z$-score vector. These functions first calculate the expected marginal $Z$ scores, $E(Z)$,
+$$E(Z)=Z_j \times \Sigma$$
 where $\Sigma$ is the correlation matrix between SNPs. 
 
-We can then simulate more $Z$-score systems from a multivariate normal distribution with mean $E(Z_m)$ and variance $\Sigma$. This is a key step in our corrected coverage method.
+We can then simulate more $Z$-score systems from a multivariate normal distribution with mean $E(Z)$ and variance $\Sigma$. This is a key step in our corrected coverage method.

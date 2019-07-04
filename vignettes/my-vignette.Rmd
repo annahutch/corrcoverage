@@ -41,7 +41,7 @@ library(corrcoverage)
 
 **This package is intended for use on summary statistics obtained from GWAS, such as observed $Z$-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the [simGWAS](https://github.com/chr1swallace/simGWAS) package. Please refer to the walkthrough guide [here](https://chr1swallace.github.io/simGWAS/articles/intro.html) from which the following is taken.** 
 
-```{r}
+```{r message = FALSE}
 library(simGWAS)
 ```
 
@@ -92,10 +92,10 @@ z0 <- simulated_z_score(N0=5000, # number of controls
 
 ----
 
-We now use the `credset` function in the `corrcoverage` package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows the standard steps from Maller's approach:
+We now use the `credset` function in the `corrcoverage` package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows the standard steps from Maller et al.'s approach:
 
 1. Order variants into descending order of posterior probabilities. 
-2. Cumulatively sum these variants until the specified threshold is exceeded.
+2. Cumulatively sum the PPs for these variants until the specified threshold is exceeded.
 3. Group these variants to form the credible set.
 
 The function requires posterior probabilities of causality as an input, and so we use the `ppfunc` function to convert the marginal $Z$-scores to posterior probabilities of causality. The `ppfunc` function also requires a value for $V$, the variance of the estimated effect size, which can be easily calculated using the `Var.data.cc` function. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.
@@ -121,14 +121,22 @@ We use the `credset` function to obtain a 90% credible set.
 ```{r warning=FALSE, error=FALSE}
 thresh <- 0.9
 
+credibleset <- credset(pp = postprobs, thr = thresh)
+
+credibleset
+```
+
+```{r warning=FALSE, error=FALSE}
+thresh <- 0.9
+
 credibleset <- credset(pp = postprobs, CV = iCV, thr = thresh)
 
 credibleset
 ```
 
-Here, the 90% credible set contains 115 (out of 200) variants, has a claimed coverage of 0.9006 and contains the true causal variant. In the literature, authors would typically report that they have found a 90% credible set containing 115 variants which they are at least 90% confident contains the true causal variant. 
+Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9008 and contains the true causal variant. In the literature, authors would typically report that they have found a 90% credible set containing 114 variants which they are at least 90% confident contains the true causal variant. 
 
-Note that if the variants are named in the `pp` vector, then the `$credset` output would contain variant names rather than indices.
+Note that if the variants are named in the `pp` vector, then the `$credset` output would contain variant names rather than their indices.
 
 ----
   
@@ -153,13 +161,13 @@ df <- data.frame("Corrected Coverage" = corrected_cov_estimate, "Claimed Coverag
 print(df, row.names = FALSE)
 ```
 
-In this example, the 90% credible set may in actual fact have nearer to 97.7% coverage of the causal variant in the credible set. 
+In this example, the 90% credible set may in actual fact have nearer to 97% coverage of the causal variant in the credible set. 
 
 ---
 
 ## Compare with estimate of 'true' coverage
 
-For the purpose of this vignette and to see the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant. This can obviously not be calculated in the 'real-world' setting, as the causal variant is unknown.  
+For the purpose of this vignette and to see the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant.
 
 ```{r}
 z0.tmp <- simulated_z_score(N0=5000, # number of controls
@@ -177,7 +185,7 @@ true.cov.est <- mean(cs)
 true.cov.est
 ```
 
-The estimated empirical coverage is found to be approximately 96.9%, so our estimate of ~97.7% is accurate - far more so than the standard 'claimed coverage' of ~90.09%.
+The estimated empirical coverage is found to be approximately 97.6%, so our estimate of ~97% is accurate - far more so than the standard 'claimed coverage' of ~90%.
 
 ```{r echo = FALSE}
 df.new <- data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)[1,]

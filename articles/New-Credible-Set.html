@@ -145,14 +145,14 @@
 <h2 class="hasAnchor">
 <a href="#corrected-coverage-estimate" class="anchor"></a>Corrected Coverage Estimate</h2>
 <p>The <code>corrected_cov</code> function is used to find the corrected coverage of a credible set with specified threshold, say 0.9.</p>
-<p>Note that this function is similar to using <code>corrcov</code> as explained in the previous vignette; which would require <span class="math inline">\(Z\)</span>-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the <code>corrcov</code> function (muhat, varbeta etc.) so we can use <code>corrected_cov</code> instead.</p>
+<p>Note that this function is similar to using <code>corrcov</code> as explained in the <a href="https://annahutch.github.io/corrcoverage/articles/my-vignette.html">“Corrected Coverage” vignette</a>; which would require <span class="math inline">\(Z\)</span>-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the <code>corrcov</code> function (muhat, varbeta etc.) so we can use <code>corrected_cov</code> instead.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">thr =<span class="st"> </span><span class="fl">0.9</span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">corrcov &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cov.html">corrected_cov</a></span>(<span class="dt">mu =</span> muhat, <span class="dt">V =</span> varbeta, <span class="dt">Sigma =</span> LD, <span class="dt">pp0 =</span> postprobs, <span class="dt">thr =</span> thr, <span class="dt">nrep =</span> <span class="dv">1000</span>)</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3">cs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">thr =</span> thr)</a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">claimed.cov =</span> cs<span class="op">$</span>claimed.cov, <span class="dt">corr.cov =</span>  corrcov, <span class="dt">nvar =</span> cs<span class="op">$</span>nvar)</a></code></pre></div>
 <pre><code>##   claimed.cov  corr.cov nvar
 ## 1    0.925687 0.9618052    4</code></pre>
-<p>Using the Bayesian approach for statistical fine-mapping we obtain a 90% credible set consisting of 9 variants. The claimed coverage of this credible set is ~0.93, yet the corrected coverage estimate is ~0.969, suggesting that we can afford to be ‘more confident’ that we have captured the causal variant in our credible set.</p>
+<p>Using the Bayesian approach for statistical fine-mapping we obtain a 90% credible set consisting of 4 variants. The claimed coverage of this credible set is ~0.925, yet the corrected coverage estimate is ~0.96, suggesting that we can afford to be ‘more confident’ that we have captured the causal variant in our credible set.</p>
 </div>
 <div id="empirical-coverage-estimate" class="section level2">
 <h2 class="hasAnchor">
@@ -200,7 +200,7 @@
 ## 
 ## $size
 ## [1] 0.8137297</code></pre>
-<p>In this example we see that a threshold of just 0.6875 is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 4 variants. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.</p>
+<p>In this example we see that a threshold of just ~0.72 is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 3 variants. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.</p>
 <p>Finally, we can compare this coverage estimate of the corrected credible set to an empirical estimate of the true coverage.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">new.cs.sims &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> res<span class="op">$</span>req.thr)<span class="op">$</span>cov)</a>
 <a class="sourceLine" id="cb17-2" data-line-number="2">true.cov.est2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(new.cs.sims)</a></code></pre></div>

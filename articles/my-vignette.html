@@ -152,10 +152,10 @@
 <h2 class="hasAnchor">
 <a href="#find-a-credible-set" class="anchor"></a>Find a credible set</h2>
 <hr>
-<p>We now use the <code>credset</code> function in the <code>corrcoverage</code> package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows the standard steps from Maller’s approach:</p>
+<p>We now use the <code>credset</code> function in the <code>corrcoverage</code> package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows the standard steps from Maller et al.’s approach:</p>
 <ol style="list-style-type: decimal">
 <li>Order variants into descending order of posterior probabilities.</li>
-<li>Cumulatively sum these variants until the specified threshold is exceeded.</li>
+<li>Cumulatively sum the PPs for these variants until the specified threshold is exceeded.</li>
 <li>Group these variants to form the credible set.</li>
 </ol>
 <p>The function requires posterior probabilities of causality as an input, and so we use the <code>ppfunc</code> function to convert the marginal <span class="math inline">\(Z\)</span>-scores to posterior probabilities of causality. The <code>ppfunc</code> function also requires a value for <span class="math inline">\(V\)</span>, the variance of the estimated effect size, which can be easily calculated using the <code>Var.data.cc</code> function. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.</p>
@@ -174,9 +174,22 @@
 <p>We use the <code>credset</code> function to obtain a 90% credible set.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">thresh &lt;-<span class="st"> </span><span class="fl">0.9</span></a>
 <a class="sourceLine" id="cb11-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">credibleset &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">credibleset &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">thr =</span> thresh)</a>
 <a class="sourceLine" id="cb11-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb11-5" data-line-number="5">credibleset</a></code></pre></div>
+<pre><code>## $credset
+##   [1]  84  16  47 176 191  13  48 141 197 198 194  14 190 196  15  96  28   8  73  66  78 192   7  65   9 162 101 126 135 151  37   1  35 178 167  51  63  50  92 106 103  86 193 142 161  36  49  17  53  62  41  88  69 140 134  23  70 177 187  90  72  24 159  68   6  98 175  18 165 195  83 127 138 149 150  21  12  38 137 170  55  29 119  22 131  33 144  87  67  97  27  82 109 139  71 136 108 102 124 133 189 111   4 174 132 107  26  61 185 158 188 157  80  30
+## 
+## $claimed.cov
+## [1] 0.9008649
+## 
+## $nvar
+## [1] 114</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">thresh &lt;-<span class="st"> </span><span class="fl">0.9</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">credibleset &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">credibleset</a></code></pre></div>
 <pre><code>## $credset
 ##   [1]  84  16  47 176 191  13  48 141 197 198 194  14 190 196  15  96  28   8  73  66  78 192   7  65   9 162 101 126 135 151  37   1  35 178 167  51  63  50  92 106 103  86 193 142 161  36  49  17  53  62  41  88  69 140 134  23  70 177 187  90  72  24 159  68   6  98 175  18 165 195  83 127 138 149 150  21  12  38 137 170  55  29 119  22 131  33 144  87  67  97  27  82 109 139  71 136 108 102 124 133 189 111   4 174 132 107  26  61 185 158 188 157  80  30
 ## 
@@ -188,8 +201,8 @@
 ## 
 ## $nvar
 ## [1] 114</code></pre>
-<p>Here, the 90% credible set contains 115 (out of 200) variants, has a claimed coverage of 0.9006 and contains the true causal variant. In the literature, authors would typically report that they have found a 90% credible set containing 115 variants which they are at least 90% confident contains the true causal variant.</p>
-<p>Note that if the variants are named in the <code>pp</code> vector, then the <code>$credset</code> output would contain variant names rather than indices.</p>
+<p>Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9008 and contains the true causal variant. In the literature, authors would typically report that they have found a 90% credible set containing 114 variants which they are at least 90% confident contains the true causal variant.</p>
+<p>Note that if the variants are named in the <code>pp</code> vector, then the <code>$credset</code> output would contain variant names rather than their indices.</p>
 <hr>
 </div>
 <div id="corrected-coverage-estimate" class="section level2">
@@ -209,31 +222,31 @@
 <code>thr</code> (threshold used to derive the credible set)</li>
 </ul>
 <p>Side note: If the estimated effect size coefficients (<code>bhat</code>) and their standard errors (<code><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt(V)</a></code>) are known instead of <span class="math inline">\(Z\)</span>-scores and minor allele frequencies, then the <code>corrcov_bhat</code> function can be used analogously.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrcov.html">corrcov</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrcov.html">corrcov</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</a></code></pre></div>
 <pre><code>##  Corrected.Coverage Claimed.Coverage Threshold
 ##           0.9736372        0.9008649       0.9</code></pre>
-<p>In this example, the 90% credible set may in actual fact have nearer to 97.7% coverage of the causal variant in the credible set.</p>
+<p>In this example, the 90% credible set may in actual fact have nearer to 97% coverage of the causal variant in the credible set.</p>
 <hr>
 </div>
 <div id="compare-with-estimate-of-true-coverage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#compare-with-estimate-of-true-coverage" class="anchor"></a>Compare with estimate of ‘true’ coverage</h2>
-<p>For the purpose of this vignette and to see the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant. This can obviously not be calculated in the ‘real-world’ setting, as the causal variant is unknown.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">z0.tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2">                            <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span></a>
-<a class="sourceLine" id="cb15-3" data-line-number="3">                            <span class="dt">snps=</span>snps, <span class="co"># column names in freq</span></a>
-<a class="sourceLine" id="cb15-4" data-line-number="4">                            <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span></a>
-<a class="sourceLine" id="cb15-5" data-line-number="5">                            <span class="dt">gamma.W=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span></a>
-<a class="sourceLine" id="cb15-6" data-line-number="6">                            <span class="dt">freq=</span>freq, <span class="co"># reference haplotypes</span></a>
-<a class="sourceLine" id="cb15-7" data-line-number="7">                            <span class="dt">nrep =</span> <span class="dv">5000</span></a>
-<a class="sourceLine" id="cb15-8" data-line-number="8">)</a>
-<a class="sourceLine" id="cb15-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb15-10" data-line-number="10">pps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.mat.html">ppfunc.mat</a></span>(<span class="dt">zstar =</span> z0.tmp, <span class="dt">V =</span> varbeta) <span class="co"># find pps from a matrix of simulations</span></a>
-<a class="sourceLine" id="cb15-11" data-line-number="11">cs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)<span class="op">$</span>cov)</a>
-<a class="sourceLine" id="cb15-12" data-line-number="12">true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs)</a>
-<a class="sourceLine" id="cb15-13" data-line-number="13">true.cov.est</a></code></pre></div>
+<p>For the purpose of this vignette and to see the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">z0.tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">                            <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">                            <span class="dt">snps=</span>snps, <span class="co"># column names in freq</span></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">                            <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5">                            <span class="dt">gamma.W=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span></a>
+<a class="sourceLine" id="cb17-6" data-line-number="6">                            <span class="dt">freq=</span>freq, <span class="co"># reference haplotypes</span></a>
+<a class="sourceLine" id="cb17-7" data-line-number="7">                            <span class="dt">nrep =</span> <span class="dv">5000</span></a>
+<a class="sourceLine" id="cb17-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb17-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb17-10" data-line-number="10">pps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.mat.html">ppfunc.mat</a></span>(<span class="dt">zstar =</span> z0.tmp, <span class="dt">V =</span> varbeta) <span class="co"># find pps from a matrix of simulations</span></a>
+<a class="sourceLine" id="cb17-11" data-line-number="11">cs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)<span class="op">$</span>cov)</a>
+<a class="sourceLine" id="cb17-12" data-line-number="12">true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs)</a>
+<a class="sourceLine" id="cb17-13" data-line-number="13">true.cov.est</a></code></pre></div>
 <pre><code>## [1] 0.9764</code></pre>
-<p>The estimated empirical coverage is found to be approximately 96.9%, so our estimate of ~97.7% is accurate - far more so than the standard ‘claimed coverage’ of ~90.09%.</p>
+<p>The estimated empirical coverage is found to be approximately 97.6%, so our estimate of ~97% is accurate - far more so than the standard ‘claimed coverage’ of ~90%.</p>
 <pre><code>##  Empirical.Coverage Corrected.Coverage Claimed.Coverage Threshold
 ##              0.9764          0.9736372        0.9008649       0.9</code></pre>
 <hr>

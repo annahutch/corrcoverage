@@ -133,14 +133,14 @@
 <td><code>approx.bf.p</code></td>
 <td>YES</td>
 <td>
-<span class="math inline">\(p\)</span>-values</td>
+<span class="math inline">\(P\)</span>-values</td>
 <td>log(ABF)</td>
 </tr>
 <tr class="even">
 <td><code>pvals_pp</code></td>
 <td>YES</td>
 <td>
-<span class="math inline">\(p\)</span>-values</td>
+<span class="math inline">\(P\)</span>-values</td>
 <td>Posterior Probabilities</td>
 </tr>
 <tr class="odd">
@@ -157,10 +157,10 @@
 </tr>
 </tbody>
 </table>
-<p>Functions are also provided to simulate marginal <span class="math inline">\(Z\)</span>-scores from joint <span class="math inline">\(Z\)</span>-scores. The joint <span class="math inline">\(Z\)</span>-scores are all 0, except at the causal variant where it is the ‘true effect’, <span class="math inline">\(\mu\)</span>.</p>
+<p>Functions are also provided to simulate marginal <span class="math inline">\(Z\)</span>-scores from joint <span class="math inline">\(Z\)</span>-scoresm(<span class="math inline">\(Z_j\)</span>). The joint <span class="math inline">\(Z\)</span>-scores are all 0, except at the causal variant where it is the ‘true effect’, <span class="math inline">\(\mu\)</span>.</p>
 <p><span class="math inline">\(\mu\)</span> can be estimated using the <code>est_mu</code> function which required sample sizes, <span class="math inline">\(Z\)</span>-scores and minor allele frequencies.</p>
-<p><code>z_sim</code> simulates marginal <span class="math inline">\(Z\)</span>-scores from joint <span class="math inline">\(Z\)</span>-scores, whilst <code>zj_pp</code> can be used to simulate posterior probability systems from a joint <span class="math inline">\(Z\)</span>-score vector. These functions first calculate <span class="math inline">\(E(Z_m)\)</span>, <span class="math display">\[E(Z_m)=Z_j \times \Sigma\]</span> where <span class="math inline">\(\Sigma\)</span> is the correlation matrix between SNPs.</p>
-<p>We can then simulate more <span class="math inline">\(Z\)</span>-score systems from a multivariate normal distribution with mean <span class="math inline">\(E(Z_m)\)</span> and variance <span class="math inline">\(\Sigma\)</span>. This is a key step in our corrected coverage method.</p>
+<p><code>z_sim</code> simulates marginal <span class="math inline">\(Z\)</span>-scores from joint <span class="math inline">\(Z\)</span>-scores, whilst <code>zj_pp</code> can be used to simulate posterior probability systems from a joint <span class="math inline">\(Z\)</span>-score vector. These functions first calculate the expected marginal <span class="math inline">\(Z\)</span> scores, <span class="math inline">\(E(Z)\)</span>, <span class="math display">\[E(Z)=Z_j \times \Sigma\]</span> where <span class="math inline">\(\Sigma\)</span> is the correlation matrix between SNPs.</p>
+<p>We can then simulate more <span class="math inline">\(Z\)</span>-score systems from a multivariate normal distribution with mean <span class="math inline">\(E(Z)\)</span> and variance <span class="math inline">\(\Sigma\)</span>. This is a key step in our corrected coverage method.</p>
 </div>
   </div>
 

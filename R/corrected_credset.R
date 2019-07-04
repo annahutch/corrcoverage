@@ -30,17 +30,20 @@
 #' N1 = 1000
 #' z_scores <- rnorm(nsnps, 0, 1) # simulate a vector of Z-scores
 #'
-#' # simulate fake haplotypes to obtain MAFs and LD matrix
-#' nhaps <- 1000
-#' lag <- 4
-#' maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-#' laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-#' haps <- laghaps[,1:nsnps]
-#' for(j in 1:lag)
-#'    haps <- haps + laghaps[,(1:nsnps)+j]
-#' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-#' maf <- colMeans(haps)
-#' LD <- cor2(haps)
+#' ## generate example LD matrix
+#' library(mvtnorm)
+#' nsamples = 1000
+#'
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#'}
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' LD <- cor2(X)
 #'
 #' names(z_scores) <- seq(1,length(z_scores))
 #'
@@ -160,16 +163,20 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 #' N1 <- 500 # number of cases
 #'
 #' # simulate fake haplotypes to obtain MAFs and LD matrix
-#' nhaps <- 1000
-#' lag <- 5
-#' maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-#' laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-#' haps <- laghaps[,1:nsnps]
-#' for(j in 1:lag)
-#'    haps <- haps + laghaps[,(1:nsnps)+j]
-#' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-#' maf <- colMeans(haps)
-#' LD <- cor2(haps)
+#' ## generate example LD matrix
+#' library(mvtnorm)
+#' nsamples = 1000
+#'
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#' }
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' LD <- cor2(X)
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 #'

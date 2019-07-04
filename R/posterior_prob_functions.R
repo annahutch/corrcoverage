@@ -20,15 +20,20 @@
 #' z_scores <- rnorm(nsnps, 0, 3)
 #' p_values <- 2 * pnorm( - abs ( z_scores ) )
 #'
-#' nhaps <- 1000
-#' lag <- 5
-#' maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-#' laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-#' haps <- laghaps[,1:nsnps]
-#' for(j in 1:lag)
-#'    haps <- haps + laghaps[,(1:nsnps)+j]
-#' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-#' maf <- colMeans(haps)
+#' ## generate example LD matrix and MAFs
+#' library(mvtnorm)
+#' nsamples = 1000
+#'
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#'}
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' maf <- colMeans(X)
 #'
 #' approx.bf.p(pvals = p_values, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
 #'
@@ -63,15 +68,20 @@ approx.bf.p <- function(pvals, f, type, N, s, W = 0.2) {
 #' z_scores <- rnorm(nsnps, 0, 3)
 #' p_values <- 2 * pnorm( - abs ( z_scores ) )
 #'
-#' nhaps <- 1000
-#' lag <- 5
-#' maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-#' laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-#' haps <- laghaps[,1:nsnps]
-#' for(j in 1:lag)
-#'    haps <- haps + laghaps[,(1:nsnps)+j]
-#' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-#' maf <- colMeans(haps)
+#' ## generate example LD matrix and MAFs
+#' library(mvtnorm)
+#' nsamples = 1000
+#'
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#'}
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' maf <- colMeans(X)
 #'
 #' res <- pvals_pp(pvals = p_values, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
 #' sum(res)
@@ -114,15 +124,20 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2) {
 #' N1 = 5000
 #' z_scores <- rnorm(nsnps, 0, 3)
 #'
-#' nhaps <- 1000
-#' lag <- 5
-#' maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-#' laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-#' haps <- laghaps[,1:nsnps]
-#' for(j in 1:lag)
-#'    haps <- haps + laghaps[,(1:nsnps)+j]
-#' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-#' maf <- colMeans(haps)
+#' ## generate example LD matrix and MAFs
+#' library(mvtnorm)
+#' nsamples = 1000
+#'
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#'}
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' maf <- colMeans(X)
 #'
 #' res <- z0_pp(z = z_scores, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
 #' sum(res)
@@ -161,15 +176,20 @@ z0_pp <- function(z, f, type, N, s, W = 0.2) {
 #' N1 = 5000
 #' z_scores <- rnorm(nsnps, 0, 3)
 #'
-#' nhaps <- 1000
-#' lag <- 5
-#' maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-#' laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-#' haps <- laghaps[,1:nsnps]
-#' for(j in 1:lag)
-#'    haps <- haps + laghaps[,(1:nsnps)+j]
-#' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-#' maf <- colMeans(haps)
+#' ## generate example LD matrix and MAFs
+#' library(mvtnorm)
+#' nsamples = 1000
+#'
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#'}
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' maf <- colMeans(X)
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0+N1, s = N1/(N0+N1))
 #'
@@ -198,6 +218,40 @@ ppfunc <- function(z, V, W = 0.2) {
 #' @param W Prior for the standard deviation of the effect size parameter, beta
 #' @return Matrix of posterior probabilities of causality
 #' @author Chris Wallace
+#'
+#' @examples
+#'
+#' set.seed(1)
+#' nsnps = 100
+#' N0 = 5000
+#' N1 = 5000
+#'
+#' ## generate example LD matrix and MAFs
+#' library(mvtnorm)
+#' nsamples = 1000
+#'
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#'}
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' maf <- colMeans(X)
+#'
+#' varbeta <- Var.data.cc(f = maf, N = N0+N1, s = N1/(N0+N1))
+#'
+#' # simulate matrix of Z scores
+#' # 1 simulation per row
+#' z_scores <- matrix(rnorm(nsnps*100, 0, 3), ncol = nsnps)
+#'
+#' # each row is a vector of simulated PPs
+#' res <- ppfunc.mat(zstar = z_scores, V = varbeta)
+#'
+#' sum(res[1,])
+#'
 #' @export
 ppfunc.mat <- function(zstar, V, W = 0.2) {
     r = matrix(W^2/(W^2 + V), nrow = nrow(zstar), ncol = ncol(zstar), byrow = TRUE)  # see wakefield paper

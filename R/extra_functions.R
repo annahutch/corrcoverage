@@ -6,6 +6,15 @@
 #' @param s Proportion of cases (N1/N0+N1)
 #' @return Variance of estimated effect size \eqn{\hat{\beta}}, V.
 #' @author Claudia Giambartolomei
+#'
+#' @examples
+#'
+#' maf =  runif(100, 0.05, 0.5)
+#' N0 = 5000 # number of controls
+#' N1 = 5000 # number of cases
+#'
+#' Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
+#'
 #' @export
 Var.data.cc <- function(f, N, s) {
     1/(2 * N * f * (1 - f) * s * (1 - s))
@@ -61,9 +70,8 @@ prop_cov <- function(x) {
 #'
 #' @examples
 #'
-#' set.seed(1)
 #' nsnps <- 100
-#' z_scores <- rnorm(nsnps, 0, 5) # simulate a vector of Z-scores
+#' z_scores <- rnorm(nsnps, 0, 3) # simulate a vector of Z-scores
 #' N0 <- 5000 # number of controls
 #' N1 <- 5000 # number of cases
 #'
@@ -102,16 +110,15 @@ est_mu <- function(z, f, N0, N1, W = 0.2) {
 #'
 #' @examples
 #'
-#' set.seed(1)
 #' nsnps <- 100
 #' N0 <- 5000 # number of controls
 #' N1 <- 5000 # number of cases
 #'
-#' maf <- runif(nsnps, 0.05, 0.5)
+#' maf <- runif(nsnps, 0.05, 0.3)
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 #'
-#' bhats = rnorm(nsnps,0,0.2) # log OR
+#' bhats = rnorm(nsnps,0,0.2) # log(OR)
 #'
 #' est_mu_bhat(bhat = bhats, V = varbeta, N0 = N0, N1 = N1)
 #'
@@ -147,12 +154,12 @@ est_mu_bhat <- function(bhat, V, N0, N1, W = 0.2) {
 #'
 #' set.seed(1)
 #' nsnps <- 100
-#' pp <- rnorm(nsnps, 0.2, 0.05)
+#' pp <- rnorm(nsnps, 0.3, 0.05)
 #' pp <- pp/sum(pp)
 #'
 #' credset(pp, thr = 0.9)
 #'
-#' iCV <- 4
+#' iCV <- 71
 #'
 #' credset(pp, CV = iCV, thr = 0.9)
 #'
@@ -183,6 +190,24 @@ credset <- function(pp, CV, thr = 0.95) {
 #' @return Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants (nvar).
 #' @useDynLib corrcoverage
 #' @importFrom Rcpp sourceCpp
+#'
+#' @examples
+#'
+#' set.seed(1)
+#' nsnps <- 100
+#'
+#' # simulate matrix of posterior probabilities
+#' # 1 simulation per row
+#'
+#' pp <- matrix(rnorm(nsnps*100, 0.3, 0.05), ncol = nsnps)
+#' pp <- pp/rowSums(pp)
+#'
+#' iCV <- 71
+#'
+#' \notrun{
+#' credsetC(pp, CV = iCV, thr = 0.9)
+#' }
+#'
 #' @export
 credsetC <- function(pp, CV, thr = 0.95) {
   ret = credsetmat(pp, CV, thr)  ## list 1 = wh, 2 = size, 3=contained

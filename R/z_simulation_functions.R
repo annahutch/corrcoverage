@@ -10,21 +10,27 @@
 #'
 #' set.seed(1)
 #' nsnps <- 100
+#'
+#' # derive joint Z score vector
 #' Zj <- rep(0, nsnps)
 #' iCV <- 4 # index of CV
 #' mu <- 5 # true effect at CV
 #' Zj[iCV] <- mu
 #'
-#' ## generate example LD matrix (https://chr1swallace.github.io/simGWAS/articles/intro.html)
-#' nhaps <- 1000
-#' lag <- 5 # genotypes are correlated between neighbouring variants
-#' maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-#' laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-#' haps <- laghaps[,1:nsnps]
-#' for(j in 1:lag)
-#'    haps <- haps + laghaps[,(1:nsnps)+j]
-#' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-#' LD <- cor2(haps)
+#' ## generate example LD matrix
+#' library(mvtnorm)
+#' nsamples = 1000
+#'
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#'}
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' LD <- cor2(X)
 #'
 #' res <- z_sim(Zj, Sigma = LD, nrep = 100)
 #' res[c(1:5), c(1:5)]
@@ -57,18 +63,21 @@ z_sim <- function(Zj, Sigma, nrep) {
 #' mu <- 5 # true effect at CV
 #' Zj[iCV] <- mu
 #'
+#' ## generate example LD matrix and MAFs
+#' library(mvtnorm)
+#' nsamples = 1000
 #'
-#' ## generate example LD matrix (https://chr1swallace.github.io/simGWAS/articles/intro.html)
-#' nhaps <- 1000
-#' lag <- 5
-#' maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-#' laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-#' haps <- laghaps[,1:nsnps]
-#' for(j in 1:lag)
-#'    haps <- haps + laghaps[,(1:nsnps)+j]
-#' haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-#' LD <- cor2(haps)
-#' maf <- colMeans(haps)
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#'}
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' LD <- cor2(X)
+#' maf <- colMeans(X)
 #'
 #' ## generate V (variance of estimated effect sizes)
 #' varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)

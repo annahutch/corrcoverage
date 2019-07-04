@@ -54,7 +54,8 @@ test_that("corrcov_nvar_bhat function returns a probability", {
   se <- 0.2 # assume all beta hats have same standard error
   bhats <- z*se
   corr <- corrcov_nvar_bhat(bhats, V = V, N0 = N, N1 = N, Sigma = sigma, nvar = 2, thr = 0.95, W = 0.2, nrep = 10)
-  expect_true(corr>=0 & corr<=1)
+  expect_gte(corr, 0)
+  expect_lte(corr, 1)
 })
 
 test_that("corrcov_CI returns an appropriate confidence interval", {

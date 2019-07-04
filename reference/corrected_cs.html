@@ -213,7 +213,7 @@
    <span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='no'>haps</span> + <span class='no'>laghaps</span>[,(<span class='fl'>1</span>:<span class='no'>nsnps</span>)+<span class='no'>j</span>]
 <span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Round'>round</a></span>(<span class='no'>haps</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/apply'>apply</a></span>(<span class='no'>haps</span>,<span class='fl'>2</span>,<span class='no'>max</span>),<span class='no'>nhaps</span>,<span class='no'>nsnps</span>,<span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))
 <span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>haps</span>)
-<span class='no'>LD</span> <span class='kw'>&lt;-</span> <span class='fu'>cor2</span>(<span class='no'>haps</span>)
+<span class='no'>LD</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cor2.html'>cor2</a></span>(<span class='no'>haps</span>)
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>z_scores</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>1</span>,<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>z_scores</span>))
 
@@ -240,7 +240,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Anna Hutchinson.</p>
+  <p>Developed by Anna Hutchinson, Chris Wallace.</p>
 </div>
 
 <div class="pkgdown">

@@ -180,7 +180,7 @@ so that the sum of the posterior probabilities for all variants is 1</p>
 <span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Round'>round</a></span>(<span class='no'>haps</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/apply'>apply</a></span>(<span class='no'>haps</span>,<span class='fl'>2</span>,<span class='no'>max</span>),<span class='no'>nhaps</span>,<span class='no'>nsnps</span>,<span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))
 <span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>haps</span>)
 
-<span class='no'>varbeta</span> <span class='kw'>&lt;-</span> <span class='fu'>Var.data.cc</span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='no'>N0</span>+<span class='no'>N1</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='no'>N1</span>/(<span class='no'>N0</span>+<span class='no'>N1</span>))
+<span class='no'>varbeta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Var.data.cc.html'>Var.data.cc</a></span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='no'>N0</span>+<span class='no'>N1</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='no'>N1</span>/(<span class='no'>N0</span>+<span class='no'>N1</span>))
 
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>ppfunc</span>(<span class='kw'>z</span> <span class='kw'>=</span> <span class='no'>z_scores</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='no'>varbeta</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sum'>sum</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='no'>res</span></div><div class='output co'>#&gt;   [1] 8.299397e-11 1.652435e-11 2.898513e-10 8.076705e-07 2.219303e-11
@@ -222,7 +222,7 @@ so that the sum of the posterior probabilities for all variants is 1</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Anna Hutchinson.</p>
+  <p>Developed by Anna Hutchinson, Chris Wallace.</p>
 </div>
 
 <div class="pkgdown">

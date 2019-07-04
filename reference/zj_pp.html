@@ -187,11 +187,11 @@
 <span class='kw'>for</span>(<span class='no'>j</span> <span class='kw'>in</span> <span class='fl'>1</span>:<span class='no'>lag</span>)
    <span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='no'>haps</span> + <span class='no'>laghaps</span>[,(<span class='fl'>1</span>:<span class='no'>nsnps</span>)+<span class='no'>j</span>]
 <span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Round'>round</a></span>(<span class='no'>haps</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/apply'>apply</a></span>(<span class='no'>haps</span>,<span class='fl'>2</span>,<span class='no'>max</span>),<span class='no'>nhaps</span>,<span class='no'>nsnps</span>,<span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))
-<span class='no'>LD</span> <span class='kw'>&lt;-</span> <span class='fu'>cor2</span>(<span class='no'>haps</span>)
+<span class='no'>LD</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cor2.html'>cor2</a></span>(<span class='no'>haps</span>)
 <span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>haps</span>)
 
 <span class='co'>## generate V (variance of estimated effect sizes)</span>
-<span class='no'>varbeta</span> <span class='kw'>&lt;-</span> <span class='fu'>Var.data.cc</span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>5000</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
+<span class='no'>varbeta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Var.data.cc.html'>Var.data.cc</a></span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>5000</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
 
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>zj_pp</span>(<span class='no'>Zj</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='no'>varbeta</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>)
 
@@ -223,7 +223,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Anna Hutchinson.</p>
+  <p>Developed by Anna Hutchinson, Chris Wallace.</p>
 </div>
 
 <div class="pkgdown">

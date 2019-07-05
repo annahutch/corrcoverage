@@ -5,10 +5,12 @@
 ^README\.Rmd$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^docs$
-_pkgdown.yml
-package_flowchart.html
-/Vignettes/my-vignette_cache/
+^docs$ .gitignore
+.Rhistory
+src/.gitignore
+.git
+^_pkgdown.yml$
+^package_flowchart.html$
 pkgdown/
 /*_cache/
 /cache/

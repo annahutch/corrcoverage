@@ -15,7 +15,6 @@ r:
 
 os:
   - linux
-  - osx
 
 matrix:
   exclude:

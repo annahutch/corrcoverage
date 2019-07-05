@@ -1,7 +1,8 @@
 Meta
 doc
 inst/doc
-.Rproj.user/
+.Rproj.user/*
+.Rproj.user
 .DS_Store
 .Rhistory
 .RData
@@ -13,7 +14,6 @@ _pkgdown.yml
 /cache/
 .Rbuildignore
 /vignette/my-vignette_cache/html
-.Rproj.user
 docs/*
 *.so
 

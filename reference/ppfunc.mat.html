@@ -162,6 +162,41 @@ not including the null model of no genetic effects,
 so that the sum of the posterior probabilities for each simulation (each row) is 1.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>1</span>)
+<span class='no'>nsnps</span> <span class='kw'>=</span> <span class='fl'>100</span>
+<span class='no'>N0</span> <span class='kw'>=</span> <span class='fl'>5000</span>
+<span class='no'>N1</span> <span class='kw'>=</span> <span class='fl'>5000</span>
+
+<span class='co'>## generate example LD matrix and MAFs</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>mvtnorm</span>)
+<span class='no'>nsamples</span> <span class='kw'>=</span> <span class='fl'>1000</span>
+
+<span class='no'>simx</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>nsnps</span>, <span class='no'>nsamples</span>, <span class='no'>S</span>, <span class='no'>maf</span><span class='kw'>=</span><span class='fl'>0.1</span>) {
+    <span class='no'>mu</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>0</span>,<span class='no'>nsnps</span>)
+    <span class='no'>rawvars</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/mvtnorm/topics/Mvnorm'>rmvnorm</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='no'>nsamples</span>, <span class='kw'>mean</span><span class='kw'>=</span><span class='no'>mu</span>, <span class='kw'>sigma</span><span class='kw'>=</span><span class='no'>S</span>)
+    <span class='no'>pvars</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>pnorm</a></span>(<span class='no'>rawvars</span>)
+    <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Binomial'>qbinom</a></span>(<span class='fl'>1</span>-<span class='no'>pvars</span>, <span class='fl'>1</span>, <span class='no'>maf</span>)
+}
+
+<span class='no'>S</span> <span class='kw'>&lt;-</span> (<span class='fl'>1</span> - (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/outer'>outer</a></span>(<span class='fl'>1</span>:<span class='no'>nsnps</span>,<span class='fl'>1</span>:<span class='no'>nsnps</span>,<span class='no'>`-`</span>))/<span class='no'>nsnps</span>))^<span class='fl'>4</span>
+<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>simx</span>(<span class='no'>nsnps</span>,<span class='no'>nsamples</span>,<span class='no'>S</span>)
+<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>X</span>)
+
+<span class='no'>varbeta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Var.data.cc.html'>Var.data.cc</a></span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='no'>N0</span>+<span class='no'>N1</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='no'>N1</span>/(<span class='no'>N0</span>+<span class='no'>N1</span>))
+
+<span class='co'># simulate matrix of Z scores</span>
+<span class='co'># 1 simulation per row</span>
+<span class='no'>z_scores</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>*<span class='fl'>100</span>, <span class='fl'>0</span>, <span class='fl'>3</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='no'>nsnps</span>)
+
+<span class='co'># each row is a vector of simulated PPs</span>
+<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>ppfunc.mat</span>(<span class='kw'>zstar</span> <span class='kw'>=</span> <span class='no'>z_scores</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='no'>varbeta</span>)
+
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>rowSums</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt;   [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+#&gt;  [38] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+#&gt;  [75] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -171,7 +206,9 @@ so that the sum of the posterior probabilities for each simulation (each row) is
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
     <h2>Author</h2>
     <p>Chris Wallace</p>

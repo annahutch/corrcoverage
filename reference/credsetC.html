@@ -156,6 +156,20 @@
     <p>Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants (nvar).</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>1</span>)
+<span class='no'>nsnps</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>
+
+<span class='co'># simulate matrix of posterior probabilities</span>
+<span class='co'># 1 simulation per row</span>
+
+<span class='no'>pp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>*<span class='fl'>100</span>, <span class='fl'>0.3</span>, <span class='fl'>0.05</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='no'>nsnps</span>)
+<span class='no'>pp</span> <span class='kw'>&lt;-</span> <span class='no'>pp</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>rowSums</a></span>(<span class='no'>pp</span>)
+
+<span class='no'>iCV</span> <span class='kw'>&lt;-</span> <span class='fl'>71</span>
+
+<span class='co'># credsetC(pp, CV = iCV, thr = 0.9)</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -163,7 +177,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
   </div>
 </div>

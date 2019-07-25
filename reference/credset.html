@@ -165,7 +165,7 @@ output includes a binary indicator of whether the CV is contained in the set</p>
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>1</span>)
 <span class='no'>nsnps</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>
-<span class='no'>pp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>, <span class='fl'>0.2</span>, <span class='fl'>0.05</span>)
+<span class='no'>pp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>, <span class='fl'>0.3</span>, <span class='fl'>0.05</span>)
 <span class='no'>pp</span> <span class='kw'>&lt;-</span> <span class='no'>pp</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sum'>sum</a></span>(<span class='no'>pp</span>)
 
 <span class='fu'>credset</span>(<span class='no'>pp</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.9</span>)</div><div class='output co'>#&gt; $credset
@@ -173,31 +173,31 @@ output includes a binary indicator of whether the CV is contained in the set</p>
 #&gt; [20]  22  48  40   8  94  43  63  25  73  85  20   9  59  96  44   7  71  30  51
 #&gt; [39]  12  33  89  47  53  86   5  76  90  66   2  69  23  79  64  78  17  62  16
 #&gt; [58]  34  26  38  32  49  60  82  27  41  42  88  10  57  37  36  77 100  29  91
-#&gt; [77]  81  98  80  52  13   1  45  46  72
+#&gt; [77]  81  98  80  52  13   1  45  46  72  65   6
 #&gt; 
 #&gt; $claimed.cov
-#&gt; [1] 0.9017792
+#&gt; [1] 0.9019109
 #&gt; 
 #&gt; $nvar
-#&gt; [1] 85
+#&gt; [1] 87
 #&gt; </div><div class='input'>
-<span class='no'>iCV</span> <span class='kw'>&lt;-</span> <span class='fl'>4</span>
+<span class='no'>iCV</span> <span class='kw'>&lt;-</span> <span class='fl'>71</span>
 
 <span class='fu'>credset</span>(<span class='no'>pp</span>, <span class='kw'>CV</span> <span class='kw'>=</span> <span class='no'>iCV</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.9</span>)</div><div class='output co'>#&gt; $credset
 #&gt;  [1]  61  70  56   4  95  11  68  55  31  92  83  93  15  39  87  18  21  50  19
 #&gt; [20]  22  48  40   8  94  43  63  25  73  85  20   9  59  96  44   7  71  30  51
 #&gt; [39]  12  33  89  47  53  86   5  76  90  66   2  69  23  79  64  78  17  62  16
 #&gt; [58]  34  26  38  32  49  60  82  27  41  42  88  10  57  37  36  77 100  29  91
-#&gt; [77]  81  98  80  52  13   1  45  46  72
+#&gt; [77]  81  98  80  52  13   1  45  46  72  65   6
 #&gt; 
 #&gt; $claimed.cov
-#&gt; [1] 0.9017792
+#&gt; [1] 0.9019109
 #&gt; 
 #&gt; $covered
 #&gt; [1] 1
 #&gt; 
 #&gt; $nvar
-#&gt; [1] 85
+#&gt; [1] 87
 #&gt; </div><div class='input'>
 </div></pre>
   </div>

@@ -156,6 +156,33 @@
     <p>Variance of estimated effect size \(\hat{\beta}\), V.</p>
     
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='no'>maf</span> <span class='kw'>=</span>  <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Uniform'>runif</a></span>(<span class='fl'>100</span>, <span class='fl'>0.05</span>, <span class='fl'>0.5</span>)
+<span class='no'>N0</span> <span class='kw'>=</span> <span class='fl'>5000</span> <span class='co'># number of controls</span>
+<span class='no'>N1</span> <span class='kw'>=</span> <span class='fl'>5000</span> <span class='co'># number of cases</span>
+
+<span class='fu'>Var.data.cc</span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='no'>N0</span> + <span class='no'>N1</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='no'>N1</span>/(<span class='no'>N0</span>+<span class='no'>N1</span>))</div><div class='output co'>#&gt;   [1] 0.0025353881 0.0008181891 0.0009185978 0.0018838648 0.0039615189
+#&gt;   [6] 0.0010398200 0.0010054095 0.0013526966 0.0008490723 0.0008349987
+#&gt;  [11] 0.0008103213 0.0017832687 0.0032716992 0.0012781987 0.0011257163
+#&gt;  [16] 0.0016807679 0.0011238656 0.0027600597 0.0011472589 0.0008003876
+#&gt;  [21] 0.0013523677 0.0008731582 0.0008481271 0.0016794491 0.0008002455
+#&gt;  [26] 0.0008457706 0.0029498620 0.0009741453 0.0008648122 0.0008682137
+#&gt;  [31] 0.0033360702 0.0015558156 0.0013244121 0.0008959042 0.0010254392
+#&gt;  [36] 0.0010827900 0.0008600363 0.0008017172 0.0017551329 0.0015896011
+#&gt;  [41] 0.0008722764 0.0010043137 0.0008928560 0.0008824952 0.0023662309
+#&gt;  [46] 0.0008372615 0.0008359197 0.0008000559 0.0008005635 0.0011464753
+#&gt;  [51] 0.0010459693 0.0012899149 0.0017846766 0.0009729199 0.0010097017
+#&gt;  [56] 0.0008328569 0.0016427071 0.0008570213 0.0027378034 0.0012081117
+#&gt;  [61] 0.0008203023 0.0013965148 0.0009408861 0.0012449967 0.0009216941
+#&gt;  [66] 0.0017001414 0.0008017721 0.0009633361 0.0009615185 0.0013829869
+#&gt;  [71] 0.0010637900 0.0011763816 0.0034068508 0.0010402951 0.0011450982
+#&gt;  [76] 0.0036006916 0.0011668847 0.0009488545 0.0008134581 0.0011536551
+#&gt;  [81] 0.0009762270 0.0009186820 0.0014334696 0.0013519527 0.0010242762
+#&gt;  [86] 0.0008041682 0.0011281913 0.0016047137 0.0008764885 0.0028351501
+#&gt;  [91] 0.0008000056 0.0019349560 0.0009849161 0.0008156441 0.0008549669
+#&gt;  [96] 0.0014987998 0.0009594483 0.0008180840 0.0034092500 0.0010363472</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -163,7 +190,9 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-          </ul>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
 
     <h2>Author</h2>
     <p>Claudia Giambartolomei</p>

@@ -170,39 +170,44 @@ so that the sum of the posterior probabilities for all variants is 1</p>
 <span class='no'>N1</span> <span class='kw'>=</span> <span class='fl'>5000</span>
 <span class='no'>z_scores</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>, <span class='fl'>0</span>, <span class='fl'>3</span>)
 
-<span class='no'>nhaps</span> <span class='kw'>&lt;-</span> <span class='fl'>1000</span>
-<span class='no'>lag</span> <span class='kw'>&lt;-</span> <span class='fl'>5</span>
-<span class='no'>maf.tmp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Uniform'>runif</a></span>(<span class='no'>nsnps</span>+<span class='no'>lag</span>, <span class='fl'>0.05</span>, <span class='fl'>0.5</span>) <span class='co'># common SNPs</span>
-<span class='no'>laghaps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/do.call'>do.call</a></span>(<span class='st'>"cbind"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='no'>maf.tmp</span>, <span class='kw'>function</span>(<span class='no'>f</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Binomial'>rbinom</a></span>(<span class='no'>nhaps</span>,<span class='fl'>1</span>,<span class='no'>f</span>)))
-<span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='no'>laghaps</span>[,<span class='fl'>1</span>:<span class='no'>nsnps</span>]
-<span class='kw'>for</span>(<span class='no'>j</span> <span class='kw'>in</span> <span class='fl'>1</span>:<span class='no'>lag</span>)
-   <span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='no'>haps</span> + <span class='no'>laghaps</span>[,(<span class='fl'>1</span>:<span class='no'>nsnps</span>)+<span class='no'>j</span>]
-<span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Round'>round</a></span>(<span class='no'>haps</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/apply'>apply</a></span>(<span class='no'>haps</span>,<span class='fl'>2</span>,<span class='no'>max</span>),<span class='no'>nhaps</span>,<span class='no'>nsnps</span>,<span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))
-<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>haps</span>)
+<span class='co'>## generate example LD matrix and MAFs</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>mvtnorm</span>)
+<span class='no'>nsamples</span> <span class='kw'>=</span> <span class='fl'>1000</span>
+
+<span class='no'>simx</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>nsnps</span>, <span class='no'>nsamples</span>, <span class='no'>S</span>, <span class='no'>maf</span><span class='kw'>=</span><span class='fl'>0.1</span>) {
+    <span class='no'>mu</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>0</span>,<span class='no'>nsnps</span>)
+    <span class='no'>rawvars</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/mvtnorm/topics/Mvnorm'>rmvnorm</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='no'>nsamples</span>, <span class='kw'>mean</span><span class='kw'>=</span><span class='no'>mu</span>, <span class='kw'>sigma</span><span class='kw'>=</span><span class='no'>S</span>)
+    <span class='no'>pvars</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>pnorm</a></span>(<span class='no'>rawvars</span>)
+    <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Binomial'>qbinom</a></span>(<span class='fl'>1</span>-<span class='no'>pvars</span>, <span class='fl'>1</span>, <span class='no'>maf</span>)
+}
+
+<span class='no'>S</span> <span class='kw'>&lt;-</span> (<span class='fl'>1</span> - (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/outer'>outer</a></span>(<span class='fl'>1</span>:<span class='no'>nsnps</span>,<span class='fl'>1</span>:<span class='no'>nsnps</span>,<span class='no'>`-`</span>))/<span class='no'>nsnps</span>))^<span class='fl'>4</span>
+<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>simx</span>(<span class='no'>nsnps</span>,<span class='no'>nsamples</span>,<span class='no'>S</span>)
+<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>X</span>)
 
 <span class='no'>varbeta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Var.data.cc.html'>Var.data.cc</a></span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='no'>N0</span>+<span class='no'>N1</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='no'>N1</span>/(<span class='no'>N0</span>+<span class='no'>N1</span>))
 
 <span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>ppfunc</span>(<span class='kw'>z</span> <span class='kw'>=</span> <span class='no'>z_scores</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='no'>varbeta</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sum'>sum</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='no'>res</span></div><div class='output co'>#&gt;   [1] 8.299397e-11 1.652435e-11 2.898513e-10 8.076705e-07 2.219303e-11
-#&gt;   [6] 3.328374e-10 3.581444e-11 1.309085e-10 4.445833e-11 1.474873e-11
-#&gt;  [11] 2.368010e-07 3.194369e-11 6.907626e-11 2.315082e-02 3.367869e-09
-#&gt;  [16] 1.083514e-11 1.107272e-11 8.015403e-10 2.554697e-10 6.297234e-11
-#&gt;  [21] 5.042301e-10 1.873557e-10 1.423008e-11 3.684194e-04 6.515618e-11
-#&gt;  [26] 1.387635e-11 3.568069e-11 1.580143e-07 3.340493e-11 2.743424e-11
-#&gt;  [31] 3.890499e-08 1.243820e-11 3.677867e-11 2.033417e-11 4.865918e-08
-#&gt;  [36] 2.427800e-11 2.276795e-11 1.118776e-11 2.378920e-09 1.566674e-10
-#&gt;  [41] 1.445503e-11 1.649881e-11 1.191658e-10 6.765772e-11 1.024573e-10
-#&gt;  [46] 1.047367e-10 1.871390e-11 2.114735e-10 1.518954e-11 4.102885e-10
-#&gt;  [51] 2.241390e-11 6.353280e-11 2.275544e-11 3.407928e-09 9.559273e-08
-#&gt;  [56] 3.194873e-04 2.132156e-11 1.390823e-09 7.630985e-11 1.902657e-11
-#&gt;  [61] 9.733391e-01 1.463044e-11 1.019843e-10 1.179265e-11 1.517166e-10
-#&gt;  [66] 2.106235e-11 1.402612e-05 1.482690e-07 2.403721e-11 2.805588e-03
-#&gt;  [71] 5.803204e-11 1.618513e-10 9.067890e-11 7.111884e-10 7.585653e-09
-#&gt;  [76] 2.588589e-11 3.666729e-11 1.261716e-11 1.244543e-11 6.173624e-11
-#&gt;  [81] 6.593777e-11 1.556326e-11 5.871073e-09 2.635377e-07 9.783982e-11
-#&gt;  [86] 3.607497e-11 2.060214e-09 2.803985e-11 3.085001e-11 1.955326e-11
-#&gt;  [91] 4.389110e-11 7.409761e-09 4.332442e-09 1.335476e-10 7.261288e-07
-#&gt;  [96] 5.279682e-11 1.652199e-08 6.411657e-11 8.929750e-09 3.238200e-11</div><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sum'>sum</a></span>(<span class='no'>res</span>)</div><div class='output co'>#&gt; [1] 1</div><div class='input'><span class='no'>res</span></div><div class='output co'>#&gt;   [1] 1.215824e-10 2.631593e-11 4.426841e-10 1.068425e-06 3.646599e-11
+#&gt;   [6] 3.907039e-10 5.990011e-11 2.225321e-10 9.103733e-11 3.354997e-11
+#&gt;  [11] 3.654523e-07 4.079658e-11 1.142769e-10 2.433182e-02 4.793560e-09
+#&gt;  [16] 2.268153e-11 2.162347e-11 9.711446e-10 3.718626e-10 9.641228e-11
+#&gt;  [21] 7.894062e-10 2.884657e-10 2.116380e-11 4.568940e-04 1.138471e-10
+#&gt;  [26] 2.161833e-11 2.337438e-11 2.173040e-07 5.462879e-11 4.208674e-11
+#&gt;  [31] 5.567277e-08 2.085934e-11 3.839569e-11 2.046751e-11 6.941122e-08
+#&gt;  [36] 4.350603e-11 3.965515e-11 2.044962e-11 3.680986e-09 2.453875e-10
+#&gt;  [41] 2.374919e-11 2.690810e-11 1.700450e-10 7.664161e-11 1.561141e-10
+#&gt;  [46] 1.788622e-10 3.732358e-11 2.605765e-10 2.215170e-11 5.796648e-10
+#&gt;  [51] 4.163009e-11 1.037319e-10 3.518230e-11 4.952190e-09 1.361513e-07
+#&gt;  [56] 3.980564e-04 3.749134e-11 2.235304e-09 8.404665e-11 2.296256e-11
+#&gt;  [61] 9.625313e-01 2.183471e-11 1.618909e-10 2.176455e-11 2.232722e-10
+#&gt;  [66] 2.380888e-11 2.351687e-05 2.035492e-07 2.357808e-11 1.225476e-02
+#&gt;  [71] 5.726625e-11 1.826669e-10 1.054809e-10 8.917293e-10 1.758062e-08
+#&gt;  [76] 3.064738e-11 4.951979e-11 2.107186e-11 2.202085e-11 9.365495e-11
+#&gt;  [81] 8.599292e-11 2.418761e-11 8.041102e-09 4.251524e-07 9.610121e-11
+#&gt;  [86] 3.450227e-11 2.650920e-09 3.230306e-11 3.950781e-11 3.002871e-11
+#&gt;  [91] 7.542926e-11 1.089141e-08 6.683445e-09 1.774247e-10 9.769621e-07
+#&gt;  [96] 8.280724e-11 2.242496e-08 8.825774e-11 1.297898e-08 5.891902e-11</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

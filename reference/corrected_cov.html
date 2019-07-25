@@ -132,34 +132,34 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>corrected_cov</span>(<span class='no'>mu</span>, <span class='no'>V</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='no'>Sigma</span>, <span class='no'>pp0</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
+    <pre class="usage"><span class='fu'>corrected_cov</span>(<span class='no'>pp0</span>, <span class='no'>mu</span>, <span class='no'>V</span>, <span class='no'>Sigma</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>pp0</th>
+      <td><p>Posterior probabilities of SNPs</p></td>
+    </tr>
     <tr>
       <th>mu</th>
       <td><p>The true effect at the CV (estimate using corrcoverage::mu_est function)</p></td>
     </tr>
     <tr>
       <th>V</th>
-      <td><p>Variance of the estimated effect size (can be obtained using Var.beta.cc function)</p></td>
-    </tr>
-    <tr>
-      <th>W</th>
-      <td><p>Prior for the standard deviation of the effect size parameter, beta (W=0.2 default)</p></td>
+      <td><p>Variance of the estimated effect size (can be obtained using coloc::Var.beta.cc function)</p></td>
     </tr>
     <tr>
       <th>Sigma</th>
       <td><p>SNP correlation matrix</p></td>
     </tr>
     <tr>
-      <th>pp0</th>
-      <td><p>Posterior probabilities of SNPs</p></td>
+      <th>thr</th>
+      <td><p>Minimum threshold for fine-mapping experiment (0.95 default)</p></td>
     </tr>
     <tr>
-      <th>thr</th>
-      <td><p>Minimum threshold for fine-mapping experiment (default is 0.95)</p></td>
+      <th>W</th>
+      <td><p>Prior for the standard deviation of the effect size parameter, beta (W=0.2 default)</p></td>
     </tr>
     <tr>
       <th>nrep</th>
@@ -183,17 +183,21 @@
 <span class='no'>N0</span> <span class='kw'>&lt;-</span> <span class='fl'>5000</span>
 <span class='no'>N1</span> <span class='kw'>&lt;-</span> <span class='fl'>5000</span>
 
-<span class='co'>## generate example LD matrix (https://chr1swallace.github.io/simGWAS/articles/intro.html)</span>
-<span class='no'>nhaps</span> <span class='kw'>&lt;-</span> <span class='fl'>1000</span>
-<span class='no'>lag</span> <span class='kw'>&lt;-</span> <span class='fl'>5</span>
-<span class='no'>maf.tmp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Uniform'>runif</a></span>(<span class='no'>nsnps</span>+<span class='no'>lag</span>, <span class='fl'>0.05</span>, <span class='fl'>0.5</span>) <span class='co'># common SNPs</span>
-<span class='no'>laghaps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/do.call'>do.call</a></span>(<span class='st'>"cbind"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>lapply</a></span>(<span class='no'>maf.tmp</span>, <span class='kw'>function</span>(<span class='no'>f</span>) <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Binomial'>rbinom</a></span>(<span class='no'>nhaps</span>,<span class='fl'>1</span>,<span class='no'>f</span>)))
-<span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='no'>laghaps</span>[,<span class='fl'>1</span>:<span class='no'>nsnps</span>]
-<span class='kw'>for</span>(<span class='no'>j</span> <span class='kw'>in</span> <span class='fl'>1</span>:<span class='no'>lag</span>)
-   <span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='no'>haps</span> + <span class='no'>laghaps</span>[,(<span class='fl'>1</span>:<span class='no'>nsnps</span>)+<span class='no'>j</span>]
-<span class='no'>haps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Round'>round</a></span>(<span class='no'>haps</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/apply'>apply</a></span>(<span class='no'>haps</span>,<span class='fl'>2</span>,<span class='no'>max</span>),<span class='no'>nhaps</span>,<span class='no'>nsnps</span>,<span class='kw'>byrow</span><span class='kw'>=</span><span class='fl'>TRUE</span>))
-<span class='no'>LD</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cor2.html'>cor2</a></span>(<span class='no'>haps</span>)
-<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>haps</span>)
+<span class='co'>## generate example LD matrix</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>mvtnorm</span>)
+<span class='no'>nsamples</span> <span class='kw'>=</span> <span class='fl'>1000</span>
+
+<span class='no'>simx</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>nsnps</span>, <span class='no'>nsamples</span>, <span class='no'>S</span>, <span class='no'>maf</span><span class='kw'>=</span><span class='fl'>0.1</span>) {
+    <span class='no'>mu</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>0</span>,<span class='no'>nsnps</span>)
+    <span class='no'>rawvars</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/mvtnorm/topics/Mvnorm'>rmvnorm</a></span>(<span class='kw'>n</span><span class='kw'>=</span><span class='no'>nsamples</span>, <span class='kw'>mean</span><span class='kw'>=</span><span class='no'>mu</span>, <span class='kw'>sigma</span><span class='kw'>=</span><span class='no'>S</span>)
+    <span class='no'>pvars</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>pnorm</a></span>(<span class='no'>rawvars</span>)
+    <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Binomial'>qbinom</a></span>(<span class='fl'>1</span>-<span class='no'>pvars</span>, <span class='fl'>1</span>, <span class='no'>maf</span>)
+}
+
+<span class='no'>S</span> <span class='kw'>&lt;-</span> (<span class='fl'>1</span> - (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/outer'>outer</a></span>(<span class='fl'>1</span>:<span class='no'>nsnps</span>,<span class='fl'>1</span>:<span class='no'>nsnps</span>,<span class='no'>`-`</span>))/<span class='no'>nsnps</span>))^<span class='fl'>4</span>
+<span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>simx</span>(<span class='no'>nsnps</span>,<span class='no'>nsamples</span>,<span class='no'>S</span>)
+<span class='no'>LD</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cor2.html'>cor2</a></span>(<span class='no'>X</span>)
+<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>X</span>)
 
 <span class='co'>## generate V (variance of estimated effect sizes)</span>
 <span class='no'>varbeta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Var.data.cc.html'>Var.data.cc</a></span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>5000</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
@@ -201,7 +205,7 @@
 <span class='no'>pp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>, <span class='fl'>0.2</span>, <span class='fl'>0.05</span>)
 <span class='no'>pp</span> <span class='kw'>&lt;-</span> <span class='no'>pp</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sum'>sum</a></span>(<span class='no'>pp</span>)
 
-<span class='fu'>corrected_cov</span>(<span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='no'>varbeta</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>, <span class='kw'>pp0</span> <span class='kw'>=</span> <span class='no'>pp</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; [1] 0.9975324</div><div class='input'>
+<span class='fu'>corrected_cov</span>(<span class='kw'>pp0</span> <span class='kw'>=</span> <span class='no'>pp</span>, <span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='no'>varbeta</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div><div class='output co'>#&gt; [1] 0.9924851</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

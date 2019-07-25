@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Estimate the true effect at the causal variant — est_mu • corrcoverage</title>
+<title>Simulate posterior probabilities of causality from joint Z-score vector — .zj_pp • corrcoverage</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -37,9 +37,9 @@
 
 
 
-<meta property="og:title" content="Estimate the true effect at the causal variant — est_mu" />
+<meta property="og:title" content="Simulate posterior probabilities of causality from joint Z-score vector — .zj_pp" />
 
-<meta property="og:description" content="Estimate the true effect at the causal variant" />
+<meta property="og:description" content="Internal function: Simulate nrep posterior probabilities of causality from joint Z-score vector" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -121,64 +121,53 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Estimate the true effect at the causal variant</h1>
+    <h1>Simulate posterior probabilities of causality from joint Z-score vector</h1>
     
-    <div class="hidden name"><code>est_mu.Rd</code></div>
+    <div class="hidden name"><code>dot-zj_pp.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Estimate the true effect at the causal variant</p>
+    <p>Internal function: Simulate nrep posterior probabilities of causality from joint Z-score vector</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>est_mu</span>(<span class='no'>z</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>p1</span> <span class='kw'>=</span> <span class='fl'>1e-04</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)</pre>
+    <pre class="usage"><span class='fu'>.zj_pp</span>(<span class='no'>Zj</span>, <span class='no'>int.Sigma</span>, <span class='no'>int.nrep</span>, <span class='no'>int.ERR</span>, <span class='no'>int.r</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>z</th>
-      <td><p>Vector of marginal Z-scores</p></td>
+      <th>Zj</th>
+      <td><p>joint z vector</p></td>
     </tr>
     <tr>
-      <th>f</th>
-      <td><p>Minor allele frequencies</p></td>
+      <th>int.Sigma</th>
+      <td><p>internal sigma</p></td>
     </tr>
     <tr>
-      <th>N0</th>
-      <td><p>Number of controls</p></td>
+      <th>int.nrep</th>
+      <td><p>internal nrep</p></td>
     </tr>
     <tr>
-      <th>N1</th>
-      <td><p>Number of cases</p></td>
+      <th>int.ERR</th>
+      <td><p>internal error matrix</p></td>
     </tr>
     <tr>
-      <th>p1</th>
-      <td><p>Prior probability a SNP is associated with the trait, default 1e-4</p></td>
-    </tr>
-    <tr>
-      <th>W</th>
-      <td><p>Prior for the standard deviation of the effect size parameter, beta, default 0.2</p></td>
+      <th>int.r</th>
+      <td><p>internal r</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Estimate of the true effect at the causal variant</p>
+    <p>Matrix of simulated posterior probabilties of causality, one simulation per row</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Does not include posterior probabilities for null model</p>
     
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='no'>nsnps</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>
-<span class='no'>z_scores</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>, <span class='fl'>0</span>, <span class='fl'>3</span>) <span class='co'># simulate a vector of Z-scores</span>
-<span class='no'>N0</span> <span class='kw'>&lt;-</span> <span class='fl'>5000</span> <span class='co'># number of controls</span>
-<span class='no'>N1</span> <span class='kw'>&lt;-</span> <span class='fl'>5000</span> <span class='co'># number of cases</span>
-
-<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Uniform'>runif</a></span>(<span class='no'>nsnps</span>, <span class='fl'>0.05</span>, <span class='fl'>0.5</span>)
-
-<span class='fu'>est_mu</span>(<span class='kw'>z</span> <span class='kw'>=</span> <span class='no'>z_scores</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N0</span> <span class='kw'>=</span> <span class='no'>N0</span>, <span class='kw'>N1</span> <span class='kw'>=</span> <span class='no'>N1</span>)</div><div class='output co'>#&gt; [1] 5.76201</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -186,12 +175,10 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
 
-    <h2>Author</h2>
-    <p>Anna Hutchinson</p>
+      <li><a href="#details">Details</a></li>
+          </ul>
+
   </div>
 </div>
 

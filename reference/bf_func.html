@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get new credible set with desired coverage of the CV — corrected_cs_bhat • corrcoverage</title>
+<title>Calculate ABFs from Z scores — bf_func • corrcoverage</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -37,9 +37,9 @@
 
 
 
-<meta property="og:title" content="Get new credible set with desired coverage of the CV — corrected_cs_bhat" />
+<meta property="og:title" content="Calculate ABFs from Z scores — bf_func" />
 
-<meta property="og:description" content="Get new credible set with desired coverage of the CV" />
+<meta property="og:description" content="Calculate ABFs from Z scores" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -121,90 +121,50 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get new credible set with desired coverage of the CV</h1>
+    <h1>Calculate ABFs from Z scores</h1>
     
-    <div class="hidden name"><code>corrected_cs_bhat.Rd</code></div>
+    <div class="hidden name"><code>bf_func.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Get new credible set with desired coverage of the CV</p>
+    <p>Calculate ABFs from Z scores</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>corrected_cs_bhat</span>(<span class='no'>bhat</span>, <span class='no'>V</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='no'>desired.cov</span>, <span class='kw'>acc</span> <span class='kw'>=</span> <span class='fl'>0.005</span>, <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>20</span>)</pre>
+    <pre class="usage"><span class='fu'>bf_func</span>(<span class='no'>z</span>, <span class='no'>V</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>bhat</th>
-      <td><p>Estimated effect sizes</p></td>
+      <th>z</th>
+      <td><p>Vector of Z-scores</p></td>
     </tr>
     <tr>
       <th>V</th>
-      <td><p>Prior variance of estimated effect sizes</p></td>
+      <td><p>Variance of the estimated effect size</p></td>
     </tr>
     <tr>
-      <th>N0</th>
-      <td><p>Number of controls</p></td>
-    </tr>
-    <tr>
-      <th>N1</th>
-      <td><p>Number of cases</p></td>
-    </tr>
-    <tr>
-      <th>Sigma</th>
-      <td><p>Correlation matrix of SNPs</p></td>
-    </tr>
-    <tr>
-      <th>lower</th>
-      <td><p>Lower threshold (default = 0)</p></td>
-    </tr>
-    <tr>
-      <th>upper</th>
-      <td><p>Upper threshold (default = 1)</p></td>
-    </tr>
-    <tr>
-      <th>desired.cov</th>
-      <td><p>The desired coverage of the causal variant in the credible set</p></td>
-    </tr>
-    <tr>
-      <th>acc</th>
-      <td><p>Accuracy of corrected coverage to desired coverage (default = 0.005)</p></td>
-    </tr>
-    <tr>
-      <th>max.iter</th>
-      <td><p>Maximum iterations (default = 20)</p></td>
+      <th>W</th>
+      <td><p>Prior for the standard deviation of the effect size parameter, beta (default 0.2)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List of variants in credible set, required threshold, the corrected coverage and the size of the credible set</p>
+    <p>ABFs</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-</div><span class='co'># NOT RUN {</span>
- <span class='co'># this is a long running example</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>1</span>)
+<span class='no'>nsnps</span> <span class='kw'>=</span> <span class='fl'>100</span>
+<span class='no'>N0</span> <span class='kw'>=</span> <span class='fl'>5000</span>
+<span class='no'>N1</span> <span class='kw'>=</span> <span class='fl'>5000</span>
+<span class='no'>z_scores</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>, <span class='fl'>0</span>, <span class='fl'>3</span>)
 
-<span class='co'># In this example, the function is used to find a corrected 95% credible set</span>
-<span class='co'># using bhats and their standard errors, that is the smallest set of variants</span>
-<span class='co'># required such that the resultant credible set has coverage close to (/within</span>
-<span class='co'># some accuracy of) the "desired coverage" (here set to 0.95). Max.iter parameter</span>
-<span class='co'># defines the maximum number of iterations to try in the root bisection algorithm,</span>
-<span class='co'># this should be increased to ensure convergence to the desired coverage, but is set</span>
-<span class='co'># to 1 here for speed (and thus the resultant credible set will not be accurate).</span>
-
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>18</span>)
-<span class='no'>nsnps</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>
-<span class='no'>N0</span> <span class='kw'>&lt;-</span> <span class='fl'>500</span> <span class='co'># number of controls</span>
-<span class='no'>N1</span> <span class='kw'>&lt;-</span> <span class='fl'>500</span> <span class='co'># number of cases</span>
-
-<span class='co'># simulate fake haplotypes to obtain MAFs and LD matrix</span>
-<span class='co'>## generate example LD matrix</span>
+<span class='co'>## generate example LD matrix and MAFs</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/library'>library</a></span>(<span class='no'>mvtnorm</span>)
 <span class='no'>nsamples</span> <span class='kw'>=</span> <span class='fl'>1000</span>
 
@@ -217,18 +177,30 @@
 
 <span class='no'>S</span> <span class='kw'>&lt;-</span> (<span class='fl'>1</span> - (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/outer'>outer</a></span>(<span class='fl'>1</span>:<span class='no'>nsnps</span>,<span class='fl'>1</span>:<span class='no'>nsnps</span>,<span class='no'>`-`</span>))/<span class='no'>nsnps</span>))^<span class='fl'>4</span>
 <span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>simx</span>(<span class='no'>nsnps</span>,<span class='no'>nsamples</span>,<span class='no'>S</span>)
-<span class='no'>LD</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cor2.html'>cor2</a></span>(<span class='no'>X</span>)
+<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>X</span>)
 
-<span class='no'>varbeta</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Var.data.cc.html'>Var.data.cc</a></span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='no'>N0</span> + <span class='no'>N1</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='no'>N1</span>/(<span class='no'>N0</span>+<span class='no'>N1</span>))
+<span class='no'>varbeta</span> <span class='kw'>=</span> <span class='fu'><a href='Var.data.cc.html'>Var.data.cc</a></span>(<span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='kw'>N</span> <span class='kw'>=</span> <span class='no'>N0</span> + <span class='no'>N1</span>, <span class='kw'>s</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
 
-<span class='no'>bhats</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>,<span class='fl'>0</span>,<span class='fl'>0.2</span>) <span class='co'># log OR</span>
-
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>bhats</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>1</span>,<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>bhats</span>))
-
-<span class='fu'>corrected_cs_bhat</span>(<span class='kw'>bhat</span> <span class='kw'>=</span> <span class='no'>bhats</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='no'>varbeta</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>, <span class='kw'>desired.cov</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-<span class='co'># max.iter set low for speed, should be set to at</span>
-<span class='co'># least the default to ensure convergence to desired coverage</span>
-<span class='co'># }</span><div class='input'>
+<span class='fu'>bf_func</span>(<span class='no'>z_scores</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='no'>varbeta</span>)</div><div class='output co'>#&gt;   [1]  0.259944111 -1.270473777  1.552208379  9.341047932 -0.944268001
+#&gt;   [6]  1.427301994 -0.447969805  0.864423167 -0.029378459 -1.027612048
+#&gt;  [11]  8.268242890 -0.832049849  0.197976322 19.374402884  3.934380483
+#&gt;  [16] -1.419097192 -1.466868876  2.337827252  1.377876401  0.027985426
+#&gt;  [21]  2.130632955  1.123928032 -1.488355879 15.399313866  0.194207970
+#&gt;  [26] -1.467106578 -1.389007422  7.748404451 -0.540087117 -0.800915466
+#&gt;  [31]  6.386598347 -1.502846526 -0.892703013 -1.521809335  6.607155676
+#&gt;  [36] -0.767748454 -0.860427213 -1.522683876  3.670287713  0.962190427
+#&gt;  [41] -1.373099565 -1.248220640  0.595415202 -0.201508038  0.509939166
+#&gt;  [46]  0.645967635 -0.921022804  1.022248367 -1.442733815  1.821801820
+#&gt;  [51] -0.811824791  0.101161970 -0.980104986  3.966937123  7.280874246
+#&gt;  [56] 15.261456261 -0.916538268  3.171484247 -0.109276062 -1.406782972
+#&gt;  [61] 23.052184326 -1.457147250  0.546274685 -1.460365661  0.867743410
+#&gt;  [66] -1.370589535 12.432580567  7.683014958 -1.380330779 18.688532357
+#&gt;  [71] -0.492936744  0.667016367  0.117881615  2.252514493  5.233904471
+#&gt;  [76] -1.118100815 -0.638275707 -1.492709470 -1.448658583 -0.001030821
+#&gt;  [81] -0.086383093 -1.354807751  4.451673295  8.419554766  0.024753811
+#&gt;  [86] -0.999623072  3.342014100 -1.065486305 -0.864149744 -1.138494311
+#&gt;  [91] -0.217452821  4.755081967  4.266740749  0.637898200  9.251555061
+#&gt;  [96] -0.124132598  5.477281671 -0.060386708  4.930438044 -0.464484167</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -241,8 +213,6 @@
       <li><a href="#examples">Examples</a></li>
     </ul>
 
-    <h2>Author</h2>
-    <p>Anna Hutchinson</p>
   </div>
 </div>
 

@@ -4,16 +4,16 @@
 \alias{zj_pp}
 \title{Simulate posterior probabilities of causality from joint Z-score vector}
 \usage{
-zj_pp(Zj, V, nrep = 5000, W = 0.2, Sigma)
+zj_pp(Zj, V, nrep = 1000, W = 0.2, Sigma)
 }
 \arguments{
 \item{Zj}{Vector of joint Z-scores (0s except at CV)}
 
 \item{V}{Variance of the estimated effect size (can be obtained using Var.beta.cc function)}
 
-\item{nrep}{Number of posterior probability systems to simulate}
+\item{nrep}{Number of posterior probability systems to simulate (default 1000)}
 
-\item{W}{Prior for the standard deviation of the effect size parameter, beta}
+\item{W}{Prior for the standard deviation of the effect size parameter, beta (default 0.2)}
 
 \item{Sigma}{SNP correlation matrix}
 }
@@ -35,18 +35,21 @@ iCV <- 4 # index of CV
 mu <- 5 # true effect at CV
 Zj[iCV] <- mu
 
+## generate example LD matrix and MAFs
+library(mvtnorm)
+nsamples = 1000
 
-## generate example LD matrix (https://chr1swallace.github.io/simGWAS/articles/intro.html)
-nhaps <- 1000
-lag <- 5
-maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-haps <- laghaps[,1:nsnps]
-for(j in 1:lag)
-   haps <- haps + laghaps[,(1:nsnps)+j]
-haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-LD <- cor2(haps)
-maf <- colMeans(haps)
+simx <- function(nsnps, nsamples, S, maf=0.1) {
+    mu <- rep(0,nsnps)
+    rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+    pvars <- pnorm(rawvars)
+    x <- qbinom(1-pvars, 1, maf)
+}
+
+S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+X <- simx(nsnps,nsamples,S)
+LD <- cor2(X)
+maf <- colMeans(X)
 
 ## generate V (variance of estimated effect sizes)
 varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)

@@ -257,6 +257,5 @@ ppfunc.mat <- function(zstar, V, W = 0.2) {
     r = matrix(W^2/(W^2 + V), nrow = nrow(zstar), ncol = ncol(zstar), byrow = TRUE)  # see wakefield paper
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
     denom = apply(bf, 1, logsum)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
-    pp.tmp = exp(bf - matrix(denom, nrow = nrow(bf), ncol = ncol(bf)))  # convert back from log scale
-    pp.tmp/rowSums(pp.tmp)
+    exp(bf - matrix(denom, nrow = nrow(bf), ncol = ncol(bf)))  # convert back from log scale
 }

@@ -24,6 +24,40 @@ This function converts a matrix of Z-scores (one row per simulation) to posterio
 not including the null model of no genetic effects,
 so that the sum of the posterior probabilities for each simulation (each row) is 1.
 }
+\examples{
+
+set.seed(1)
+nsnps = 100
+N0 = 5000
+N1 = 5000
+
+## generate example LD matrix and MAFs
+library(mvtnorm)
+nsamples = 1000
+
+simx <- function(nsnps, nsamples, S, maf=0.1) {
+    mu <- rep(0,nsnps)
+    rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+    pvars <- pnorm(rawvars)
+    x <- qbinom(1-pvars, 1, maf)
+}
+
+S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+X <- simx(nsnps,nsamples,S)
+maf <- colMeans(X)
+
+varbeta <- Var.data.cc(f = maf, N = N0+N1, s = N1/(N0+N1))
+
+# simulate matrix of Z scores
+# 1 simulation per row
+z_scores <- matrix(rnorm(nsnps*100, 0, 3), ncol = nsnps)
+
+# each row is a vector of simulated PPs
+res <- ppfunc.mat(zstar = z_scores, V = varbeta)
+
+sum(res[1,])
+
+}
 \author{
 Chris Wallace
 }

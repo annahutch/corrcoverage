@@ -19,3 +19,21 @@ Data.frame of claimed coverage (sum of posterior probabilities of variants in th
 \description{
 Quick credset function for matrix of posterior probabilities (using RCpp)
 }
+\examples{
+
+set.seed(1)
+nsnps <- 100
+
+# simulate matrix of posterior probabilities
+# 1 simulation per row
+
+pp <- matrix(rnorm(nsnps*100, 0.3, 0.05), ncol = nsnps)
+pp <- pp/rowSums(pp)
+
+iCV <- 71
+
+\\notrun{
+credsetC(pp, CV = iCV, thr = 0.9)
+}
+
+}

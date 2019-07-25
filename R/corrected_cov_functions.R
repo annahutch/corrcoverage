@@ -55,13 +55,12 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
     r = W^2/(W^2 + V)
 
     pp_ERR = function(Zj) {
-        exp.zm = Zj %*% Sigma
-        mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-        zstar = mexp.zm + ERR
-        bf = 0.5 * (log(1 - r) + (r * zstar^2))
-        denom = logsum(bf)
-        pp.tmp = exp(bf - denom)  # convert back from log scale
-        pp.tmp/rowSums(pp.tmp)
+      exp.zm = Zj %*% Sigma
+      mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
+      zstar = mexp.zm + ERR
+      bf = 0.5 * (log(1 - r) + (r * zstar^2))
+      denom = apply(bf, 1, logsum) # get different denom for each rep
+      exp(bf - denom)  # convert back from log scale
     }
 
     # simulate pp systems
@@ -151,15 +150,16 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-4, nrep = 
     # simulate ERR matrix
 
     ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+
     pp_ERR = function(Zj) {
-        exp.zm = Zj %*% Sigma
-        mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-        zstar = mexp.zm + ERR
-        bf = 0.5 * (log(1 - r) + (r * zstar^2))
-        denom = logsum(bf)
-        pp.tmp = exp(bf - denom)  # convert back from log scale
-        pp.tmp/rowSums(pp.tmp)
+      exp.zm = Zj %*% Sigma
+      mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
+      zstar = mexp.zm + ERR
+      bf = 0.5 * (log(1 - r) + (r * zstar^2))
+      denom = apply(bf, 1, logsum) # get different denom for each rep
+      exp(bf - denom)  # convert back from log scale
     }
+
     # simulate pp systems
     pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
     # consider different CV as causal in each list
@@ -250,14 +250,14 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-4,
     # simulate ERR matrix
 
     ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+
     pp_ERR = function(Zj) {
-        exp.zm = Zj %*% Sigma
-        mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-        zstar = mexp.zm + ERR
-        bf = 0.5 * (log(1 - r) + (r * zstar^2))
-        denom = logsum(bf)
-        pp.tmp = exp(bf - denom)  # convert back from log scale
-        pp.tmp/rowSums(pp.tmp)
+      exp.zm = Zj %*% Sigma
+      mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
+      zstar = mexp.zm + ERR
+      bf = 0.5 * (log(1 - r) + (r * zstar^2))
+      denom = apply(bf, 1, logsum) # get different denom for each rep
+      exp(bf - denom)  # convert back from log scale
     }
 
     # simulate pp systems
@@ -353,15 +353,16 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, p1 = 1e
   # simulate ERR matrix
 
   ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+
   pp_ERR = function(Zj) {
     exp.zm = Zj %*% Sigma
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
     zstar = mexp.zm + ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
-    pp.tmp = exp(bf - denom)  # convert back from log scale
-    pp.tmp/rowSums(pp.tmp)
+    denom = apply(bf, 1, logsum) # get different denom for each rep
+    exp(bf - denom)  # convert back from log scale
   }
+
   # simulate pp systems
   pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
   # consider different CV as causal in each list
@@ -466,14 +467,14 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
   # simulate ERR matrix
 
   ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+
   pp_ERR = function(Zj) {
     exp.zm = Zj %*% Sigma
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
     zstar = mexp.zm + ERR
     bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = logsum(bf)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
-    pp.tmp = exp(bf - denom)  # convert back from log scale
-    pp.tmp/rowSums(pp.tmp)
+    denom = apply(bf, 1, logsum) # get different denom for each rep
+    exp(bf - denom)  # convert back from log scale
   }
 
   # simulate pp systems

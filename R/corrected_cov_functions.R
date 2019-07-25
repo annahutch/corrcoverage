@@ -33,6 +33,7 @@
 #' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 #' X <- simx(nsnps,nsamples,S)
 #' LD <- cor2(X)
+#' maf <- colMeans(X)
 #'
 #' ## generate V (variance of estimated effect sizes)
 #' varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)
@@ -52,19 +53,12 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
 
     # simulate ERR matrix
     ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+
+    # calculate r
     r = W^2/(W^2 + V)
 
-    pp_ERR = function(Zj) {
-      exp.zm = Zj %*% Sigma
-      mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-      zstar = mexp.zm + ERR
-      bf = 0.5 * (log(1 - r) + (r * zstar^2))
-      denom = apply(bf, 1, logsum) # get different denom for each rep
-      exp(bf - denom)  # convert back from log scale
-    }
-
     # simulate pp systems
-    pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+    pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
 
     # consider different CV as causal in each list
     n_pps <- length(pps)
@@ -75,8 +69,8 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
         credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
     })
 
-    prop_cov <- lapply(d5, prop_cov) %>% unlist()
-    sum(prop_cov * pp0)
+    propcov <- lapply(d5, prop_cov) %>% unlist()
+    sum(propcov * pp0)
 }
 
 
@@ -118,62 +112,21 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
 #' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 #' X <- simx(nsnps,nsamples,S)
 #' LD <- cor2(X)
+#' maf <- colMeans(X)
 #'
 #' corrcov(z = z_scores, f = maf, N0, N1, Sigma = LD, thr = 0.95)
 #'
 #' @export
 #' @author Anna Hutchinson
 corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-4, nrep = 1000) {
+
     varbeta = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
-    r = W^2/(W^2 + varbeta)
-    bf = 0.5 * (log(1 - r) + (r * z^2))
-    nsnps = length(bf)
-    prior = c(1 - nsnps * p1, rep(p1, nsnps))
-    tmp = c(1, bf)  # add on extra for null model
-    my.denom = logsum(tmp + prior)
-    tmp1 = exp(tmp + prior - my.denom)
-    ph0.tmp = tmp1/sum(tmp1)
 
-    ph0 = ph0.tmp[1]  # prob of the null
-    pp0dash = ph0.tmp[-1]  # pps of variants
+    muhat = est_mu(z, f, N0, N1, p1 = 1e-4, W = 0.2)
 
-    # posterior probs of true system
-    pp.tmp = exp(bf - logsum(bf))
-    pp0 = pp.tmp/sum(pp.tmp)
+    pp = ppfunc(z, V = varbeta, W = 0.2)
 
-    # estimate mu
-    muhat = mean(c(sum(abs(z) * pp0dash), (1 - ph0) * max(abs(z))))
-
-    #### corrected coverage
-    temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
-    zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
-    # simulate ERR matrix
-
-    ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
-
-    pp_ERR = function(Zj) {
-      exp.zm = Zj %*% Sigma
-      mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-      zstar = mexp.zm + ERR
-      bf = 0.5 * (log(1 - r) + (r * zstar^2))
-      denom = apply(bf, 1, logsum) # get different denom for each rep
-      exp(bf - denom)  # convert back from log scale
-    }
-
-    # simulate pp systems
-    pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
-    # consider different CV as causal in each list
-    n_pps = length(pps)
-    args = 1:nsnps
-
-    # obtain credible set for each simulation
-    d5 <- lapply(1:n_pps, function(x) {
-        credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
-    })
-
-    prop_cov = lapply(d5, prop_cov) %>% unlist()
-
-    sum(prop_cov * pp0)
+    corrected_cov(pp0 = pp, mu = muhat, V = varbeta, Sigma, thr, W, nrep)
 }
 
 #' Corrected coverage estimate using estimated effect sizes and their standard errors
@@ -213,6 +166,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-4, nrep = 
 #' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 #' X <- simx(nsnps,nsamples,S)
 #' LD <- cor2(X)
+#' maf <- colMeans(X)
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 #'
@@ -223,57 +177,14 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-4, nrep = 
 #' @export
 #' @author Anna Hutchinson
 corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-4, nrep = 1000) {
-    z = bhat/sqrt(V)
-    r = W^2/(W^2 + V)
-    bf = 0.5 * (log(1 - r) + (r * z^2))
-    nsnps = length(bf)
-    prior = c(1 - nsnps * p1, rep(p1, nsnps))
-    tmp = c(1, bf)  # add on extra for null model
-    my.denom = logsum(tmp + prior)
-    tmp1 = exp(tmp + prior - my.denom)
-    ph0.tmp = tmp1/sum(tmp1)
 
-    ph0 = ph0.tmp[1]  # prob of the null
-    pp0dash = ph0.tmp[-1]  # pps of variants
+    z0 = bhat/sqrt(V)
 
-    # posterior probs of true system
-    pp.tmp = exp(bf - logsum(bf))
-    pp0 = pp.tmp/sum(pp.tmp)
+    muhat = est_mu_bhat(bhat, V, N0, N1, p1 = 1e-4, W = 0.2)
 
-    # estimate mu
-    muhat = mean(c(sum(abs(z) * pp0dash), (1 - ph0) * max(abs(z))))
+    pp = ppfunc(z0, V, W = 0.2)
 
-    #### corrected coverage
-    temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
-    zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
-
-    # simulate ERR matrix
-
-    ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
-
-    pp_ERR = function(Zj) {
-      exp.zm = Zj %*% Sigma
-      mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-      zstar = mexp.zm + ERR
-      bf = 0.5 * (log(1 - r) + (r * zstar^2))
-      denom = apply(bf, 1, logsum) # get different denom for each rep
-      exp(bf - denom)  # convert back from log scale
-    }
-
-    # simulate pp systems
-    pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
-    # consider different CV as causal in each list
-    n_pps = length(pps)
-    args = 1:nsnps
-
-    # obtain credible set for each simulation
-    d5 <- lapply(1:n_pps, function(x) {
-        credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
-    })
-
-    prop_cov = lapply(d5, prop_cov) %>% unlist()
-
-    sum(prop_cov * pp0)
+    corrected_cov(pp0 = pp, mu = muhat, V, Sigma, thr, W, nrep)
 }
 
 #' Obtain corrected coverage estimate using Z-scores and mafs (limiting simulations used for estimation to those with correct nvar)
@@ -317,6 +228,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-4,
 #' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 #' X <- simx(nsnps,nsamples,S)
 #' LD <- cor2(X)
+#' maf <- colMeans(X)
 #'
 #' corrcov_nvar(z = z_scores, f = maf, N0, N1, Sigma = LD, nvar = 1, nrep = 100)
 #'
@@ -327,44 +239,28 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-4,
 
 #' @author Anna Hutchinson
 corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, p1 = 1e-4, nrep = 10000) {
+
   varbeta = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
-  r = W^2/(W^2 + varbeta)
-  bf = 0.5 * (log(1 - r) + (r * z^2))
-  nsnps = length(bf)
-  prior = c(1 - nsnps * p1, rep(p1, nsnps))
-  tmp = c(1, bf)  # add on extra for null model
-  my.denom = logsum(tmp + prior)
-  tmp1 = exp(tmp + prior - my.denom)
-  ph0.tmp = tmp1/sum(tmp1)
 
-  ph0 = ph0.tmp[1]  # prob of the null
-  pp0dash = ph0.tmp[-1]  # pps of variants
+  muhat = est_mu(z, f, N0, N1, p1 = 1e-4, W = 0.2)
 
-  # posterior probs of true system
-  pp.tmp = exp(bf - logsum(bf))
-  pp0 = pp.tmp/sum(pp.tmp)
+  pp = ppfunc(z, V = varbeta, W = 0.2)
 
-  # estimate mu
-  muhat = mean(c(sum(abs(z) * pp0dash), (1 - ph0) * max(abs(z))))
+  nsnps = length(pp)
 
   #### corrected coverage
+
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+
   # simulate ERR matrix
 
   ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
 
-  pp_ERR = function(Zj) {
-    exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-    zstar = mexp.zm + ERR
-    bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = apply(bf, 1, logsum) # get different denom for each rep
-    exp(bf - denom)  # convert back from log scale
-  }
+  r = W^2/(W^2 + varbeta)
 
-  # simulate pp systems
-  pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
+
   # consider different CV as causal in each list
   n_pps = length(pps)
   args = 1:nsnps
@@ -382,7 +278,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, p1 = 1e
 
   contained <- lapply(d5_trim, function(p) p$covered) %>% unlist()
 
-  pp.vec <- rep(pp0, times=nsims)
+  pp.vec <- rep(pp, times=nsims)
 
   sum(contained * pp.vec)/sum(pp.vec)
 }
@@ -427,6 +323,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, p1 = 1e
 #' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 #' X <- simx(nsnps,nsamples,S)
 #' LD <- cor2(X)
+#' maf <- colMeans(X)
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 #'
@@ -441,47 +338,31 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, p1 = 1e
 #'
 #' @author Anna Hutchinson
 corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, p1 = 1e-4, nrep = 10000) {
-  z = bhat/sqrt(V)
-  r = W^2/(W^2 + V)
-  bf = 0.5 * (log(1 - r) + (r * z^2))
-  nsnps = length(bf)
-  prior = c(1 - nsnps * p1, rep(p1, nsnps))
-  tmp = c(1, bf)  # add on extra for null model
-  my.denom = logsum(tmp + prior)
-  tmp1 = exp(tmp + prior - my.denom)
-  ph0.tmp = tmp1/sum(tmp1)
 
-  ph0 = ph0.tmp[1]  # prob of the null
-  pp0dash = ph0.tmp[-1]  # pps of variants
+  z0 = bhat/sqrt(V)
 
-  # posterior probs of true system
-  pp.tmp = exp(bf - logsum(bf))
-  pp0 = pp.tmp/sum(pp.tmp)
+  muhat = est_mu_bhat(bhat, V, N0, N1, p1 = 1e-4, W = 0.2)
 
-  # estimate mu
-  muhat = mean(c(sum(abs(z) * pp0dash), (1 - ph0) * max(abs(z))))
+  pp = ppfunc(z0, V, W = 0.2)
+
+  nsnps = length(pp)
 
   #### corrected coverage
+
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+
   # simulate ERR matrix
 
   ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
 
-  pp_ERR = function(Zj) {
-    exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-    zstar = mexp.zm + ERR
-    bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = apply(bf, 1, logsum) # get different denom for each rep
-    exp(bf - denom)  # convert back from log scale
-  }
+  r = W^2/(W^2 + V)
 
-  # simulate pp systems
-  pps <- mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
+
   # consider different CV as causal in each list
-  n_pps <- length(pps)
-  args <- 1:nsnps
+  n_pps = length(pps)
+  args = 1:nsnps
 
   # obtain credible set for each simulation
   d5 <- lapply(1:n_pps, function(x) {
@@ -496,7 +377,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 
   contained <- lapply(d5_trim, function(p) p$covered) %>% unlist()
 
-  pp.vec <- rep(pp0, times=nsims)
+  pp.vec <- rep(pp, times=nsims)
 
   sum(contained * pp.vec)/sum(pp.vec)
 }
@@ -565,6 +446,7 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-4, nrep
 #' @param Sigma SNP correlation matrix
 #' @param thr Minimum threshold for fine-mapping experiment (default is 0.95)
 #' @param W Prior for the standard deviation of the effect size parameter beta
+#' @param p1 Prior probability a SNP is associated with the trait (default 1e-4)
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)
 #' @param CI The size of the confidence interval (as a decimal)
 #' @return CI for corrected coverage estimate
@@ -607,4 +489,3 @@ corrcov_CI_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e
   corrcov_reps = replicate(100, corrcov_bhat(bhat, V, N0, N1, Sigma, thr, W, p1, nrep))
   stats::quantile(corrcov_reps, probs = c((1-CI)/2, (CI+1)/2))
 }
-

@@ -95,22 +95,7 @@ zj_pp <- function(Zj, V, nrep = 1000, W = 0.2, Sigma) {
     mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
     zstar = mexp.zm + ERR
     r = W^2/(W^2 + V)
-    bf = 0.5 * (log(1 - r) + (r * zstar^2))
+    bf = 0.5 * t(log(1 - r) + (r * t(zstar^2)))
     denom = apply(bf,1,logsum)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
-    exp(bf - denom)  # convert back from log scale
-}
-
-#' Internal function: Simulate nrep posterior probabilities of causality from joint Z-score vector
-#'
-#' Does not include posterior probabilities for null model
-#' @title Simulate posterior probabilities of causality from joint Z-score vector
-#' @param Zj Vector of joint Z-scores (0s except at CV)
-#' @return Matrix of simulated posterior probabilties of causality, one simulation per row
-pp_ERR = function(Zj) {
-    exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-    zstar = mexp.zm + ERR
-    bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = apply(bf, 1, logsum) # get different denom for each rep
     exp(bf - denom)  # convert back from log scale
 }

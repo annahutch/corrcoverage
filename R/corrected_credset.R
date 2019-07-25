@@ -55,31 +55,23 @@
 #' @export
 #' @author Anna Hutchinson
 corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov, acc = 0.005, max.iter = 20){
+
   s = N1/(N0+N1) # proportion of cases
-  V = 1/(2 * (N0+N1) * f * (1 - f) * s * (1 - s))
+  varbeta = 1/(2 * (N0+N1) * f * (1 - f) * s * (1 - s))
   W = 0.2
-  r = W^2/(W^2 + V)
-  pp = ppfunc(z, V = V) # pp of system in question
+  r = W^2/(W^2 + varbeta)
+  pp = ppfunc(z, V = varbeta) # pp of system in question
   muhat = est_mu(z, f, N0, N1)
   nsnps = length(pp)
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
   nrep = 1000
 
-  # simulate ERR matrix
-  ERR = mvtnorm::rmvnorm(nrep, rep(0,ncol(Sigma)), Sigma)
+  ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
 
-  pp_ERR = function(Zj) {
-    exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-    zstar = mexp.zm + ERR
-    bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = apply(bf, 1, logsum) # get different denom for each rep
-    exp(bf - denom)  # convert back from log scale
-  }
+  r = W^2/(W^2 + varbeta)
 
-  # simulate pp systems
-  pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
 
   n_pps = length(pps)
   args = 1:length(pp)
@@ -193,6 +185,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 #' @export
 #' @author Anna Hutchinson
 corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower = 0, upper = 1, desired.cov, acc = 0.005, max.iter = 20){
+
   z = bhat/sqrt(V)
   W = 0.2
   r = W^2/(W^2 + V)
@@ -204,19 +197,11 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower = 0, upper = 1, desi
   nrep = 1000
 
   # simulate ERR matrix
-  ERR = mvtnorm::rmvnorm(nrep, rep(0,ncol(Sigma)), Sigma)
+  ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
 
-  pp_ERR = function(Zj) {
-    exp.zm = Zj %*% Sigma
-    mexp.zm = matrix(exp.zm, nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-    zstar = mexp.zm + ERR
-    bf = 0.5 * (log(1 - r) + (r * zstar^2))
-    denom = apply(bf, 1, logsum) # get different denom for each rep
-    exp(bf - denom)  # convert back from log scale
-  }
+  r = W^2/(W^2 + V)
 
-  # simulate pp systems
-  pps = mapply(pp_ERR, zj, SIMPLIFY = FALSE)
+  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
 
   n_pps = length(pps)
   args = 1:length(pp)

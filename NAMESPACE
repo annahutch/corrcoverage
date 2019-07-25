@@ -3,6 +3,7 @@
 export("%>%")
 export(Var.data.cc)
 export(approx.bf.p)
+export(bf_func)
 export(cor2)
 export(corrcov)
 export(corrcov_CI)

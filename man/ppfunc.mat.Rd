@@ -55,7 +55,7 @@ z_scores <- matrix(rnorm(nsnps*100, 0, 3), ncol = nsnps)
 # each row is a vector of simulated PPs
 res <- ppfunc.mat(zstar = z_scores, V = varbeta)
 
-sum(res[1,])
+rowSums(res)
 
 }
 \author{

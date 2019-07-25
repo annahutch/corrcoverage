@@ -106,7 +106,7 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2, p1 = 1e-4) {
 
 #' Posterior probabilities of causality from marginal Z-scores with prior SD as a parameter
 #'
-#' This function converts Z-scores to posterior probabilities of causality, including the null model of no genetic effects
+#' Converts Z-scores to posterior probabilities of causality, including the null model of no genetic effects
 #' @title Find PPs from Z-scores and MAFs
 #' @param z Marginal Z-scores of SNPs
 #' @param f Minor allele frequencies
@@ -203,8 +203,7 @@ ppfunc <- function(z, V, W = 0.2) {
     r = W^2/(W^2 + V)
     bf = 0.5 * (log(1 - r) + (r * z^2))
     denom = logsum(bf)
-    pp.tmp = exp(bf - denom)  # convert back from log scale
-    pp.tmp/sum(pp.tmp)
+    exp(bf - denom)  # convert back from log scale
 }
 
 #' Posterior probabilities of causality from matrix of marginal Z-scores (1 simulation per row)
@@ -250,12 +249,12 @@ ppfunc <- function(z, V, W = 0.2) {
 #' # each row is a vector of simulated PPs
 #' res <- ppfunc.mat(zstar = z_scores, V = varbeta)
 #'
-#' sum(res[1,])
+#' rowSums(res)
 #'
 #' @export
 ppfunc.mat <- function(zstar, V, W = 0.2) {
-    r = matrix(W^2/(W^2 + V), nrow = nrow(zstar), ncol = ncol(zstar), byrow = TRUE)  # see wakefield paper
-    bf = 0.5 * (log(1 - r) + (r * zstar^2))
+    r = W^2/(W^2 + V)
+    bf = 0.5 * t(log(1 - r) + (r * t(zstar^2)))
     denom = apply(bf, 1, logsum)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
     exp(bf - matrix(denom, nrow = nrow(bf), ncol = ncol(bf)))  # convert back from log scale
 }

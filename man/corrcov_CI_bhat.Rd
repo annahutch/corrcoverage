@@ -22,6 +22,8 @@ corrcov_CI_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
 
 \item{W}{Prior for the standard deviation of the effect size parameter beta}
 
+\item{p1}{Prior probability a SNP is associated with the trait (default 1e-4)}
+
 \item{nrep}{The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)}
 
 \item{CI}{The size of the confidence interval (as a decimal)}

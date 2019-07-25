@@ -91,7 +91,7 @@ cs <- credset(pp = postprobs, thr = thr)
 data.frame(claimed.cov = cs$claimed.cov, corr.cov =  corrcov, nvar = cs$nvar)
 ```
 
-Using the Bayesian approach for statistical fine-mapping we obtain a 90% credible set consisting of 4 variants. The claimed coverage of this credible set is ~0.925, yet the corrected coverage estimate is ~0.96, suggesting that we can afford to be 'more confident' that we have captured the causal variant in our credible set. 
+Using the Bayesian approach for statistical fine-mapping we obtain a 90% credible set consisting of 9 variants. The claimed coverage of this credible set is ~0.93, yet the corrected coverage estimate is ~0.97, suggesting that we can afford to be 'more confident' that we have captured the causal variant in our credible set. 
 
 ## Empirical Coverage Estimate
 
@@ -133,7 +133,7 @@ res <- corrected_cs(z = z0, f = MAF, N0, N1, Sigma = LD, lower = 0.5, upper = 1,
 res
 ```
 
-In this example we see that a threshold of just ~0.72 is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 3 variants. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.
+In this example we see that a threshold of just ~0.69 is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 4 variants. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.
 
 Finally, we can compare this coverage estimate of the corrected credible set to an empirical estimate of the true coverage. 
 

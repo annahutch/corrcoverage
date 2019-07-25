@@ -13,9 +13,6 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 options(width = 3000)
 set.seed(2)
-Var.data.cc <- function(f, N, s) {
-    1/(2 * N * f * (1 - f) * s * (1 - s))
-}
 ```
 
 ---
@@ -134,7 +131,7 @@ credibleset <- credset(pp = postprobs, CV = iCV, thr = thresh)
 credibleset
 ```
 
-Here, the 90% credible set contains 114 (out of 200) variants, has a claimed coverage of 0.9008 and contains the true causal variant. In the literature, authors would typically report that they have found a 90% credible set containing 114 variants which they are at least 90% confident contains the true causal variant. 
+Here, the 90% credible set contains many variants, has a claimed coverage of ~90% and contains the true causal variant. In the literature, authors would typically report that they have found a 90% credible set which they are at least 90% confident contains the true causal variant. 
 
 Note that if the variants are named in the `pp` vector, then the `$credset` output would contain variant names rather than their indices.
 
@@ -185,7 +182,7 @@ true.cov.est <- mean(cs)
 true.cov.est
 ```
 
-The estimated empirical coverage is found to be approximately 97.6%, so our estimate of ~97% is accurate - far more so than the standard 'claimed coverage' of ~90%.
+The estimated empirical coverage is found to be approximately 97%, so our corrected coverage estimate is accurate - far more so than the standard 'claimed coverage' of ~90%.
 
 ```{r echo = FALSE}
 df.new <- data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)[1,]
@@ -199,7 +196,6 @@ print(df.new, row.names = FALSE)
 This vignette has shown readers how to use the `corrcoverage` package to obtain a more accurate coverage estimate of the causal variant in a credible set. Obtaining accurate coverage estimates will allow researchers to adjust their credible set to achieve the true desired coverage - for example narrowing down a 95% credible set of 10 variants to just 5 variants. Moreover, reporting an accurate coverage estimate of the causal variant in a credible set will allow for more efficient allocation and expenditure of resources in the laborious follow-up wet lab analyses of the variants in the credible set. Altogether, this procedure will improve the efficiency of determining the genes and pathways which play a role in human disease, ultimately helping to untangle the complex relationship between genetic variants and disease.
 
 ---
-
 
   
 ## References

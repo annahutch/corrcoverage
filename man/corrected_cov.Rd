@@ -51,6 +51,7 @@ simx <- function(nsnps, nsamples, S, maf=0.1) {
 S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 X <- simx(nsnps,nsamples,S)
 LD <- cor2(X)
+maf <- colMeans(X)
 
 ## generate V (variance of estimated effect sizes)
 varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)

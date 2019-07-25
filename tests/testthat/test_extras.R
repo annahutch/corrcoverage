@@ -86,3 +86,21 @@ test_that("approx.bf.p returns 4 columns", {
   res <- approx.bf.p(pvals, f = maf, type = "cc", N = N, s = 0.5, W = 0.2)
   expect_true(dim(res)[2]==4)
 })
+
+test_that("bf_func returns vector of correct length", {
+  varbeta <- Var.data.cc(maf, N, 0.5)
+  expect_true(length(bf_func(z = z, V = varbeta))==length(z))
+})
+
+test_that("calculating bfs over a matrix performs row wise", {
+  W = 0.2
+  V = Var.data.cc(maf, N, 0.5)
+  r = W^2/(W^2 + V)
+  zj = rep(0, 100)
+  zj[2] = 5
+  nrep = 10
+  Z = z_sim(Zj = zj, Sigma = cor2(h), nrep = nrep)
+  bf_matrix = 0.5 * t(log(1 - r) + (r * t(Z^2)))
+  bf_apply = sapply(1:nrep, function(i) bf = 0.5 * (log(1 - r) + (r * Z[i,]^2))) %>% t()
+  expect_identical(bf_matrix, bf_apply)
+})

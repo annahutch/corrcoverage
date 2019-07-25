@@ -60,6 +60,7 @@ simx <- function(nsnps, nsamples, S, maf=0.1) {
 S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 X <- simx(nsnps,nsamples,S)
 LD <- cor2(X)
+maf <- colMeans(X)
 
 varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 

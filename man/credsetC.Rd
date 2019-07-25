@@ -32,8 +32,7 @@ pp <- pp/rowSums(pp)
 
 iCV <- 71
 
-\\notrun{
-credsetC(pp, CV = iCV, thr = 0.9)
-}
+# credsetC(pp, CV = iCV, thr = 0.9)
+
 
 }

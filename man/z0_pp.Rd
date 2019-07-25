@@ -28,7 +28,7 @@ Posterior probabilities of null model (no genetic effect) and causality for each
 Posterior probabilities of causality from marginal Z-scores with prior SD as a parameter
 }
 \details{
-This function converts Z-scores to posterior probabilities of causality, including the null model of no genetic effects
+Converts Z-scores to posterior probabilities of causality, including the null model of no genetic effects
 }
 \examples{
 

@@ -204,12 +204,53 @@ credset <- function(pp, CV, thr = 0.95) {
 #'
 #' iCV <- 71
 #'
-#' \notrun{
-#' credsetC(pp, CV = iCV, thr = 0.9)
-#' }
+#' # credsetC(pp, CV = iCV, thr = 0.9)
+#'
 #'
 #' @export
 credsetC <- function(pp, CV, thr = 0.95) {
   ret = credsetmat(pp, CV, thr)  ## list 1 = wh, 2 = size, 3=contained
   data.frame(claimed.cov = ret[[2]], covered = ret[[3]], nvar = ret[[1]])
+}
+
+#' Calculate ABFs from Z scores
+#'
+#' @title Calculate ABFs from Z scores
+#' @param z Vector of Z-scores
+#' @param V Variance of the estimated effect size
+#' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
+#'
+#' @return ABFs
+#'
+#' @examples
+#'
+#' set.seed(1)
+#' nsnps = 100
+#' N0 = 5000
+#' N1 = 5000
+#' z_scores <- rnorm(nsnps, 0, 3)
+#'
+#' ## generate example LD matrix and MAFs
+#' library(mvtnorm)
+#' nsamples = 1000
+#'
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#'}
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' maf <- colMeans(X)
+#'
+#' varbeta = Var.data.cc(f = maf, N = N0 + N1, s = 0.5)
+#'
+#' bf_func(z_scores, V = varbeta)
+#'
+#' @export
+bf_func <- function(z, V, W = 0.2){
+  r = W^2/(W^2 + V)
+  0.5 * (log(1 - r) + (r * z^2))
 }

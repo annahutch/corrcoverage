@@ -29,7 +29,7 @@ test_that("credsetC function reports correct things", {
 })
 
 test_that("corrected_cov function returns a probability", {
-  corr <- corrected_cov(mu = mu, V = V, Sigma = sigma, pp0 = pp, thr = thr, nrep = 2)
+  corr <- corrected_cov(pp0 = pp, mu = mu, V = V, Sigma = sigma, thr = thr, nrep = 2)
   expect_true(corr>=0 & corr<=1)
 })
 

@@ -4,7 +4,7 @@
 \alias{est_mu_bhat}
 \title{Estimate the true effect at the causal variant}
 \usage{
-est_mu_bhat(bhat, V, N0, N1, W = 0.2)
+est_mu_bhat(bhat, V, N0, N1, p1 = 1e-04, W = 0.2)
 }
 \arguments{
 \item{bhat}{Vector of estimated effect sizes}
@@ -14,6 +14,8 @@ est_mu_bhat(bhat, V, N0, N1, W = 0.2)
 \item{N0}{Number of controls}
 
 \item{N1}{Number of cases}
+
+\item{p1}{Prior probability a SNP is associated with the trait, default 1e-4}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta}
 }
@@ -25,16 +27,15 @@ Estimate the true effect at the causal variant
 }
 \examples{
 
-set.seed(1)
 nsnps <- 100
 N0 <- 5000 # number of controls
 N1 <- 5000 # number of cases
 
-maf <- runif(nsnps, 0.05, 0.5)
+maf <- runif(nsnps, 0.05, 0.3)
 
 varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 
-bhats = rnorm(nsnps,0,0.2) # log OR
+bhats = rnorm(nsnps,0,0.2) # log(OR)
 
 est_mu_bhat(bhat = bhats, V = varbeta, N0 = N0, N1 = N1)
 

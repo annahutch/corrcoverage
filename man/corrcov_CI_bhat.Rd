@@ -5,7 +5,7 @@
 \title{Confidence interval for corrected coverage estimate using estimated effect sizes and their standard errors}
 \usage{
 corrcov_CI_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
-  nrep = 1000, CI = 0.95)
+  p1 = 1e-04, nrep = 1000, CI = 0.95)
 }
 \arguments{
 \item{bhat}{Estimated effect sizes from single-SNP logistic regressions}
@@ -41,17 +41,20 @@ nsnps <- 100
 N0 <- 5000 # number of controls
 N1 <- 5000 # number of cases
 
-# simulate fake haplotypes to obtain MAFs and LD matrix
-nhaps <- 1000
-lag <- 5
-maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-haps <- laghaps[,1:nsnps]
-for(j in 1:lag)
-   haps <- haps + laghaps[,(1:nsnps)+j]
-haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-maf <- colMeans(haps)
-LD <- cor2(haps)
+## generate example LD matrix
+library(mvtnorm)
+nsamples = 1000
+
+simx <- function(nsnps, nsamples, S, maf=0.1) {
+    mu <- rep(0,nsnps)
+    rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+    pvars <- pnorm(rawvars)
+    x <- qbinom(1-pvars, 1, maf)
+}
+
+S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+X <- simx(nsnps,nsamples,S)
+LD <- cor2(X)
 
 varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 

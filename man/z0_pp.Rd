@@ -4,7 +4,7 @@
 \alias{z0_pp}
 \title{Find PPs from Z-scores and MAFs}
 \usage{
-z0_pp(z, f, type, N, s, W = 0.2)
+z0_pp(z, f, type, N, s, W = 0.2, p1 = 1e-04)
 }
 \arguments{
 \item{z}{Marginal Z-scores of SNPs}
@@ -17,7 +17,9 @@ z0_pp(z, f, type, N, s, W = 0.2)
 
 \item{s}{Proportion of cases (N1/N0+N1), ignored if type=='quant'}
 
-\item{W}{Prior for the standard deviation of the effect size parameter beta}
+\item{W}{Prior for the standard deviation of the effect size parameter, beta (default 0.2)}
+
+\item{p1}{Prior probability a SNP is associated with the trait (default 1e-4)}
 }
 \value{
 Posterior probabilities of null model (no genetic effect) and causality for each SNP
@@ -36,15 +38,20 @@ N0 = 5000
 N1 = 5000
 z_scores <- rnorm(nsnps, 0, 3)
 
-nhaps <- 1000
-lag <- 5
-maf.tmp <- runif(nsnps+lag, 0.05, 0.5) # common SNPs
-laghaps <- do.call("cbind", lapply(maf.tmp, function(f) rbinom(nhaps,1,f)))
-haps <- laghaps[,1:nsnps]
-for(j in 1:lag)
-   haps <- haps + laghaps[,(1:nsnps)+j]
-haps <- round(haps/matrix(apply(haps,2,max),nhaps,nsnps,byrow=TRUE))
-maf <- colMeans(haps)
+## generate example LD matrix and MAFs
+library(mvtnorm)
+nsamples = 1000
+
+simx <- function(nsnps, nsamples, S, maf=0.1) {
+    mu <- rep(0,nsnps)
+    rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+    pvars <- pnorm(rawvars)
+    x <- qbinom(1-pvars, 1, maf)
+}
+
+S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+X <- simx(nsnps,nsamples,S)
+maf <- colMeans(X)
 
 res <- z0_pp(z = z_scores, f = maf, type = "cc", N = N0+N1, s = N1/(N0+N1))
 sum(res)

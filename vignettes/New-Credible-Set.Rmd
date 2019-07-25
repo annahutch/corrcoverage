@@ -86,7 +86,7 @@ Note that this function is similar to using `corrcov` as explained in the ["Corr
 
 ```{r}
 thr = 0.9
-corrcov <- corrected_cov(mu = muhat, V = varbeta, Sigma = LD, pp0 = postprobs, thr = thr, nrep = 1000)
+corrcov <- corrected_cov(pp0 = postprobs, mu = muhat, V = varbeta, Sigma = LD, thr = thr, nrep = 1000)
 cs <- credset(pp = postprobs, thr = thr)
 data.frame(claimed.cov = cs$claimed.cov, corr.cov =  corrcov, nvar = cs$nvar)
 ```

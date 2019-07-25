@@ -19,6 +19,15 @@ Variance of estimated effect size \eqn{\hat{\beta}}, V.
 \description{
 Variance of the estimated effect size for case-control data
 }
+\examples{
+
+maf =  runif(100, 0.05, 0.5)
+N0 = 5000 # number of controls
+N1 = 5000 # number of cases
+
+Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
+
+}
 \author{
 Claudia Giambartolomei
 }

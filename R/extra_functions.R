@@ -64,7 +64,8 @@ prop_cov <- function(x) {
 #' @param f Minor allele frequencies
 #' @param N0 Number of controls
 #' @param N1 Number of cases
-#' @param W Prior for the standard deviation of the effect size parameter, beta
+#' @param p1 Prior probability a SNP is associated with the trait, default 1e-4
+#' @param W Prior for the standard deviation of the effect size parameter, beta, default 0.2
 #'
 #' @return Estimate of the true effect at the causal variant
 #'
@@ -82,11 +83,10 @@ prop_cov <- function(x) {
 #' @export
 #'
 #' @author Anna Hutchinson
-est_mu <- function(z, f, N0, N1, W = 0.2) {
+est_mu <- function(z, f, N0, N1, p1 = 1e-4, W = 0.2) {
     V = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
     r = W^2/(W^2 + V)
     lABF = 0.5 * (log(1 - r) + (r * z^2))
-    p1 = 1e-04
     nsnps = length(lABF)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
     tmp = c(1, lABF)  # add on extra for null model
@@ -104,6 +104,7 @@ est_mu <- function(z, f, N0, N1, W = 0.2) {
 #' @param V Prior variance for estimated effect sizes
 #' @param N0 Number of controls
 #' @param N1 Number of cases
+#' @param p1 Prior probability a SNP is associated with the trait, default 1e-4
 #' @param W Prior for the standard deviation of the effect size parameter, beta
 #'
 #' @return Estimate of the true effect at the causal variant
@@ -125,11 +126,10 @@ est_mu <- function(z, f, N0, N1, W = 0.2) {
 #' @export
 #'
 #' @author Anna Hutchinson
-est_mu_bhat <- function(bhat, V, N0, N1, W = 0.2) {
+est_mu_bhat <- function(bhat, V, N0, N1, p1 = 1e-4, W = 0.2) {
     z = bhat/sqrt(V)
     r = W^2/(W^2 + V)
     lABF = 0.5 * (log(1 - r) + (r * z^2))
-    p1 = 1e-04  # hard coded
     nsnps = length(lABF)
     prior = c(1 - nsnps * p1, rep(p1, nsnps))
     tmp = c(1, lABF)  # add on extra for null model

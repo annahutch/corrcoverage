@@ -27,12 +27,12 @@ output includes a binary indicator of whether the CV is contained in the set
 
 set.seed(1)
 nsnps <- 100
-pp <- rnorm(nsnps, 0.2, 0.05)
+pp <- rnorm(nsnps, 0.3, 0.05)
 pp <- pp/sum(pp)
 
 credset(pp, thr = 0.9)
 
-iCV <- 4
+iCV <- 71
 
 credset(pp, CV = iCV, thr = 0.9)
 

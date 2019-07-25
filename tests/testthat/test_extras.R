@@ -105,22 +105,17 @@ test_that("calculating bfs over a matrix performs row wise", {
   expect_identical(bf_matrix, bf_apply)
 })
 
-bf_func <- function(z, V, W = 0.2){
-  stopifnot(class(z)==class(V))
-  r = W^2/(W^2 + V)
-  0.5 * (log(1 - r) + (r * z^2))
-}
-
 test_that("bf_func only accepts parameters of the same class", {
   V <- Var.data.cc(f = maf, N, 0.5)
   V_matrix = t(replicate(2, V))
-  z_matrix = t(replicate(2, V))
+  z_matrix = t(replicate(2, z))
   expect_error(bf_func(z = z, V = V_matrix))
   expect_error(bf_func(z = z_matrix, V = V))
 })
 
 test_that(".zj_abf only accepts parameters of correct class", {
   W = 0.2
+  V = Var.data.cc(f = maf, N, 0.5)
   r = W^2/(W^2+V)
   nrep = 10
   z_wrong = t(replicate(2, z))

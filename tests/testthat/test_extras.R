@@ -104,3 +104,41 @@ test_that("calculating bfs over a matrix performs row wise", {
   bf_apply = sapply(1:nrep, function(i) bf = 0.5 * (log(1 - r) + (r * Z[i,]^2))) %>% t()
   expect_identical(bf_matrix, bf_apply)
 })
+
+bf_func <- function(z, V, W = 0.2){
+  stopifnot(class(z)==class(V))
+  r = W^2/(W^2 + V)
+  0.5 * (log(1 - r) + (r * z^2))
+}
+
+test_that("bf_func only accepts parameters of the same class", {
+  V <- Var.data.cc(f = maf, N, 0.5)
+  V_matrix = t(replicate(2, V))
+  z_matrix = t(replicate(2, V))
+  expect_error(bf_func(z = z, V = V_matrix))
+  expect_error(bf_func(z = z_matrix, V = V))
+})
+
+test_that(".zj_abf only accepts parameters of correct class", {
+  W = 0.2
+  r = W^2/(W^2+V)
+  nrep = 10
+  z_wrong = t(replicate(2, z))
+  r_wrong = t(replicate(2, r))
+  ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(sigma)), sigma)
+  expect_error(.zj_abf(Zj = z_wrong, sigma, nrep, ERR, r))
+  expect_error(.zj_abf(Zj = z, sigma, nrep, ERR[1,], r))
+  expect_error(.zj_abf(Zj = z, sigma, nrep, ERR, r_wrong))
+})
+
+test_that(".zj_pp only accepts parameters of correct class", {
+  W = 0.2
+  r = W^2/(W^2+V)
+  nrep = 10
+  z_wrong = t(replicate(2, z))
+  r_wrong = t(replicate(2, r))
+  ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(sigma)), sigma)
+  expect_error(.zj_pp(Zj = z_wrong, sigma, nrep, ERR, r))
+  expect_error(.zj_pp(Zj = z, sigma, nrep, ERR[1,], r))
+  expect_error(.zj_pp(Zj = z, sigma, nrep, ERR, r_wrong))
+})

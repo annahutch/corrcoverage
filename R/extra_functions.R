@@ -215,6 +215,7 @@ credsetC <- function(pp, CV, thr = 0.95) {
 
 #' Calculate ABFs from Z scores
 #'
+#' Note, z and V should both be vectors or both be matrices
 #' @title Calculate ABFs from Z scores
 #' @param z Vector of Z-scores
 #' @param V Variance of the estimated effect size
@@ -251,6 +252,7 @@ credsetC <- function(pp, CV, thr = 0.95) {
 #'
 #' @export
 bf_func <- function(z, V, W = 0.2){
+  stopifnot(class(z)==class(V))
   r = W^2/(W^2 + V)
   0.5 * (log(1 - r) + (r * z^2))
 }

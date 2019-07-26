@@ -14,14 +14,13 @@ testdata <- system.file("extdata", "testdata.RDS", package="corrcoverage")
 data <- readRDS(testdata)
 
 test_that("cor2 finds correlation matrix", {
-  skip("")
   r <- 10 # no. samples
   c <- 100 # no. SNPs
   h <- matrix(sample(0:1, r*c, replace=TRUE), r, c) # phased haplotype matrix
   cor_matrix <- cor2(h)
   expect_true(dim(cor_matrix)[1]==c)
   expect_true(dim(cor_matrix)[2]==c)
-  expect_true(all(dplyr::between(cor_matrix,-1.0001,1.0001)))
+  expect_true(all(dplyr::between(cor_matrix,-1.01,1.01)))
 })
 
 test_that("z_sim simulates the correct number of marginal Z scores", {
@@ -114,11 +113,11 @@ test_that("bf_func only accepts parameters of the same class", {
 })
 
 test_that(".zj_abf only accepts parameters of correct class", {
-  skip("")
   W = 0.2
   V = Var.data.cc(f = maf, N, 0.5)
   r = W^2/(W^2+V)
   nrep = 10
+  sigma =  cor2(h)
   z_wrong = t(replicate(2, z))
   r_wrong = t(replicate(2, r))
   ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(sigma)), sigma)
@@ -128,10 +127,11 @@ test_that(".zj_abf only accepts parameters of correct class", {
 })
 
 test_that(".zj_pp only accepts parameters of correct class", {
-  skip("")
   W = 0.2
+  V = Var.data.cc(f = maf, N, 0.5)
   r = W^2/(W^2+V)
   nrep = 10
+  sigma =  cor2(h)
   z_wrong = t(replicate(2, z))
   r_wrong = t(replicate(2, r))
   ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(sigma)), sigma)

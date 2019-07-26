@@ -114,11 +114,11 @@ test_that("bf_func only accepts parameters of the same class", {
 })
 
 test_that(".zj_abf only accepts parameters of correct class", {
-  skip("")
   W = 0.2
   V = Var.data.cc(f = maf, N, 0.5)
   r = W^2/(W^2+V)
   nrep = 10
+  sigma =  cor2(h)
   z_wrong = t(replicate(2, z))
   r_wrong = t(replicate(2, r))
   ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(sigma)), sigma)
@@ -128,10 +128,11 @@ test_that(".zj_abf only accepts parameters of correct class", {
 })
 
 test_that(".zj_pp only accepts parameters of correct class", {
-  skip("")
   W = 0.2
+  V = Var.data.cc(f = maf, N, 0.5)
   r = W^2/(W^2+V)
   nrep = 10
+  sigma =  cor2(h)
   z_wrong = t(replicate(2, z))
   r_wrong = t(replicate(2, r))
   ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(sigma)), sigma)

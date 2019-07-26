@@ -14,14 +14,13 @@ testdata <- system.file("extdata", "testdata.RDS", package="corrcoverage")
 data <- readRDS(testdata)
 
 test_that("cor2 finds correlation matrix", {
-  skip("")
   r <- 10 # no. samples
   c <- 100 # no. SNPs
   h <- matrix(sample(0:1, r*c, replace=TRUE), r, c) # phased haplotype matrix
   cor_matrix <- cor2(h)
   expect_true(dim(cor_matrix)[1]==c)
   expect_true(dim(cor_matrix)[2]==c)
-  expect_true(all(dplyr::between(cor_matrix,-1.0001,1.0001)))
+  expect_true(all(dplyr::between(cor_matrix,-1.01,1.01)))
 })
 
 test_that("z_sim simulates the correct number of marginal Z scores", {

@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{pvals_pp}
 \alias{pvals_pp}
-\title{Find PPs from P-values and MAFs}
+\title{Find PPs for SNPs and null model from P-values and MAFs}
 \usage{
 pvals_pp(pvals, f, type, N, s, W = 0.2, p1 = 1e-04)
 }

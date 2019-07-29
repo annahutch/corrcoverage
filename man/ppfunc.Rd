@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{ppfunc}
 \alias{ppfunc}
-\title{Find PPs from Z-scores}
+\title{Find PPs of SNPs from Z-scores}
 \usage{
 ppfunc(z, V, W = 0.2)
 }

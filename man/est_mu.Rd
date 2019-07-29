@@ -4,7 +4,7 @@
 \alias{est_mu}
 \title{Estimate the true effect at the causal variant}
 \usage{
-est_mu(z, f, N0, N1, p1 = 1e-04, W = 0.2)
+est_mu(z, f, N0, N1, W = 0.2)
 }
 \arguments{
 \item{z}{Vector of marginal Z-scores}
@@ -14,8 +14,6 @@ est_mu(z, f, N0, N1, p1 = 1e-04, W = 0.2)
 \item{N0}{Number of controls}
 
 \item{N1}{Number of cases}
-
-\item{p1}{Prior probability a SNP is associated with the trait, default 1e-4}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta, default 0.2}
 }

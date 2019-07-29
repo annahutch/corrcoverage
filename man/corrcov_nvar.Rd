@@ -5,7 +5,7 @@
 \title{Corrected coverage estimate using Z-scores and mafs (fixing nvar)}
 \usage{
 corrcov_nvar(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
-  p1 = 1e-04, nrep = 10000)
+  nrep = 10000)
 }
 \arguments{
 \item{z}{Marginal Z-scores}
@@ -23,8 +23,6 @@ corrcov_nvar(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 \item{thr}{Minimum threshold for fine-mapping experiment (default 0.95)}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta (default 0.2)}
-
-\item{p1}{Prior probability a SNP is associated with the trait (default 1e-4)}
 
 \item{nrep}{The number of simulated posterior probability systems to consider for the corrected
 coverage estimate (nrep = 10000 default because we trim out the ones without correct

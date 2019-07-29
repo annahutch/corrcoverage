@@ -4,7 +4,7 @@
 \alias{corrcov_bhat}
 \title{Corrected coverage estimate using estimated effect sizes and their standard errors}
 \usage{
-corrcov_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-04,
+corrcov_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
   nrep = 1000)
 }
 \arguments{
@@ -21,8 +21,6 @@ corrcov_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-04,
 \item{thr}{Minimum threshold for fine-mapping experiment (default 0.95)}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta (default 0.2)}
-
-\item{p1}{Prior probability a SNP is associated with the trait (default 1e-4)}
 
 \item{nrep}{The number of simulated posterior probability systems to consider for the corrected coverage estimate (default 1000)}
 }

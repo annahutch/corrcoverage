@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_prob_functions.R
 \name{z0_pp}
 \alias{z0_pp}
-\title{Find PPs from Z-scores and MAFs}
+\title{Find PPs for SNPs and null model from Z-scores and MAFs}
 \usage{
 z0_pp(z, f, type, N, s, W = 0.2, p1 = 1e-04)
 }

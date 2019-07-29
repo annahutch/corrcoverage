@@ -19,6 +19,9 @@ ABFs
 \description{
 Calculate ABFs from Z scores
 }
+\details{
+Note, z and V should both be vectors or both be matrices
+}
 \examples{
 
 set.seed(1)

@@ -4,8 +4,8 @@
 \alias{corrcov_CI}
 \title{Confidence interval for corrected coverage estimate using Z-scores and mafs}
 \usage{
-corrcov_CI(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-04,
-  nrep = 1000, CI = 0.95)
+corrcov_CI(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000,
+  CI = 0.95)
 }
 \arguments{
 \item{z}{Marginal Z-scores}
@@ -21,8 +21,6 @@ corrcov_CI(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, p1 = 1e-04,
 \item{thr}{Minimum threshold for fine-mapping experiment (default 0.95)}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta (default 0.2)}
-
-\item{p1}{Prior probability a SNP is associated with the trait (default 1e-4)}
 
 \item{nrep}{The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)}
 

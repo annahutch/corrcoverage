@@ -61,7 +61,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
   W = 0.2
   r = W^2/(W^2 + varbeta)
   pp = ppfunc(z, V = varbeta) # pp of system in question
-  muhat = est_mu(z, f, N0, N1)
+  muhat = sum(abs(z) * pp)
   nsnps = length(pp)
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
@@ -190,7 +190,7 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower = 0, upper = 1, desi
   W = 0.2
   r = W^2/(W^2 + V)
   pp = ppfunc(z, V = V) # pp of system in question
-  muhat = est_mu_bhat(bhat, V, N0, N1, W = 0.2)
+  muhat = sum(abs(z) * pp)
   nsnps = length(pp)
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
   zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal

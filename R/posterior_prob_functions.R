@@ -50,7 +50,7 @@ approx.bf.p <- function(pvals, f, type, N, s, W = 0.2) {
 #' Posterior probabilities of causality from P-values
 #'
 #' This function converts p-values to posterior probabilities of causality, including the null model of no genetic effect
-#' @title Find PPs from P-values and MAFs
+#' @title Find PPs for SNPs and null model from P-values and MAFs
 #' @param pvals P-values of SNPs
 #' @param f Minor allele frequencies
 #' @param type Type of experiment ('quant' or 'cc')
@@ -107,7 +107,7 @@ pvals_pp <- function(pvals, f, type, N, s, W = 0.2, p1 = 1e-4) {
 #' Posterior probabilities of causality from marginal Z-scores with prior SD as a parameter
 #'
 #' Converts Z-scores to posterior probabilities of causality, including the null model of no genetic effects
-#' @title Find PPs from Z-scores and MAFs
+#' @title Find PPs for SNPs and null model from Z-scores and MAFs
 #' @param z Marginal Z-scores of SNPs
 #' @param f Minor allele frequencies
 #' @param type Type of experiment ('quant' or 'cc')
@@ -163,7 +163,7 @@ z0_pp <- function(z, f, type, N, s, W = 0.2, p1 = 1e-4) {
 #' This function converts Z-scores to posterior probabilities of causality
 #' i.e. not including the null model of no genetic effects,
 #' so that the sum of the posterior probabilities for all variants is 1
-#' @title Find PPs from Z-scores
+#' @title Find PPs of SNPs from Z-scores
 #' @param z Vector of marginal Z-scores
 #' @param V Variance of the estimated effect size (can be obtained using Var.beta.cc function)
 #' @param W Prior for the standard deviation of the effect size parameter, beta (W = 0.2 default)
@@ -212,7 +212,7 @@ ppfunc <- function(z, V, W = 0.2) {
 #' This function converts a matrix of Z-scores (one row per simulation) to posterior probabilities of causality,
 #' not including the null model of no genetic effects,
 #' so that the sum of the posterior probabilities for each simulation (each row) is 1.
-#' @title Find PPs from matrix of Z-scores
+#' @title Find PPs of SNPs from matrix of Z-scores
 #' @param zstar Matrix of marginal z-scores, one replicate per row
 #' @param V Variance of the estimated effect size, one element per column of zstar
 #' @param W Prior for the standard deviation of the effect size parameter, beta
@@ -254,6 +254,7 @@ ppfunc <- function(z, V, W = 0.2) {
 #'
 #' @export
 ppfunc.mat <- function(zstar, V, W = 0.2) {
+    stopifnot(class(zstar)=="matrix") # ensure zstar is a matrix of simulated z scores
     r = W^2/(W^2 + V)
     bf = 0.5 * t(log(1 - r) + (r * t(zstar^2)))
     denom = apply(bf, 1, logsum)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf

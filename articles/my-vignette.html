@@ -113,7 +113,7 @@
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Simulate reference haplotypes</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">nsnps &lt;-<span class="st"> </span><span class="dv">200</span></a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">nhaps &lt;-<span class="st"> </span><span class="dv">1000</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">lag &lt;-<span class="st"> </span><span class="dv">5</span> <span class="co"># genotypes are correlated between neighbouring variants</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">lag &lt;-<span class="st"> </span><span class="dv">6</span> <span class="co"># genotypes are correlated between neighbouring variants</span></a>
 <a class="sourceLine" id="cb3-5" data-line-number="5">maf &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(nsnps<span class="op">+</span>lag,<span class="fl">0.05</span>,<span class="fl">0.5</span>) <span class="co"># common SNPs</span></a>
 <a class="sourceLine" id="cb3-6" data-line-number="6">laghaps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(maf, <span class="cf">function</span>(f) <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(nhaps,<span class="dv">1</span>,f)))</a>
 <a class="sourceLine" id="cb3-7" data-line-number="7">haps &lt;-<span class="st"> </span>laghaps[,<span class="dv">1</span><span class="op">:</span>nsnps]</a>
@@ -133,7 +133,7 @@
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">CV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(snps[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(haps)<span class="op">&gt;</span><span class="fl">0.1</span>)],<span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV) <span class="co"># index of cv</span></a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">OR &lt;-<span class="st"> </span><span class="fl">1.1</span></a></code></pre></div>
-<p>Then, we simulate marginal <span class="math inline">\(Z\)</span>-scores. Here, we consider a (fairly small) GWAS with 5000 cases and 5000 controls.</p>
+<p>Then, we simulate marginal <span class="math inline">\(Z\)</span>-scores. Here, we consider a (relatively small) GWAS with 5000 cases and 5000 controls.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">              <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">              <span class="dt">snps=</span>snps, <span class="co"># column names in freq of SNPs for which Z scores should be generated</span></a>
@@ -147,13 +147,13 @@
 <h2 class="hasAnchor">
 <a href="#find-a-credible-set" class="anchor"></a>Find a credible set</h2>
 <hr>
-<p>We now use the <code>credset</code> function in the <code>corrcoverage</code> package to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows the standard steps from Maller et al.’s approach:</p>
+<p>Firstly, the <code>credset</code> function in the <code>corrcoverage</code> package is used to obtain a credible set using the Bayesian approach for fine-mapping. In brief, the function follows the standard steps from Maller et al.’s approach:</p>
 <ol style="list-style-type: decimal">
-<li>Order variants into descending order of posterior probabilities.</li>
+<li>Order variants into descending order of posterior probabilities (PPs).</li>
 <li>Cumulatively sum the PPs for these variants until the specified threshold is exceeded.</li>
 <li>Group these variants to form the credible set.</li>
 </ol>
-<p>The function requires posterior probabilities of causality as an input, and so we use the <code>ppfunc</code> function to convert the marginal <span class="math inline">\(Z\)</span>-scores to posterior probabilities of causality. The <code>ppfunc</code> function also requires a value for <span class="math inline">\(V\)</span>, the variance of the estimated effect size, which can be easily calculated using the <code>Var.data.cc</code> function. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.</p>
+<p>The function requires posterior probabilities of causality (PPs) as an input, and so we use the <code>ppfunc</code> function to convert the marginal <span class="math inline">\(Z\)</span>-scores to posterior probabilities of causality. The <code>ppfunc</code> function also requires a value for <span class="math inline">\(V\)</span>, the variance of the estimated effect size, which can be easily calculated using the <code>Var.data.cc</code> function. The prior standard deviation of the effect size, <span class="math inline">\(W\)</span>, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">N0 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of controls</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">N1 &lt;-<span class="st"> </span><span class="dv">5000</span> <span class="co"># number of cases</span></a>
 <a class="sourceLine" id="cb8-3" data-line-number="3"></a>
@@ -164,7 +164,7 @@
 <a class="sourceLine" id="cb8-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(postprobs, <span class="dt">main =</span> <span class="st">"Posterior probabilities of causality"</span>, <span class="dt">xlab =</span> <span class="st">"SNP index"</span>, <span class="dt">ylab =</span> <span class="st">"Posterior probability"</span>)</a>
 <a class="sourceLine" id="cb8-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> iCV, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="my-vignette_files/figure-html/unnamed-chunk-6-1.png" width="384"></p>
-<p>The posterior probability plot shows the location of the causal variant (red line). Notice that the causal variant is not the variant with the largest posterior probability. This is not rare in fine-mapping analyses and occurs due to linkage disequilibrium patterns (correlation between SNPs).</p>
+<p>The posterior probability plot shows the location of the causal variant (red line).</p>
 <p>The <code>credset</code> function reports the variants in the credible set, the claimed coverage<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> (the sum of the posterior probabilities of the variants in the set) and the number of variants in the credible set (nvar). If the <code>CV</code> parameter is supplied by the user (e.g. in simulation studies where the CV is known), then the output also includes a binary indicator of whether the causal variant was contained in the credible set.</p>
 <p>We use the <code>credset</code> function to obtain a 90% credible set.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">thresh &lt;-<span class="st"> </span><span class="fl">0.9</span></a>
@@ -173,29 +173,29 @@
 <a class="sourceLine" id="cb9-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb9-5" data-line-number="5">credibleset</a></code></pre></div>
 <pre><code>## $credset
-##   [1]  49  48  46  11 125 126  44  45 153 185 128 107   1 152  10 119 149 190  30  43  12  62  60  61 184  42 154 127 186 180  93  94  53  72 189 124  16  17 123  91  70 106  55 183 130 191 139  24 151 112  97  40  83  57  95  47  58  50  32  69  92 187  52 113 181 175  78  21 111 134 135 179   2 150 129  96   3 195  84  68  90 103 144 146  66  63  51 104 108  18 194  71 147  81  80 188   6 101  27   4  34 174 196 161  67   8 159  26 170 140 109  38  31  87 176
+##  [1]   4 160  24   3 158  25 156 157 128  69 127   2  53  42 124 162 126 152  51 123 171  52 145
 ## 
 ## $claimed.cov
-## [1] 0.9006078
+## [1] 0.9007093
 ## 
 ## $nvar
-## [1] 115</code></pre>
+## [1] 23</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">thresh &lt;-<span class="st"> </span><span class="fl">0.9</span></a>
 <a class="sourceLine" id="cb11-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb11-3" data-line-number="3">credibleset &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)</a>
 <a class="sourceLine" id="cb11-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb11-5" data-line-number="5">credibleset</a></code></pre></div>
 <pre><code>## $credset
-##   [1]  49  48  46  11 125 126  44  45 153 185 128 107   1 152  10 119 149 190  30  43  12  62  60  61 184  42 154 127 186 180  93  94  53  72 189 124  16  17 123  91  70 106  55 183 130 191 139  24 151 112  97  40  83  57  95  47  58  50  32  69  92 187  52 113 181 175  78  21 111 134 135 179   2 150 129  96   3 195  84  68  90 103 144 146  66  63  51 104 108  18 194  71 147  81  80 188   6 101  27   4  34 174 196 161  67   8 159  26 170 140 109  38  31  87 176
+##  [1]   4 160  24   3 158  25 156 157 128  69 127   2  53  42 124 162 126 152  51 123 171  52 145
 ## 
 ## $claimed.cov
-## [1] 0.9006078
+## [1] 0.9007093
 ## 
 ## $covered
 ## [1] 1
 ## 
 ## $nvar
-## [1] 115</code></pre>
+## [1] 23</code></pre>
 <p>Here, the 90% credible set contains many variants, has a claimed coverage of ~90% and contains the true causal variant. In the literature, authors would typically report that they have found a 90% credible set which they are at least 90% confident contains the true causal variant.</p>
 <p>Note that if the variants are named in the <code>pp</code> vector, then the <code>$credset</code> output would contain variant names rather than their indices.</p>
 <hr>
@@ -219,8 +219,8 @@
 <p>Side note: If the estimated effect size coefficients (<code>bhat</code>) and their standard errors (<code><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt(V)</a></code>) are known instead of <span class="math inline">\(Z\)</span>-scores and minor allele frequencies, then the <code>corrcov_bhat</code> function can be used analogously.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrcov.html">corrcov</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</a></code></pre></div>
 <pre><code>##  Corrected.Coverage Claimed.Coverage Threshold
-##              0.9383        0.9006078       0.9</code></pre>
-<p>In this example, the 90% credible set may in actual fact have nearer to 97% coverage of the causal variant in the credible set.</p>
+##           0.9833866        0.9007093       0.9</code></pre>
+<p>In this example, the 90% credible set may in actual fact have nearer to 98% coverage of the causal variant in the credible set.</p>
 <hr>
 </div>
 <div id="compare-with-estimate-of-true-coverage" class="section level2">
@@ -240,16 +240,16 @@
 <a class="sourceLine" id="cb15-11" data-line-number="11">cs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)<span class="op">$</span>cov)</a>
 <a class="sourceLine" id="cb15-12" data-line-number="12">true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs)</a>
 <a class="sourceLine" id="cb15-13" data-line-number="13">true.cov.est</a></code></pre></div>
-<pre><code>## [1] 0.969</code></pre>
-<p>The estimated empirical coverage is found to be approximately 97%, so our corrected coverage estimate is accurate - far more so than the standard ‘claimed coverage’ of ~90%.</p>
+<pre><code>## [1] 0.981</code></pre>
+<p>The estimated empirical coverage is found to be approximately 98%, showing that our corrected coverage estimate was indeed accurate - far more so than the standard claimed coverage of ~90%.</p>
 <pre><code>##  Empirical.Coverage Corrected.Coverage Claimed.Coverage Threshold
-##               0.969             0.9383        0.9006078       0.9</code></pre>
+##               0.981          0.9833866        0.9007093       0.9</code></pre>
 <hr>
 </div>
 <div id="so-what" class="section level2">
 <h2 class="hasAnchor">
 <a href="#so-what" class="anchor"></a>So what?</h2>
-<p>This vignette has shown readers how to use the <code>corrcoverage</code> package to obtain a more accurate coverage estimate of the causal variant in a credible set. Obtaining accurate coverage estimates will allow researchers to adjust their credible set to achieve the true desired coverage - for example narrowing down a 95% credible set of 10 variants to just 5 variants. Moreover, reporting an accurate coverage estimate of the causal variant in a credible set will allow for more efficient allocation and expenditure of resources in the laborious follow-up wet lab analyses of the variants in the credible set. Altogether, this procedure will improve the efficiency of determining the genes and pathways which play a role in human disease, ultimately helping to untangle the complex relationship between genetic variants and disease.</p>
+<p>This vignette has shown readers how to use the <code>corrcoverage</code> package to obtain a more accurate coverage estimate of the causal variant in a credible set. Obtaining accurate coverage estimates will allow researchers to adjust their credible set to achieve the true desired coverage - for example narrowing down a 95% credible set of 10 variants to just 5 variants (see <a href="https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html" class="uri">https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html</a>). Moreover, reporting an accurate coverage estimate of the causal variant in a credible set will allow for more efficient allocation and expenditure of resources in the laborious follow-up wet lab analyses of the variants in the credible set. Altogether, this procedure will improve the efficiency of determining the genes and pathways which play a role in human disease, ultimately helping to untangle the complex relationship between genetic variants and disease.</p>
 <hr>
 </div>
 <div id="references" class="section level2">

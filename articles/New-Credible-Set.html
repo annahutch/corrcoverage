@@ -201,7 +201,7 @@
 ## 
 ## $size
 ## [1] 0.7343958</code></pre>
-<p>In this example we see that a threshold of just ~0.69 is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 4 variants. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.</p>
+<p>In this example we see that a much smaller threshold value is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 4 variants. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.</p>
 <p>Finally, we can compare this coverage estimate of the corrected credible set to an empirical estimate of the true coverage.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">new.cs.sims &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> res<span class="op">$</span>req.thr)<span class="op">$</span>cov)</a>
 <a class="sourceLine" id="cb17-2" data-line-number="2">true.cov.est2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(new.cs.sims)</a></code></pre></div>

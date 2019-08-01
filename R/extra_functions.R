@@ -55,7 +55,8 @@ cor2 <- function(x) {
 #' @return Proportion of x with x = 1
 #' @author Anna Hutchinson
 prop_cov <- function(x) {
-    sum(x$covered)/length(x$covered)
+    ## sum(x$covered)/length(x$covered)
+    .Internal(mean(x$covered)) # faster
 }
 
 #' @title Estimate the true effect at the causal variant

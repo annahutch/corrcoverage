@@ -2,7 +2,8 @@
 % Please edit documentation in R/func_utils.R
 \name{.zj_pp}
 \alias{.zj_pp}
-\title{Simulate posterior probabilities of causality from joint Z-score vector}
+\title{Simulate posterior probabilities of causality from joint
+    Z-score vector}
 \usage{
 .zj_pp(Zj, int.Sigma, int.nrep, int.ERR, int.r)
 }
@@ -18,7 +19,8 @@
 \item{int.r}{internal r}
 }
 \value{
-Matrix of simulated posterior probabilties of causality, one simulation per row
+Matrix of simulated posterior probabilties of causality,
+    one simulation per row
 }
 \description{
 Internal function: Simulate nrep posterior probabilities of causality from joint Z-score vector

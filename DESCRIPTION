@@ -39,6 +39,7 @@ Imports:
     data.table,
     magrittr,
     stats,
-    Rcpp
+    Rcpp,
+    matrixStats
 SystemRequirements: C++11
 Remotes: chr1swallace/simGWAS

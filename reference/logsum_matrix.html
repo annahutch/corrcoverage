@@ -6,8 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simulate posterior probabilities of causality from joint
-    Z-score vector — .zj_pp • corrcoverage</title>
+<title>logsum rows of a matrix — logsum_matrix • corrcoverage</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -38,10 +37,9 @@
 
 
 
-<meta property="og:title" content="Simulate posterior probabilities of causality from joint
-    Z-score vector — .zj_pp" />
+<meta property="og:title" content="logsum rows of a matrix — logsum_matrix" />
 
-<meta property="og:description" content="Internal function: Simulate nrep posterior probabilities of causality from joint Z-score vector" />
+<meta property="og:description" content="logsum rows of a matrix" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -123,53 +121,31 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Simulate posterior probabilities of causality from joint
-    Z-score vector</h1>
+    <h1>logsum rows of a matrix</h1>
     
-    <div class="hidden name"><code>dot-zj_pp.Rd</code></div>
+    <div class="hidden name"><code>logsum_matrix.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Internal function: Simulate nrep posterior probabilities of causality from joint Z-score vector</p>
+    <p>logsum rows of a matrix</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>.zj_pp</span>(<span class='no'>Zj</span>, <span class='no'>int.Sigma</span>, <span class='no'>int.nrep</span>, <span class='no'>int.ERR</span>, <span class='no'>int.r</span>)</pre>
+    <pre class="usage"><span class='fu'>logsum_matrix</span>(<span class='no'>x</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>Zj</th>
-      <td><p>joint z vector</p></td>
-    </tr>
-    <tr>
-      <th>int.Sigma</th>
-      <td><p>internal sigma</p></td>
-    </tr>
-    <tr>
-      <th>int.nrep</th>
-      <td><p>internal nrep</p></td>
-    </tr>
-    <tr>
-      <th>int.ERR</th>
-      <td><p>internal error matrix</p></td>
-    </tr>
-    <tr>
-      <th>int.r</th>
-      <td><p>internal r</p></td>
+      <th>x</th>
+      <td><p>numeric matrix</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Matrix of simulated posterior probabilties of causality,
-    one simulation per row</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Does not include posterior probabilities for null model</p>
+    <p>rowwise sums</p>
     
 
   </div>
@@ -179,10 +155,10 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
           </ul>
 
+    <h2>Author</h2>
+    <p>Chris Wallace</p>
   </div>
 </div>
 

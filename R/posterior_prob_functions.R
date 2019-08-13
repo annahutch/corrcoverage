@@ -257,6 +257,7 @@ ppfunc.mat <- function(zstar, V, W = 0.2) {
     stopifnot(class(zstar)=="matrix") # ensure zstar is a matrix of simulated z scores
     r = W^2/(W^2 + V)
     bf = 0.5 * t(log(1 - r) + (r * t(zstar^2)))
-    denom = apply(bf, 1, logsum)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+## denom = apply(bf, 1, logsum)  # logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf
+    denom = logsum_matrix(bf) # faster
     exp(bf - matrix(denom, nrow = nrow(bf), ncol = ncol(bf)))  # convert back from log scale
 }

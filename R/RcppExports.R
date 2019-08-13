@@ -11,3 +11,30 @@ credsetmat <- function(pp, iCV, threshold) {
     .Call('_corrcoverage_credsetmat', PACKAGE = 'corrcoverage', pp, iCV, threshold)
 }
 
+#' Obtain pp from a matrix of Zj and ERR
+#'
+#' @param Zj vector of ...
+#' @return pp Matrix of posterior probabilities (one row for each simulation)
+#' @export
+zj_pp_c <- function(zm, nrep, ERR, r) {
+    .Call('_corrcoverage_zj_pp_c', PACKAGE = 'corrcoverage', zm, nrep, ERR, r)
+}
+
+#' Obtain pp from a matrix of Zj and ERR
+#'
+#' @param Zj vector of ...
+#' @return pp Matrix of posterior probabilities (one row for each simulation)
+#' @export
+zj_pp_arma <- function(Zj, sigma, nrep, ERR, r) {
+    .Call('_corrcoverage_zj_pp_arma', PACKAGE = 'corrcoverage', Zj, sigma, nrep, ERR, r)
+}
+
+#' Obtain pp from a matrix of Zj and ERR
+#'
+#' @param Zj vector of ...
+#' @return pp Matrix of posterior probabilities (one row for each simulation)
+#' @export
+zj_pp_arma2 <- function(zm, nrep, ERR, r) {
+    .Call('_corrcoverage_zj_pp_arma2', PACKAGE = 'corrcoverage', zm, nrep, ERR, r)
+}
+

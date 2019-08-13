@@ -32,13 +32,14 @@ Suggests:
     simGWAS,
     pkgdown
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 6.0.1
 LinkingTo: 
-    Rcpp
+    Rcpp, RcppArmadillo
 Imports: 
     data.table,
     magrittr,
     stats,
-    Rcpp
+    matrixStats,
+    Rcpp, RcppArmadillo
 SystemRequirements: C++11
 Remotes: chr1swallace/simGWAS

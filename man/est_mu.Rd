@@ -20,9 +20,6 @@ est_mu(z, f, N0, N1, W = 0.2)
 \value{
 Estimate of the true effect at the causal variant
 }
-\description{
-Estimate the true effect at the causal variant
-}
 \examples{
 
 nsnps <- 100

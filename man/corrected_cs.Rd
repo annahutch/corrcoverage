@@ -31,9 +31,6 @@ corrected_cs(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 \value{
 List of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 }
-\description{
-Corrected credible set with desired coverage of the CV
-}
 \examples{
 \dontrun{
  # this is a long running example

@@ -33,24 +33,26 @@
   stopifnot(class(Zj)=="numeric")
   stopifnot(class(int.ERR)=="matrix")
   stopifnot(class(int.r)=="numeric")
-  exp.zm = Zj %*% int.Sigma
-  mexp.zm = matrix(exp.zm, int.nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-  zstar = mexp.zm + int.ERR
-  bf = 0.5 * t(log(1 - int.r) + (int.r * t(zstar^2)))
-  ## denom = apply(bf, 1, logsum) # get different denom for each rep
-  denom = logsum_matrix(bf) # faster
-  exp(bf - denom)  # convert back from log scale
+  zj_pp_arma(Zj, int.Sigma, int.nrep, int.ERR, int.r)
+  ## exp.zm = Zj %*% int.Sigma
+  ## mexp.zm = matrix(exp.zm, int.nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
+  ## zstar = mexp.zm + int.ERR
+  ## bf = 0.5 * t(log(1 - int.r) + (int.r * t(zstar^2)))
+  ## ## denom = apply(bf, 1, logsum) # get different denom for each rep
+  ## denom = logsum_matrix(bf) # faster
+  ## exp(bf - denom)  # convert back from log scale
 }
 
 #' @importFrom matrixStats rowMaxs
-
+NULL
+ 
 ##' matrix-ified version of logsum to avoid needing apply()
 ##'
 ##' @title logsum rows of a matrix
 ##' @param x numeric matrix
 ##' @return rowwise sums
 ##' @author Chris Wallace
-logsum_matrix=function(x) { # faster
+logsum_matrix=function(x) {
     my.max=rowMaxs(x)
     my.max + log(rowSums(exp(x - my.max)))
 }

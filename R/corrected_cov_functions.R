@@ -147,7 +147,7 @@ corrected_cov_faster <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 
     })
 
     propcov <- lapply(d5, prop_cov) %>% unlist()
-    sum(propcov * pp0[usesnps])
+    sum(propcov * pp0[usesnps])/sum(pp0[usesnps])
 }
 
 

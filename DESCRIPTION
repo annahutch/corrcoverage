@@ -1,6 +1,6 @@
 Package: corrcoverage
 Type: Package
-Title: Find Corrected Coverage Estimate of Credible Sets from Bayesian Fine-Mapping
+Title: Corrected the Coverage of Credible Sets from Bayesian Genetic Fine Mapping
 Version: 0.0.1.900
 Authors@R: c(
         person("Anna", "Hutchinson", role = c("aut", "cre"), email = "anna.hutchinson@mrc-bsu.cam.ac.uk"),
@@ -10,13 +10,11 @@ Authors@R: c(
 Maintainer: Anna Hutchinson <anna.hutchinson@mrc-bsu.cam.ac.uk>
 Description: The package uses a computationally efficient method to find the
     "Corrected Coverage Estimate" of a credible set of putative
-    causal variants from Bayesian fine-mapping. The package can 
+    causal variants from Bayesian genetic fine-mapping. The package can 
     also be used to obtain a "Corrected Credible Set" if required; 
     that is, the smallest set of variants required such that the
     corrected coverage estimate of the resultant credible set is  
     within some user defined accuracy of the desired coverage. 
-    We recommend that our method is only used if the true effect
-    in the genomic region is $> 2$, corresponding to $\hat\mu>2.5$.
 URL: https://annahutch.github.io/corrcoverage
 License: MIT + file LICENSE
 BugReports: https://github.com/annahutch/corrcoverage/issues

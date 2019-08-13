@@ -16,4 +16,6 @@ _pkgdown.yml
 /vignette/my-vignette_cache/html
 docs/*
 *.so
+pkgdown/
+corrcoverage.Rproj
 

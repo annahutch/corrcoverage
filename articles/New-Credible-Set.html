@@ -94,7 +94,7 @@
 <h3 class="hasAnchor">
 <a href="#simulate-gwas-summary-statistics" class="anchor"></a>1. Simulate GWAS summary statistics</h3>
 <hr>
-<p>As in the <a href="https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html">corrected coverage vignette</a>, let’s begin by simulating some GWAS data using the <code>simGWAS</code> package.</p>
+<p>As in the <a href="https://annahutch.github.io/corrcoverage/articles/Corrected-Coverage.html">corrected coverage vignette</a>, let’s begin by simulating some GWAS data using the <code>simGWAS</code> package.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simGWAS)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#  Simulate reference haplotypes</span></a>
@@ -140,7 +140,7 @@
 <a href="#derive-corrected-coverage-estimate" class="anchor"></a>2. Derive corrected coverage estimate</h3>
 <hr>
 <p>The <code>corrected_cov</code> function is used to find the corrected coverage of a credible set with specified threshold, say 0.9.</p>
-<p>Note that this function is similar to using <code>corrcov</code> as explained in the <a href="https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html">“Corrected Coverage” vignette</a>; which would require <span class="math inline">\(Z\)</span>-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the <code>corrcov</code> function (muhat, varbeta etc.) so we can use <code>corrected_cov</code> instead.</p>
+<p>Note that this function is similar to using <code>corrcov</code> as explained in the <a href="https://annahutch.github.io/corrcoverage/articles/Corrected-Coverage.html">“Corrected Coverage” vignette</a>; which would require <span class="math inline">\(Z\)</span>-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the <code>corrcov</code> function (muhat, varbeta etc.) so we can use <code>corrected_cov</code> instead.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">thr =<span class="st"> </span><span class="fl">0.9</span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">corrcov &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cov.html">corrected_cov</a></span>(<span class="dt">pp0 =</span> postprobs, <span class="dt">mu =</span> muhat, <span class="dt">V =</span> varbeta, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thr, <span class="dt">nrep =</span> <span class="dv">1000</span>)</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3">cs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">thr =</span> thr)</a>

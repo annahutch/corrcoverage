@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>New Credible Set: <code>corrected_cs</code> • corrcoverage</title>
+<title>Corrected Credible Set • corrcoverage</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="New Credible Set: &lt;code&gt;corrected_cs&lt;/code&gt;">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Corrected Credible Set">
 <meta property="og:description" content="">
 <meta property="og:image" content="/logo.png">
 <meta name="twitter:card" content="summary">
@@ -54,13 +54,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/New-Credible-Set.html">New Credible Set: `corrected_cs`</a>
+      <a href="../articles/New-Credible-Set.html">Corrected Credible Set</a>
     </li>
     <li>
       <a href="../articles/Useful-Info.html">Useful Info</a>
     </li>
     <li>
-      <a href="../articles/my-vignette.html">Correcting the Coverage of Credible Sets: `corrcov`</a>
+      <a href="../articles/corrected-coverage.html">Correcting the Coverage of Credible Sets</a>
     </li>
   </ul>
 </li>
@@ -77,8 +77,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>New Credible Set: <code>corrected_cs</code>
-</h1>
+      <h1>Corrected Credible Set</h1>
                         <h4 class="author">Anna Hutchinson</h4>
             
       
@@ -89,12 +88,13 @@
 
     
     
-<p>This vignette will show users how the <code>corrcoverage</code> package can be used to obtain a new credible set of variants that contains the true causal variant with some specified desired coverage value whilst containing as few variants as possible.</p>
+<p>This vignette will show users how the <code>corrcoverage</code> R package can be used to obtain a new credible set of variants that contains the true causal variant with some specified desired coverage value whilst containing as few variants as possible.</p>
 <hr>
-<div id="simulate-gwas-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#simulate-gwas-data" class="anchor"></a>Simulate GWAS data</h2>
-<p>As in the <a href="https://annahutch.github.io/corrcoverage/articles/my-vignette.html">corrected coverage vignette</a>, let’s begin by simulating some GWAS data using the <code>simGWAS</code> package.</p>
+<div id="simulate-gwas-summary-statistics" class="section level3">
+<h3 class="hasAnchor">
+<a href="#simulate-gwas-summary-statistics" class="anchor"></a>1. Simulate GWAS summary statistics</h3>
+<hr>
+<p>As in the <a href="https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html">corrected coverage vignette</a>, let’s begin by simulating some GWAS data using the <code>simGWAS</code> package.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simGWAS)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#  Simulate reference haplotypes</span></a>
@@ -132,25 +132,28 @@
 <p>We use the <code>est_mu</code> function to obtain an estimate of the true effect at the causal variant.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">muhat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/est_mu.html">est_mu</a></span>(z0, MAF, N0, N1)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">muhat</a></code></pre></div>
-<pre><code>## [1] 4.437987</code></pre>
+<pre><code>## [1] 4.970273</code></pre>
 <hr>
 </div>
-<div id="corrected-coverage-estimate" class="section level2">
-<h2 class="hasAnchor">
-<a href="#corrected-coverage-estimate" class="anchor"></a>Corrected Coverage Estimate</h2>
+<div id="derive-corrected-coverage-estimate" class="section level3">
+<h3 class="hasAnchor">
+<a href="#derive-corrected-coverage-estimate" class="anchor"></a>2. Derive corrected coverage estimate</h3>
+<hr>
 <p>The <code>corrected_cov</code> function is used to find the corrected coverage of a credible set with specified threshold, say 0.9.</p>
-<p>Note that this function is similar to using <code>corrcov</code> as explained in the <a href="https://annahutch.github.io/corrcoverage/articles/my-vignette.html">“Corrected Coverage” vignette</a>; which would require <span class="math inline">\(Z\)</span>-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the <code>corrcov</code> function (muhat, varbeta etc.) so we can use <code>corrected_cov</code> instead.</p>
+<p>Note that this function is similar to using <code>corrcov</code> as explained in the <a href="https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html">“Corrected Coverage” vignette</a>; which would require <span class="math inline">\(Z\)</span>-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the <code>corrcov</code> function (muhat, varbeta etc.) so we can use <code>corrected_cov</code> instead.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">thr =<span class="st"> </span><span class="fl">0.9</span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">corrcov &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cov.html">corrected_cov</a></span>(<span class="dt">pp0 =</span> postprobs, <span class="dt">mu =</span> muhat, <span class="dt">V =</span> varbeta, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thr, <span class="dt">nrep =</span> <span class="dv">1000</span>)</a>
 <a class="sourceLine" id="cb9-3" data-line-number="3">cs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">thr =</span> thr)</a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">claimed.cov =</span> cs<span class="op">$</span>claimed.cov, <span class="dt">corr.cov =</span>  corrcov, <span class="dt">nvar =</span> cs<span class="op">$</span>nvar)</a></code></pre></div>
 <pre><code>##   claimed.cov  corr.cov nvar
-## 1    0.925687 0.9603044    4</code></pre>
+## 1   0.9307395 0.9672825    9</code></pre>
 <p>Using the Bayesian approach for statistical fine-mapping we obtain a 90% credible set consisting of 9 variants. The claimed coverage of this credible set is ~0.93, yet the corrected coverage estimate is ~0.97, suggesting that we can afford to be ‘more confident’ that we have captured the causal variant in our credible set.</p>
+<hr>
 </div>
-<div id="empirical-coverage-estimate" class="section level2">
-<h2 class="hasAnchor">
-<a href="#empirical-coverage-estimate" class="anchor"></a>Empirical Coverage Estimate</h2>
+<div id="evaluate-accuracy-of-estimate" class="section level3">
+<h3 class="hasAnchor">
+<a href="#evaluate-accuracy-of-estimate" class="anchor"></a>3. Evaluate accuracy of estimate</h3>
+<hr>
 <p>Again, for the purpose of this vignette we can investigate how accurate this estimate is by simulating many credible sets from the same system, and finding the proportion of these that contain the true causal variant.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">z0.tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0 =</span> N0, <span class="co"># number of controls</span></a>
 <a class="sourceLine" id="cb11-2" data-line-number="2">                            <span class="dt">N1 =</span> N1, <span class="co"># number of cases</span></a>
@@ -165,63 +168,79 @@
 <a class="sourceLine" id="cb11-11" data-line-number="11">true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs.cov)</a>
 <a class="sourceLine" id="cb11-12" data-line-number="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">claimed.cov =</span> cs<span class="op">$</span>claimed.cov, <span class="dt">corr.cov =</span>  corrcov, <span class="dt">true.cov =</span> true.cov.est, <span class="dt">nvar =</span> cs<span class="op">$</span>nvar)</a></code></pre></div>
 <pre><code>##   claimed.cov  corr.cov true.cov nvar
-## 1    0.925687 0.9603044   0.9612    4</code></pre>
+## 1   0.9307395 0.9672825   0.9696    9</code></pre>
 <p>We find that our corrected coverage value is very close to the empirical coverage of the credible set.</p>
 <hr>
 </div>
-<div id="obtain-a-new-credible-set" class="section level2">
-<h2 class="hasAnchor">
-<a href="#obtain-a-new-credible-set" class="anchor"></a>Obtain a New Credible Set</h2>
+<div id="obtain-a-corrected-credible-set" class="section level3">
+<h3 class="hasAnchor">
+<a href="#obtain-a-corrected-credible-set" class="anchor"></a>4. Obtain a corrected credible set</h3>
+<hr>
 <p>Our results suggest that we may be able to remove some variants from the credible set, whilst still achieving the desired coverage of 90%.</p>
 <p>The <code>corrected_cs</code> function uses GWAS summary statistics and some user-defined parameters to find the smallest credible set such that the coverage estimate is within some accuracy of the desired coverage.</p>
-<p>The function requires the <span class="math inline">\(Z\)</span>-scores (<code>z</code>), minor allele frequencies (<code>f</code>), control and case sample sizes (<code>N0</code> and <code>N1</code> respectively), LD matrix (<code>Sigma</code>), some lower threshold value (<code>lower</code>), some upper threshold value (<code>upper</code>) and the desired coverage (<code>desired.cov</code>).</p>
-<p>The function uses the <a href="https://en.wikipedia.org/wiki/Root-finding_algorithm#Bisection_method">bisection root finding method</a> to converge to the smallest threshold such that the corrected coverage is larger than the desired coverage. The accuracy parameter is optional (default value set to 0.005) and controls how much greater than the desired coverage the user is happy for the corrected coverage value to lie.</p>
-<p>The function reports the threshold values tested and their corresponding corrected coverage value. The maximum number of iterations for the bisecting root finding algorithm is an optional parameter, with default value 20. The functions stops when either the number of iterations reaches the maximum, or the corrected coverage is within some accuracy of the desired coverage.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cs.html">corrected_cs</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">lower =</span> <span class="fl">0.5</span>, <span class="dt">upper =</span> <span class="dv">1</span>, <span class="dt">desired.cov =</span> <span class="fl">0.9</span>)</a></code></pre></div>
-<pre><code>## [1] "thr:  0.75 , cov:  0.911130168156529"
-## [1] "thr:  0.625 , cov:  0.863372335203957"
-## [1] "thr:  0.6875 , cov:  0.886796184036723"
-## [1] "thr:  0.71875 , cov:  0.899593001147898"
-## [1] "thr:  0.734375 , cov:  0.90531956631607"
-## [1] "thr:  0.7265625 , cov:  0.902735401137361"</code></pre>
+<p>The function requires the following parameters to be specified:</p>
+<ul>
+<li>
+<code>z</code> (vector of marginal <span class="math inline">\(Z\)</span>-scores)</li>
+<li>
+<code>f</code> (vector of minor allele frequencies)</li>
+<li>
+<code>N0</code>, <code>N1</code> (number of controls and cases respectively)</li>
+<li>
+<code>Sigma</code> (SNP correlation matrix)</li>
+<li>
+<code>desired.cov</code> (desired coverage of the credible set)</li>
+</ul>
+<p>In addition, there are a number of optional parameters:</p>
+<ul>
+<li>
+<code>lower</code> (the lower value to try for the threshold)</li>
+<li>
+<code>upper</code> (the upper value to try for the threshold)</li>
+<li>
+<code>acc</code> (the accuracy required for the coverage of the resultant credible set)</li>
+<li>
+<code>max.iter</code> (maximum number of iterations)</li>
+</ul>
+<p>The function uses the <a href="https://en.wikipedia.org/wiki/Root-finding_algorithm#Bisection_method">bisection root finding method</a> to converge to the smallest threshold such that the corrected coverage is larger than the desired coverage. The <code>lower</code> and <code>upper</code> parameters define the boundaries of the threshold values for the root finding method, with default values of 0 and 1 respectively. The <code>acc</code> parameter has a default value set to 0.005, meaning that the algorithm will keep attempting to find a corrected credible set (until the number of iterations reaches <code>max.iter</code>) that has coverage within 0.005 of the desired coverage value (e.g. between 0.895 and 0.905 for a 90% credible set).</p>
+<p>The function reports the threshold values tested and their corresponding corrected coverage value at each iteration. The maximum number of iterations for the bisecting root finding algorithm is an optional parameter, with default value 20. The functions stops when either the number of iterations reaches the maximum, or the corrected coverage is within some accuracy of the desired coverage.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cs.html">corrected_cs</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, </a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">                    <span class="dt">Sigma =</span> LD, <span class="dt">lower =</span> <span class="fl">0.5</span>, <span class="dt">upper =</span> <span class="dv">1</span>, <span class="dt">desired.cov =</span> <span class="fl">0.9</span>)</a></code></pre></div>
+<pre><code>## [1] "thr:  0.75 , cov:  0.917720376269878"
+## [1] "thr:  0.625 , cov:  0.878893777630186"
+## [1] "thr:  0.6875 , cov:  0.896800428830677"
+## [1] "thr:  0.71875 , cov:  0.907035299005275"
+## [1] "thr:  0.703125 , cov:  0.901704434955293"</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">res</a></code></pre></div>
 <pre><code>## $credset
-## [1] "s12" "s10" "s9" 
+## [1] "s54" "s58" "s57" "s67"
 ## 
 ## $req.thr
-## [1] 0.7265625
+## [1] 0.703125
 ## 
 ## $corr.cov
-## [1] 0.9027354
+## [1] 0.9017044
 ## 
 ## $size
-## [1] 0.8137297</code></pre>
-<p>In this example we see that a much smaller threshold value is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 4 variants. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.</p>
+## [1] 0.7343958</code></pre>
+<p>The first threshold value tested is the midpoint of the <code>lower</code> (0.5) and <code>upper</code> (1) parameter values, which here is 0.75. The coverage of this credible set is too high (<span class="math inline">\(&gt;0.9\)</span>) and so a smaller threshold value is tested, the midpoint of the <code>lower</code> parameter value (0.5) and the previously tried threshold value (0.75). This credible set has a coverage that is too low, and so a higher threshold value is tested, and so on.</p>
+<p>In this example we see that a much smaller threshold value is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 4 variants. In the standard Bayesian approach, the threshold value of 90% leads to over-coverage.</p>
+<hr>
 <p>Finally, we can compare this coverage estimate of the corrected credible set to an empirical estimate of the true coverage.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">new.cs.sims &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> res<span class="op">$</span>req.thr)<span class="op">$</span>cov)</a>
 <a class="sourceLine" id="cb17-2" data-line-number="2">true.cov.est2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(new.cs.sims)</a></code></pre></div>
 <p>Original 90% credible set:</p>
 <pre><code>##  claimed.cov corr.cov true.cov nvar
-##        0.926     0.96    0.961    4</code></pre>
+##        0.931    0.967     0.97    9</code></pre>
 <p>New 90% credible set:</p>
 <pre><code>##  claimed.cov corr.cov true.cov nvar
-##        0.814    0.903    0.887    3</code></pre>
+##        0.734    0.902    0.897    4</code></pre>
 <hr>
 <p>This vignette has shown how the <code>corrcoverage</code> R package can be used to improve the resolution of a credible set from Bayesian genetic fine-mapping, without the use of any additional data.</p>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#simulate-gwas-data">Simulate GWAS data</a></li>
-      <li><a href="#corrected-coverage-estimate">Corrected Coverage Estimate</a></li>
-      <li><a href="#empirical-coverage-estimate">Empirical Coverage Estimate</a></li>
-      <li><a href="#obtain-a-new-credible-set">Obtain a New Credible Set</a></li>
-      </ul>
-</div>
       </div>
 
 </div>

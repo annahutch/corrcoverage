@@ -132,7 +132,7 @@
 <p>We use the <code>est_mu</code> function to obtain an estimate of the true effect at the causal variant.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">muhat &lt;-<span class="st"> </span><span class="kw"><a href="../reference/est_mu.html">est_mu</a></span>(z0, MAF, N0, N1)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">muhat</a></code></pre></div>
-<pre><code>## [1] 4.970273</code></pre>
+<pre><code>## [1] 4.437987</code></pre>
 <hr>
 </div>
 <div id="corrected-coverage-estimate" class="section level2">
@@ -145,7 +145,7 @@
 <a class="sourceLine" id="cb9-3" data-line-number="3">cs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/credset.html">credset</a></span>(<span class="dt">pp =</span> postprobs, <span class="dt">thr =</span> thr)</a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">claimed.cov =</span> cs<span class="op">$</span>claimed.cov, <span class="dt">corr.cov =</span>  corrcov, <span class="dt">nvar =</span> cs<span class="op">$</span>nvar)</a></code></pre></div>
 <pre><code>##   claimed.cov  corr.cov nvar
-## 1   0.9307395 0.9672825    9</code></pre>
+## 1    0.925687 0.9603044    4</code></pre>
 <p>Using the Bayesian approach for statistical fine-mapping we obtain a 90% credible set consisting of 9 variants. The claimed coverage of this credible set is ~0.93, yet the corrected coverage estimate is ~0.97, suggesting that we can afford to be ‘more confident’ that we have captured the causal variant in our credible set.</p>
 </div>
 <div id="empirical-coverage-estimate" class="section level2">
@@ -165,7 +165,7 @@
 <a class="sourceLine" id="cb11-11" data-line-number="11">true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs.cov)</a>
 <a class="sourceLine" id="cb11-12" data-line-number="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">claimed.cov =</span> cs<span class="op">$</span>claimed.cov, <span class="dt">corr.cov =</span>  corrcov, <span class="dt">true.cov =</span> true.cov.est, <span class="dt">nvar =</span> cs<span class="op">$</span>nvar)</a></code></pre></div>
 <pre><code>##   claimed.cov  corr.cov true.cov nvar
-## 1   0.9307395 0.9672825   0.9696    9</code></pre>
+## 1    0.925687 0.9603044   0.9612    4</code></pre>
 <p>We find that our corrected coverage value is very close to the empirical coverage of the credible set.</p>
 <hr>
 </div>
@@ -178,33 +178,34 @@
 <p>The function uses the <a href="https://en.wikipedia.org/wiki/Root-finding_algorithm#Bisection_method">bisection root finding method</a> to converge to the smallest threshold such that the corrected coverage is larger than the desired coverage. The accuracy parameter is optional (default value set to 0.005) and controls how much greater than the desired coverage the user is happy for the corrected coverage value to lie.</p>
 <p>The function reports the threshold values tested and their corresponding corrected coverage value. The maximum number of iterations for the bisecting root finding algorithm is an optional parameter, with default value 20. The functions stops when either the number of iterations reaches the maximum, or the corrected coverage is within some accuracy of the desired coverage.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrected_cs.html">corrected_cs</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">lower =</span> <span class="fl">0.5</span>, <span class="dt">upper =</span> <span class="dv">1</span>, <span class="dt">desired.cov =</span> <span class="fl">0.9</span>)</a></code></pre></div>
-<pre><code>## [1] "thr:  0.75 , cov:  0.917720376269878"
-## [1] "thr:  0.625 , cov:  0.878893777630186"
-## [1] "thr:  0.6875 , cov:  0.896800428830677"
-## [1] "thr:  0.71875 , cov:  0.907035299005275"
-## [1] "thr:  0.703125 , cov:  0.901704434955293"</code></pre>
+<pre><code>## [1] "thr:  0.75 , cov:  0.911130168156529"
+## [1] "thr:  0.625 , cov:  0.863372335203957"
+## [1] "thr:  0.6875 , cov:  0.886796184036723"
+## [1] "thr:  0.71875 , cov:  0.899593001147898"
+## [1] "thr:  0.734375 , cov:  0.90531956631607"
+## [1] "thr:  0.7265625 , cov:  0.902735401137361"</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">res</a></code></pre></div>
 <pre><code>## $credset
-## [1] "s54" "s58" "s57" "s67"
+## [1] "s12" "s10" "s9" 
 ## 
 ## $req.thr
-## [1] 0.703125
+## [1] 0.7265625
 ## 
 ## $corr.cov
-## [1] 0.9017044
+## [1] 0.9027354
 ## 
 ## $size
-## [1] 0.7343958</code></pre>
+## [1] 0.8137297</code></pre>
 <p>In this example we see that a much smaller threshold value is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 4 variants. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.</p>
 <p>Finally, we can compare this coverage estimate of the corrected credible set to an empirical estimate of the true coverage.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">new.cs.sims &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> res<span class="op">$</span>req.thr)<span class="op">$</span>cov)</a>
 <a class="sourceLine" id="cb17-2" data-line-number="2">true.cov.est2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(new.cs.sims)</a></code></pre></div>
 <p>Original 90% credible set:</p>
 <pre><code>##  claimed.cov corr.cov true.cov nvar
-##        0.931    0.967     0.97    9</code></pre>
+##        0.926     0.96    0.961    4</code></pre>
 <p>New 90% credible set:</p>
 <pre><code>##  claimed.cov corr.cov true.cov nvar
-##        0.734    0.902    0.897    4</code></pre>
+##        0.814    0.903    0.887    3</code></pre>
 <hr>
 <p>This vignette has shown how the <code>corrcoverage</code> R package can be used to improve the resolution of a credible set from Bayesian genetic fine-mapping, without the use of any additional data.</p>
 </div>

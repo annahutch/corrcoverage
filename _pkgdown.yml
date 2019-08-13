@@ -21,7 +21,7 @@ navbar:
       text: Articles
       menu:
       - text: Corrected Coverage
-        href: articles/my-vignette.html
+        href: articles/corrected-coverage.html
       - text: New Credible Set
         href: articles/New-Credible-Set.html
       - text: Useful Info
@@ -31,8 +31,8 @@ articles:
 - title: All vignettes
   desc: ~
   contents:
+  - '`corrected-coverage`'
   - '`New-Credible-Set`'
-  - '`my-vignette`'
   - '`Useful-Info`'
 
 

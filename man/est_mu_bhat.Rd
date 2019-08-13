@@ -2,7 +2,8 @@
 % Please edit documentation in R/extra_functions.R
 \name{est_mu_bhat}
 \alias{est_mu_bhat}
-\title{Estimate the true effect at the causal variant}
+\title{Estimate the true effect at the causal variant using estimated
+effect sizes and their standard errors}
 \usage{
 est_mu_bhat(bhat, V, N0, N1, p1 = 1e-04, W = 0.2)
 }
@@ -23,7 +24,8 @@ est_mu_bhat(bhat, V, N0, N1, p1 = 1e-04, W = 0.2)
 Estimate of the true effect at the causal variant
 }
 \description{
-Estimate the true effect at the causal variant
+Estimate the true effect at the causal variant using estimated
+effect sizes and their standard errors
 }
 \examples{
 

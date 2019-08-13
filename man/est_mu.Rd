@@ -2,7 +2,7 @@
 % Please edit documentation in R/extra_functions.R
 \name{est_mu}
 \alias{est_mu}
-\title{Estimate the true effect at the causal variant}
+\title{Estimate the true effect at the causal variant using Z-scores and MAFs}
 \usage{
 est_mu(z, f, N0, N1, W = 0.2)
 }
@@ -21,7 +21,7 @@ est_mu(z, f, N0, N1, W = 0.2)
 Estimate of the true effect at the causal variant
 }
 \description{
-Estimate the true effect at the causal variant
+Estimate the true effect at the causal variant using Z-scores and MAFs
 }
 \examples{
 

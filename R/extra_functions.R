@@ -35,7 +35,7 @@ logsum <- function(x) {
     return(my.res)
 }
 
-#' Correlation matrix of SNPS
+#' Correlation matrix of SNPs
 #'
 #' Quick function to find a correlation matrix
 #' @title Correlation matrix of SNPS
@@ -58,7 +58,7 @@ prop_cov <- function(x) {
     mean(x$covered)
 }
 
-#' @title Estimate the true effect at the causal variant
+#' @title Estimate the true effect at the causal variant using Z-scores and MAFs
 #'
 #' @param z Vector of marginal Z-scores
 #' @param f Minor allele frequencies
@@ -92,7 +92,8 @@ est_mu <- function(z, f, N0, N1, W = 0.2) {
   sum(abs(z)*pp)
 }
 
-#' @title Estimate the true effect at the causal variant
+#' @title Estimate the true effect at the causal variant using estimated
+#' effect sizes and their standard errors
 #'
 #' @param bhat Vector of estimated effect sizes
 #' @param V Prior variance for estimated effect sizes

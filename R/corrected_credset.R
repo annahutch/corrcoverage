@@ -122,7 +122,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
   list(credset = names(pp)[o[1:wh]], req.thr = c, corr.cov = desired.cov + fc, size = size)
 }
 
-#' @title Get new credible set with desired coverage of the CV
+#' @title Corrected credible set with desired coverage of the CV
 #'
 #' @param bhat Estimated effect sizes
 #' @param V Prior variance of estimated effect sizes

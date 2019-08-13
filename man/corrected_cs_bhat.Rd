@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_credset.R
 \name{corrected_cs_bhat}
 \alias{corrected_cs_bhat}
-\title{Get new credible set with desired coverage of the CV}
+\title{Corrected credible set with desired coverage of the CV}
 \usage{
 corrected_cs_bhat(bhat, V, N0, N1, Sigma, lower = 0, upper = 1,
   desired.cov, acc = 0.005, max.iter = 20)
@@ -32,7 +32,7 @@ corrected_cs_bhat(bhat, V, N0, N1, Sigma, lower = 0, upper = 1,
 List of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 }
 \description{
-Get new credible set with desired coverage of the CV
+Corrected credible set with desired coverage of the CV
 }
 \examples{
 

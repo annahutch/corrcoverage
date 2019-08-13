@@ -12,25 +12,31 @@ This vignette contains supplementary information regarding the usage of the `cor
 
 ---
 
-## Key Functions
+### Key functions
 
 The two main functions are:
 
-1. `corrcov` (or analogously `corrcov_bhat`): Provides a corrected coverage estimate of credible sets obtained using the Bayesian approach for fine-mapping (see 'Corrected Coverage' vignette). Use `corrcov` for $Z$-scores and MAFs or `corrcov_bhat` for beta hat estimates and their standard errors.
+1. `corrcov` (or analogously `corrcov_bhat`): Provides a corrected coverage estimate of credible sets obtained using the Bayesian approach for fine-mapping (see "Corrected Coverage" vignette).
 
-2. `corrected_cs` (or analogously `corrected_cs_bhat`): Finds a new 'corrected' credible set, which is the smallest set of variants such that the corrected coverage is above some user defined 'desired coverage'. Use `corrected_cs` for $Z$-scores and MAFs or `corrected_cs_bhat` for beta hat estimates and their standard errors.
+* Use `corrcov` for $Z$-scores and minor allele frequencies 
+* Use `corrcov_bhat` for beta hat estimates and their standard errors.
+
+2. `corrected_cs` (or analogously `corrected_cs_bhat`): Finds a corrected credible set, which is the smallest set of variants such that the corrected coverage is above some user defined "desired coverage" (see "Corrected credible set vignette).
+
+* Use `corrected_cs` for $Z$-scores and minor allele frequencies 
+* Use `corrected_cs_bhat` for beta hat estimates and their standard errors.
 
 ---
 
-## Other Useful Functions
+### Additional useful functions
 
 * `corrcov_nvar` (or analogously `corrcov_nvar_bhat`): Finds a corrected coverage estimate whereby the simulated credible sets used to derive the estimate are limited to those which contain a specified number of variants (parameter 'nvar'). These functions should be used with caution and only ever for very small credible sets (fewer than 4 variants).
 
-* `corrcov_CI` (or analogously `corrcov_CI_bhat`): Finds a 'confidence interval' for the corrected coverage estimate. The default is a 95% confidence interval (parameter 'CI' = 0.95), but the 'CI' parameter can be adjusted accordingly. This function involves repeating the correction procedure 100 times and so, depending on the number of SNPs, may take a long time to implement.
+* `corrcov_CI` (or analogously `corrcov_CI_bhat`): Finds a confidence interval for the corrected coverage estimate. The default is a 95% confidence interval (parameter `CI = 0.95`), but can be adjusted accordingly. This function involves repeating the correction procedure 100 times and therefore requires lots of memory. 
 
 ----
 
-## Conversion Functions
+### Conversion functions
 
 The Bayesian method for fine-mapping involves finding the posterior probability of causality for each SNP, before sorting these into descending order and adding variants to a 'credible set' until the combined posterior probabilities of these SNPs exceed some threshold. The supplementary text of Maller's paper (available [here](https://media.nature.com/original/nature-assets/ng/journal/v44/n12/extref/ng.2435-S1.pdf)) shows that these posterior probabilities are normalised Bayes factors. 
 
@@ -45,12 +51,32 @@ Function | Include null model? | Input | Output
 `z0_pp` | YES | Marginal $Z$-scores | Posterior Probabilities |
 `ppfunc` | NO | Marginal $Z$-scores | Posterior Probabilities |
 
-Functions are also provided to simulate marginal $Z$-scores from joint $Z$-scoresm($Z_j$). The joint $Z$-scores are all 0, except at the causal variant where it is the 'true effect', $\mu$. 
+---
 
-$\mu$ can be estimated using the `est_mu` function which required sample sizes, $Z$-scores and minor allele frequencies.
+### Marginal and joint Z scores
 
-`z_sim` simulates marginal $Z$-scores from joint $Z$-scores, whilst `zj_pp` can be used to simulate posterior probability systems from a joint $Z$-score vector. These functions first calculate the expected marginal $Z$ scores, $E(Z)$,
+Functions are also provided to simulate marginal $Z$-scores from joint $Z$-scores ($Z_j$). The joint $Z$-scores are all 0, except at the causal variant where it is the "true effect", $\mu$. 
+
+$\mu$ can be estimated using the `est_mu` function which requires sample sizes, marginal $Z$-scores and minor allele frequencies. We estimate $\mu$ by
+$$\hat\mu=\sum_{j}|Z_j|\times PP_j$$
+
+The `z_sim` function simulates marginal $Z$-scores from joint $Z$-scores, whilst `zj_pp` can be used to simulate posterior probability systems from a joint $Z$-score vector. These functions first calculate the expected marginal $Z$ scores, $E(Z)$,
 $$E(Z)=Z_j \times \Sigma$$
 where $\Sigma$ is the correlation matrix between SNPs. 
 
 We can then simulate more $Z$-score systems from a multivariate normal distribution with mean $E(Z)$ and variance $\Sigma$. This is a key step in our corrected coverage method.
+
+#### Summary
+
+* Joint $Z$ score vectors (`Z_j`) are used to derive expected marginal $Z$ score vectors, by multiplying with the SNP correlation matrix.
+
+$$E(Z)=Z_j \times \Sigma$$
+
+* The expected marginal $Z$ score vectors can be used as the mean in a multi-variate normal distribution with variance equal to the SNP correlation matrix to simulate more marginal $Z$ score vectors.
+
+$$Z \sim MVN(E(Z),\Sigma)$$
+
+* The `z_sim` function follows these steps to simulate `nrep` marginal $Z$ score vectors. 
+
+* The `zj_pp` function goes one step further and converts these simulated marginal $Z$ scores to posterior probabilities of causality. 
+

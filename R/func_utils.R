@@ -29,18 +29,21 @@
 #' @param int.r internal r
 #' @return Matrix of simulated posterior probabilties of causality,
 #'     one simulation per row
-.zj_pp = function(Zj, int.Sigma, int.nrep, int.ERR, int.r) {
+.zj_pp = function(Zj, int.Sigma, int.nrep, int.ERR, int.r, usec=FALSE) {
   stopifnot(class(Zj)=="numeric")
   stopifnot(class(int.ERR)=="matrix")
   stopifnot(class(int.r)=="numeric")
-  zj_pp_arma(Zj, int.Sigma, int.nrep, int.ERR, int.r)
-  ## exp.zm = Zj %*% int.Sigma
-  ## mexp.zm = matrix(exp.zm, int.nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
-  ## zstar = mexp.zm + int.ERR
-  ## bf = 0.5 * t(log(1 - int.r) + (int.r * t(zstar^2)))
-  ## ## denom = apply(bf, 1, logsum) # get different denom for each rep
-  ## denom = logsum_matrix(bf) # faster
-  ## exp(bf - denom)  # convert back from log scale
+  if(usec) {
+      zj_pp_arma(Zj, int.Sigma, int.nrep, int.ERR, int.r)
+  } else {
+      exp.zm = Zj %*% int.Sigma
+      mexp.zm = matrix(exp.zm, int.nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
+      zstar = mexp.zm + int.ERR
+      bf = 0.5 * t(log(1 - int.r) + (int.r * t(zstar^2)))
+      ## denom = apply(bf, 1, logsum) # get different denom for each rep
+      denom = logsum_matrix(bf) # faster
+      exp(bf - denom)  # convert back from log scale
+  }
 }
 
 #' @importFrom matrixStats rowMaxs

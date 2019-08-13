@@ -51,19 +51,17 @@ test_that("corrcov_nvar function returns a probability", {
 })
 
 test_that("corrcov_nvar_bhat function returns a probability", {
-  skip("")
   se <- 0.2 # assume all beta hats have same standard error
   bhats <- z*se
-  corr <- corrcov_nvar_bhat(bhats, V = V, N0 = N, N1 = N, Sigma = sigma, nvar = 2, thr = 0.95, W = 0.2, nrep = 100)
+  corr <- corrcov_nvar_bhat(bhats, V = V, N0 = N, N1 = N, Sigma = sigma, nvar = 2, thr = 0.95, W = 0.2, nrep = 50)
   expect_gte(corr, 0)
   expect_lte(corr, 1)
 })
 
 test_that("corrcov_CI returns an appropriate confidence interval", {
-  skip("")
   CI <- corrcov_CI(z = z, f = maf, N0 = N, N1 = N, Sigma = sigma, nrep = 1)
   expect_true(dplyr::between(CI[[1]],-0.1,1.1))
-  expect_true(dplyr::between(CI[[2]],-0.0,1.1))
+  expect_true(dplyr::between(CI[[2]],-0.1,1.1))
 })
 
 test_that("corrcov_CI_bhat returns an appropriate confidence interval", {
@@ -98,17 +96,21 @@ test_that("corrected_cs_bhat reports appropriate list", { # get an error.. canno
   # skip("takes too long")
   se <- 0.2 # assume all beta hats have same standard error
   bhats <- z*se
-  expect_error(corrected_cs_bhat(bhat = bhats, V = V, N0 = N, N1 = N, Sigma = sigma, lower = 0.8, upper = 1, desired.cov = 0.95, max.iter = 1))
+  res <- corrected_cs_bhat(bhat = bhats, V = se^2, N0 = N, N1 = N, Sigma = sigma, lower = 0.6, upper = 1, desired.cov = 0.95, max.iter = 1)
+  expect_true(length(res) == 4)
+  expect_true(all(dplyr::between(res$corr.cov,0,1)))
+  expect_true(all(dplyr::between(res$req.thr,0,1)))
+  expect_true(all(dplyr::between(res$size,0,1)))
+})
+
+
+test_that("corrected_cs_bhat reports error (no root in range)", {
+  # skip("takes too long")
+  se <- 0.2 # assume all beta hats have same standard error
+  bhats <- z*se
+  expect_error(corrected_cs_bhat(bhat = bhats, V = se^2, N0 = N, N1 = N, Sigma = sigma, lower = 1, upper = 1, desired.cov = 0.95, max.iter = 1))
   #expect_true(length(res) == 4)
   #expect_true(all(dplyr::between(res$corr.cov,0,1)))
   #expect_true(all(dplyr::between(res$req.thr,0,1)))
   #expect_true(all(dplyr::between(res$size,0,1)))
 })
-
-
-
-
-
-
-
-

@@ -73,6 +73,83 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
     sum(propcov * pp0)
 }
 
+#' Corrected coverage estimate of the causal variant in the credible set
+#'
+#' Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)
+#' @rdname corrected_cov
+#' @title Corrected coverage estimate of the causal variant in the credible set
+#' @param pp0 Posterior probabilities of SNPs
+#' @param mu The true effect at the CV (estimate using corrcoverage::mu_est function)
+#' @param V Variance of the estimated effect size (can be obtained using coloc::Var.beta.cc function)
+#' @param Sigma SNP correlation matrix
+#' @param thr Minimum threshold for fine-mapping experiment (0.95 default)
+#' @param W Prior for the standard deviation of the effect size parameter, beta (W=0.2 default)
+#' @param nrep Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)
+#' @param pp0min only average over SNPs with pp0 > pp0min
+#' @return Corrected coverage estimate
+#'
+#' @examples
+#'
+#' set.seed(1)
+#' nsnps <- 100
+#' N0 <- 5000
+#' N1 <- 5000
+#'
+#' ## generate example LD matrix
+#' library(mvtnorm)
+#' nsamples = 1000
+#'
+#' simx <- function(nsnps, nsamples, S, maf=0.1) {
+#'     mu <- rep(0,nsnps)
+#'     rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+#'     pvars <- pnorm(rawvars)
+#'     x <- qbinom(1-pvars, 1, maf)
+#'}
+#'
+#' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+#' X <- simx(nsnps,nsamples,S)
+#' LD <- cor2(X)
+#' maf <- colMeans(X)
+#'
+#' ## generate V (variance of estimated effect sizes)
+#' varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)
+#'
+#' pp <- rnorm(nsnps, 0.2, 0.05)
+#' pp <- pp/sum(pp)
+#'
+#' corrected_cov(pp0 = pp, mu = 4, V = varbeta, Sigma = LD, thr = 0.95, nrep = 100)
+#'
+#' @export
+#' @author Anna Hutchinson
+corrected_cov_faster <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000, pp0min=0.001) {
+
+    nsnps = length(pp0)
+    temp = diag(x = mu, nrow = nsnps, ncol = nsnps)
+    usesnps=which(pp0 > pp0min)
+    zj = lapply(usesnps, function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+    
+    # simulate ERR matrix
+    ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+
+    # calculate r
+    r = W^2/(W^2 + V)
+
+    # simulate pp systems
+    pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
+
+    # consider different CV as causal in each list
+    n_pps <- length(pps)
+    args <- 1:nsnps
+
+    # obtain credible set for each simulation
+    d5 <- lapply(1:n_pps, function(x) {
+        credsetC(pps[[x]], CV = rep(usesnps[x], dim(pps[[x]])[1]), thr = thr)
+    })
+
+    propcov <- lapply(d5, prop_cov) %>% unlist()
+    sum(propcov * pp0[usesnps])
+}
+
 
 #' Corrected coverage estimate using Z-scores and mafs
 #'

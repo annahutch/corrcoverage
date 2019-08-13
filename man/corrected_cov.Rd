@@ -2,11 +2,31 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{corrected_cov}
 \alias{corrected_cov}
+\alias{corrected_cov_faster}
 \title{Corrected coverage estimate of the causal variant in the credible set}
 \usage{
 corrected_cov(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000)
+
+corrected_cov_faster(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000,
+  pp0min = 0.001)
 }
 \arguments{
+\item{pp0}{Posterior probabilities of SNPs}
+
+\item{mu}{The true effect at the CV (estimate using corrcoverage::mu_est function)}
+
+\item{V}{Variance of the estimated effect size (can be obtained using coloc::Var.beta.cc function)}
+
+\item{Sigma}{SNP correlation matrix}
+
+\item{thr}{Minimum threshold for fine-mapping experiment (0.95 default)}
+
+\item{W}{Prior for the standard deviation of the effect size parameter, beta (W=0.2 default)}
+
+\item{nrep}{Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)}
+
+\item{pp0min}{only average over SNPs with pp0 > pp0min}
+
 \item{pp0}{Posterior probabilities of SNPs}
 
 \item{mu}{The true effect at the CV (estimate using corrcoverage::mu_est function)}
@@ -23,11 +43,17 @@ corrected_cov(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000)
 }
 \value{
 Corrected coverage estimate
+
+Corrected coverage estimate
 }
 \description{
 Corrected coverage estimate of the causal variant in the credible set
+
+Corrected coverage estimate of the causal variant in the credible set
 }
 \details{
+Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)
+
 Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)
 }
 \examples{
@@ -61,7 +87,39 @@ pp <- pp/sum(pp)
 
 corrected_cov(pp0 = pp, mu = 4, V = varbeta, Sigma = LD, thr = 0.95, nrep = 100)
 
+
+set.seed(1)
+nsnps <- 100
+N0 <- 5000
+N1 <- 5000
+
+## generate example LD matrix
+library(mvtnorm)
+nsamples = 1000
+
+simx <- function(nsnps, nsamples, S, maf=0.1) {
+    mu <- rep(0,nsnps)
+    rawvars <- rmvnorm(n=nsamples, mean=mu, sigma=S)
+    pvars <- pnorm(rawvars)
+    x <- qbinom(1-pvars, 1, maf)
+}
+
+S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
+X <- simx(nsnps,nsamples,S)
+LD <- cor2(X)
+maf <- colMeans(X)
+
+## generate V (variance of estimated effect sizes)
+varbeta <- Var.data.cc(f = maf, N = 5000, s = 0.5)
+
+pp <- rnorm(nsnps, 0.2, 0.05)
+pp <- pp/sum(pp)
+
+corrected_cov(pp0 = pp, mu = 4, V = varbeta, Sigma = LD, thr = 0.95, nrep = 100)
+
 }
 \author{
+Anna Hutchinson
+
 Anna Hutchinson
 }

@@ -1,9 +1,9 @@
 ---
-title: "New Credible Set: `corrected_cs`"
+title: "Corrected Credible Set"
 author: "Anna Hutchinson"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{New Credible Set: `corrected_cs`}
+  %\VignetteIndexEntry{Corrected Credible Set}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,13 +14,15 @@ set.seed(18)
 library(corrcoverage)
 ```
 
-This vignette will show users how the `corrcoverage` package can be used to obtain a new credible set of variants that contains the true causal variant with some specified desired coverage value whilst containing as few variants as possible.
+This vignette will show users how the `corrcoverage` R package can be used to obtain a new credible set of variants that contains the true causal variant with some specified desired coverage value whilst containing as few variants as possible.
 
 ---
 
-## Simulate GWAS data
+### 1. Simulate GWAS summary statistics
 
-As in the [corrected coverage vignette](https://annahutch.github.io/corrcoverage/articles/my-vignette.html), let's begin by simulating some GWAS data using the `simGWAS` package.
+---
+
+As in the [corrected coverage vignette](https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html), let's begin by simulating some GWAS data using the `simGWAS` package.
 
 ```{r}
 library(simGWAS)
@@ -78,11 +80,13 @@ muhat
 
 ---
 
-## Corrected Coverage Estimate
+### 2. Derive corrected coverage estimate
+
+---
 
 The `corrected_cov` function is used to find the corrected coverage of a credible set with specified threshold, say 0.9.
 
-Note that this function is similar to using `corrcov` as explained in the ["Corrected Coverage" vignette](https://annahutch.github.io/corrcoverage/articles/my-vignette.html); which would require $Z$-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the `corrcov` function (muhat, varbeta etc.) so we can use `corrected_cov` instead.
+Note that this function is similar to using `corrcov` as explained in the ["Corrected Coverage" vignette](https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html); which would require $Z$-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the `corrcov` function (muhat, varbeta etc.) so we can use `corrected_cov` instead.
 
 ```{r}
 thr = 0.9
@@ -93,7 +97,11 @@ data.frame(claimed.cov = cs$claimed.cov, corr.cov =  corrcov, nvar = cs$nvar)
 
 Using the Bayesian approach for statistical fine-mapping we obtain a 90% credible set consisting of 9 variants. The claimed coverage of this credible set is ~0.93, yet the corrected coverage estimate is ~0.97, suggesting that we can afford to be 'more confident' that we have captured the causal variant in our credible set. 
 
-## Empirical Coverage Estimate
+---
+
+### 3. Evaluate accuracy of estimate
+
+---
 
 Again, for the purpose of this vignette we can investigate how accurate this estimate is by simulating many credible sets from the same system, and finding the proportion of these that contain the true causal variant.
 
@@ -116,24 +124,44 @@ We find that our corrected coverage value is very close to the empirical coverag
 
 ---
 
-## Obtain a New Credible Set
+### 4. Obtain a corrected credible set
+
+---
 
 Our results suggest that we may be able to remove some variants from the credible set, whilst still achieving the desired coverage of 90%.
 
 The `corrected_cs` function uses GWAS summary statistics and some user-defined parameters to find the smallest credible set such that the coverage estimate is within some accuracy of the desired coverage.
 
-The function requires the $Z$-scores (`z`), minor allele frequencies (`f`), control and case sample sizes (`N0` and `N1` respectively), LD matrix (`Sigma`), some lower threshold value (`lower`), some upper threshold value (`upper`) and the desired coverage (`desired.cov`). 
+The function requires the following parameters to be specified:
 
-The function uses the [bisection root finding method](https://en.wikipedia.org/wiki/Root-finding_algorithm#Bisection_method) to converge to the smallest threshold such that the corrected coverage is larger than the desired coverage. The accuracy parameter is optional (default value set to 0.005) and controls how much greater than the desired coverage the user is happy for the corrected coverage value to lie. 
+* `z` (vector of marginal $Z$-scores)
+* `f` (vector of minor allele frequencies)
+* `N0`, `N1` (number of controls and cases respectively)
+* `Sigma` (SNP correlation matrix) 
+* `desired.cov` (desired coverage of the credible set)
 
-The function reports the threshold values tested and their corresponding corrected coverage value. The maximum number of iterations for the bisecting root finding algorithm is an optional parameter, with default value 20. The functions stops when either the number of iterations reaches the maximum, or the corrected coverage is within some accuracy of the desired coverage. 
+In addition, there are a number of optional parameters:
+
+* `lower` (the lower value to try for the threshold)
+* `upper` (the upper value to try for the threshold)
+* `acc` (the accuracy required for the coverage of the resultant credible set)
+* `max.iter` (maximum number of iterations)
+
+The function uses the [bisection root finding method](https://en.wikipedia.org/wiki/Root-finding_algorithm#Bisection_method) to converge to the smallest threshold such that the corrected coverage is larger than the desired coverage. The `lower` and `upper` parameters define the boundaries of the threshold values for the root finding method, with default values of 0 and 1 respectively. The `acc` parameter has a default value set to 0.005, meaning that the algorithm will keep attempting to find a corrected credible set (until the number of iterations reaches `max.iter`) that has coverage within 0.005 of the desired coverage value (e.g. between 0.895 and 0.905 for a 90% credible set). 
+
+The function reports the threshold values tested and their corresponding corrected coverage value at each iteration. The maximum number of iterations for the bisecting root finding algorithm is an optional parameter, with default value 20. The functions stops when either the number of iterations reaches the maximum, or the corrected coverage is within some accuracy of the desired coverage. 
 
 ```{r}
-res <- corrected_cs(z = z0, f = MAF, N0, N1, Sigma = LD, lower = 0.5, upper = 1, desired.cov = 0.9)
+res <- corrected_cs(z = z0, f = MAF, N0, N1, 
+                    Sigma = LD, lower = 0.5, upper = 1, desired.cov = 0.9)
 res
 ```
 
-In this example we see that a much smaller threshold value is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 4 variants. In the standard Bayesian approach, a threshold of 90% is chosen which we have seen leads to over-coverage.
+The first threshold value tested is the midpoint of the `lower` (0.5) and `upper` (1) parameter values, which here is 0.75. The coverage of this credible set is too high ($>0.9$) and so a smaller threshold value is tested, the midpoint of the `lower` parameter value (0.5) and the previously tried threshold value (0.75). This credible set has a coverage that is too low, and so a higher threshold value is tested, and so on. 
+
+In this example we see that a much smaller threshold value is required to obtain a credible set with 90% corrected coverage of the causal variant, containing only 4 variants. In the standard Bayesian approach, the threshold value of 90% leads to over-coverage.
+
+---
 
 Finally, we can compare this coverage estimate of the corrected credible set to an empirical estimate of the true coverage. 
 

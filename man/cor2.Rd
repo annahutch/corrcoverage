@@ -13,7 +13,7 @@ cor2(x)
 Correlation matrix
 }
 \description{
-Correlation matrix of SNPS
+Correlation matrix of SNPs
 }
 \details{
 Quick function to find a correlation matrix

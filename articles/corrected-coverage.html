@@ -140,7 +140,7 @@
 <a class="sourceLine" id="cb7-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(z0)</a></code></pre></div>
 <pre><code>## [1] 200</code></pre>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">z0[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>## [1] -1.730825 -2.398744 -3.099309 -3.554752 -1.842284</code></pre>
+<pre><code>## [1] -1.889831 -2.534196 -3.139531 -3.753833 -1.821278</code></pre>
 <p><code>z0</code> is a vector of marginal Z scores for the SNPs in our genomic region.</p>
 <hr>
 </div>
@@ -180,13 +180,13 @@
 <a class="sourceLine" id="cb12-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb12-5" data-line-number="5">credibleset</a></code></pre></div>
 <pre><code>## $credset
-##  [1]  24   4  25   3 128  69 127   2 152  42 125  53 124 126  51 145 197  41  52  47 156  95 151  50 103 123   6   5 186   1 138  36  16 153  46 150  54 149 136 102 170  61  26  60 169 131 137 104 144 146
+##  [1]   4 160  24   3 158  25 156 157 128  69 127   2  53  42 124 162 126 152  51 123 171  52 145
 ## 
 ## $claimed.cov
-## [1] 0.9001601
+## [1] 0.9007093
 ## 
 ## $nvar
-## [1] 50</code></pre>
+## [1] 23</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># is the true CV contained within the credible set?</span></a>
 <a class="sourceLine" id="cb14-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb14-3" data-line-number="3">thresh &lt;-<span class="st"> </span><span class="fl">0.9</span></a>
@@ -195,16 +195,16 @@
 <a class="sourceLine" id="cb14-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb14-7" data-line-number="7">credibleset</a></code></pre></div>
 <pre><code>## $credset
-##  [1]  24   4  25   3 128  69 127   2 152  42 125  53 124 126  51 145 197  41  52  47 156  95 151  50 103 123   6   5 186   1 138  36  16 153  46 150  54 149 136 102 170  61  26  60 169 131 137 104 144 146
+##  [1]   4 160  24   3 158  25 156 157 128  69 127   2  53  42 124 162 126 152  51 123 171  52 145
 ## 
 ## $claimed.cov
-## [1] 0.9001601
+## [1] 0.9007093
 ## 
 ## $covered
 ## [1] 1
 ## 
 ## $nvar
-## [1] 50</code></pre>
+## [1] 23</code></pre>
 <p>The 90% credible set has a claimed coverage of ~90% and contains the true causal variant. In the literature, authors would typically report that they have found a 90% credible set which they are at least 90% confident contains the true causal variant.</p>
 <p>Note that if the variants are named in the <code>pp</code> vector, then the <code>$credset</code> output would contain variant names rather than their indices.</p>
 <hr>
@@ -229,7 +229,7 @@
 <p><strong>Note that if the estimated effect size coefficients (<code>bhat</code>) and their standard errors (<code><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt(V)</a></code>) are known instead of <span class="math inline">\(Z\)</span>-scores and minor allele frequencies, then the <code>corrcov_bhat</code> function can be used analogously.</strong></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrcov.html">corrcov</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</a></code></pre></div>
 <pre><code>##  Corrected.Coverage Claimed.Coverage Threshold
-##           0.9858226        0.9001601       0.9</code></pre>
+##           0.9833866        0.9007093       0.9</code></pre>
 <p>In our example, the 90% credible set may have nearer to 98% coverage of the causal variant in the credible set.</p>
 <hr>
 </div>
@@ -251,10 +251,10 @@
 <a class="sourceLine" id="cb18-11" data-line-number="11">cs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)<span class="op">$</span>cov)</a>
 <a class="sourceLine" id="cb18-12" data-line-number="12">true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs)</a>
 <a class="sourceLine" id="cb18-13" data-line-number="13">true.cov.est</a></code></pre></div>
-<pre><code>## [1] 0.9832</code></pre>
+<pre><code>## [1] 0.981</code></pre>
 <p>The estimated empirical coverage is found to be approximately 98%, showing that our corrected coverage estimate was indeed accurate - far more so than the standard claimed coverage of ~90%.</p>
 <pre><code>##  Empirical.Coverage Corrected.Coverage Claimed.Coverage Threshold
-##              0.9832          0.9858226        0.9001601       0.9</code></pre>
+##               0.981          0.9833866        0.9007093       0.9</code></pre>
 <hr>
 </div>
 <div id="so-what" class="section level3">

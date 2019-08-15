@@ -11,3 +11,16 @@ credsetmat <- function(pp, iCV, threshold) {
     .Call('_corrcoverage_credsetmat', PACKAGE = 'corrcoverage', pp, iCV, threshold)
 }
 
+#' Obtain pp from a matrix of Zj and ERR
+#'
+#' @param Zj vector of joint Z scores
+#' @param sigma SNP correlation matrix
+#' @param nrep Number of simulations
+#' @param ERR Error matrix
+#' @param r Shrinkage values
+#' @return pp Matrix of posterior probabilities (one row for each simulation)
+#' @export
+zj_pp_arma <- function(Zj, sigma, nrep, ERR, r) {
+    .Call('_corrcoverage_zj_pp_arma', PACKAGE = 'corrcoverage', Zj, sigma, nrep, ERR, r)
+}
+

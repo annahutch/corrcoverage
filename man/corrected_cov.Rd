@@ -4,12 +4,13 @@
 \alias{corrected_cov}
 \title{Corrected coverage estimate of the causal variant in the credible set}
 \usage{
-corrected_cov(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000)
+corrected_cov(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000,
+  pp0min = 0.001)
 }
 \arguments{
 \item{pp0}{Posterior probabilities of SNPs}
 
-\item{mu}{The true effect at the CV (estimate using corrcoverage::mu_est function)}
+\item{mu}{The true effect at the CV (estimate using corrcoverage::est_mu function)}
 
 \item{V}{Variance of the estimated effect size (can be obtained using coloc::Var.beta.cc function)}
 
@@ -20,6 +21,8 @@ corrected_cov(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000)
 \item{W}{Prior for the standard deviation of the effect size parameter, beta (W=0.2 default)}
 
 \item{nrep}{Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)}
+
+\item{pp0min}{Only average over SNPs with pp0 > pp0min}
 }
 \value{
 Corrected coverage estimate
@@ -28,7 +31,7 @@ Corrected coverage estimate
 Corrected coverage estimate of the causal variant in the credible set
 }
 \details{
-Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)
+Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::est_mu function)
 }
 \examples{
 

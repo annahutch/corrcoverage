@@ -5,7 +5,7 @@
 \title{Corrected coverage estimate using Z-scores and mafs (fixing nvar)}
 \usage{
 corrcov_nvar(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
-  nrep = 10000)
+  nrep = 10000, pp0min = 0.001)
 }
 \arguments{
 \item{z}{Marginal Z-scores}
@@ -26,7 +26,9 @@ corrcov_nvar(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 
 \item{nrep}{The number of simulated posterior probability systems to consider for the corrected
 coverage estimate (nrep = 10000 default because we trim out the ones without correct
-nvar so need this to be hugh)}
+nvar so need this to be high)}
+
+\item{pp0min}{Only average over SNPs with pp0 > pp0min}
 }
 \value{
 Corrected coverage estimate

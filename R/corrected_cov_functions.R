@@ -10,6 +10,7 @@
 #' @param thr Minimum threshold for fine-mapping experiment (0.95 default)
 #' @param W Prior for the standard deviation of the effect size parameter, beta (W=0.2 default)
 #' @param nrep Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)
+#' @param pp0min Only average over SNPs with pp0 > pp0min
 #' @return Corrected coverage estimate
 #'
 #' @examples
@@ -45,34 +46,34 @@
 #'
 #' @export
 #' @author Anna Hutchinson
-corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
+corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000, pp0min = 0.001) {
 
-    nsnps = length(pp0)
-    temp = diag(x = mu, nrow = nsnps, ncol = nsnps)
-    zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+  nsnps = length(pp0)
+  temp = diag(x = mu, nrow = nsnps, ncol = nsnps)
+  usesnps = which(pp0 > pp0min)
+  zj = lapply(usesnps, function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
 
-    # simulate ERR matrix
-    ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
+  # simulate ERR matrix
+  ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
 
-    # calculate r
-    r = W^2/(W^2 + V)
+  # calculate r
+  r = W^2/(W^2 + V)
 
-    # simulate pp systems
-    pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
+  # simulate pp systems
+  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
 
-    # consider different CV as causal in each list
-    n_pps <- length(pps)
-    args <- 1:nsnps
+  # consider different CV as causal in each list
+  n_pps <- length(pps)
+  args <- 1:nsnps
 
-    # obtain credible set for each simulation
-    d5 <- lapply(1:n_pps, function(x) {
-        credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
-    })
+  # obtain credible set for each simulation
+  d5 <- lapply(1:n_pps, function(x) {
+    credsetC(pps[[x]], CV = rep(usesnps[x], dim(pps[[x]])[1]), thr = thr)
+  })
 
-    propcov <- lapply(d5, prop_cov) %>% unlist()
-    sum(propcov * pp0)
+  propcov <- lapply(d5, prop_cov) %>% unlist()
+  sum(propcov * pp0[usesnps])/sum(pp0[usesnps])
 }
-
 
 #' Corrected coverage estimate using Z-scores and mafs
 #'
@@ -87,6 +88,7 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
 #' @param thr Minimum threshold for fine-mapping experiment (default 0.95)
 #' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (default 1000)
+#' @param pp0min Only average over SNPs with pp0 > pp0min
 #' @return Corrected coverage estimate
 #'
 #' @examples
@@ -117,7 +119,7 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
 #'
 #' @export
 #' @author Anna Hutchinson
-corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
+corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, pp0min = 0.001) {
 
     varbeta = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
 
@@ -125,7 +127,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
 
     muhat = sum(abs(z) * pp)
 
-    corrected_cov(pp0 = pp, mu = muhat, V = varbeta, Sigma, thr, W, nrep)
+    corrected_cov(pp0 = pp, mu = muhat, V = varbeta, Sigma, thr, W, nrep, pp0min)
 }
 
 #' Corrected coverage estimate using estimated effect sizes and their standard errors
@@ -141,6 +143,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
 #' @param thr Minimum threshold for fine-mapping experiment (default 0.95)
 #' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (default 1000)
+#' @param pp0min Only average over SNPs with pp0 > pp0min
 #' @return Corrected coverage estimate
 #'
 #' @examples
@@ -174,7 +177,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
 #'
 #' @export
 #' @author Anna Hutchinson
-corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000) {
+corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, pp0min = 0.001) {
 
     z = bhat/sqrt(V)
 
@@ -182,7 +185,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 
     muhat = sum(abs(z) * pp)
 
-    corrected_cov(pp0 = pp, mu = muhat, V, Sigma, thr, W, nrep)
+    corrected_cov(pp0 = pp, mu = muhat, V, Sigma, thr, W, nrep, pp0min)
 }
 
 #' Obtain corrected coverage estimate using Z-scores and mafs (limiting simulations used for estimation to those with correct nvar)
@@ -200,7 +203,8 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 #' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected
 #'            coverage estimate (nrep = 10000 default because we trim out the ones without correct
-#'            nvar so need this to be hugh)
+#'            nvar so need this to be high)
+#' @param pp0min Only average over SNPs with pp0 > pp0min
 #' @return Corrected coverage estimate
 #'
 #' @examples
@@ -235,7 +239,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 #' @export
 
 #' @author Anna Hutchinson
-corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 10000) {
+corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 10000, pp0min = 0.001) {
 
   varbeta = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
 
@@ -248,7 +252,8 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
   #### corrected coverage
 
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
-  zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+  usesnps = which(pp > pp0min)
+  zj = lapply(usesnps, function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
 
   # simulate ERR matrix
 
@@ -256,7 +261,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 
   r = W^2/(W^2 + varbeta)
 
-  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
+  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY = FALSE)
 
   # consider different CV as causal in each list
   n_pps = length(pps)
@@ -264,7 +269,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 
   # obtain credible set for each simulation
   d5 <- lapply(1:n_pps, function(x) {
-    credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
+    credsetC(pps[[x]], CV = rep(usesnps[x], dim(pps[[x]])[1]), thr = thr)
   })
 
   d5_trim <- lapply(d5, function(p) p[which(p$nvar==nvar),])
@@ -275,7 +280,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 
   contained <- lapply(d5_trim, function(p) p$covered) %>% unlist()
 
-  pp.vec <- rep(pp, times=nsims)
+  pp.vec <- rep(pp[usesnps], times=nsims)
 
   sum(contained * pp.vec)/sum(pp.vec)
 }
@@ -295,7 +300,8 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 #' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected
 #'            coverage estimate (nrep = 10000 default because we trim out the ones without correct
-#'            nvar so need this to be hugh)
+#'            nvar so need this to be high)
+#' @param pp0min Only average over SNPs with pp0 > pp0min
 #' @return Corrected coverage estimate
 #'
 #' @examples
@@ -333,7 +339,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 #' @export
 #'
 #' @author Anna Hutchinson
-corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 10000) {
+corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 10000, pp0min = 0.001) {
 
   z = bhat/sqrt(V)
 
@@ -346,7 +352,8 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
   #### corrected coverage
 
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
-  zj = lapply(seq_len(nrow(temp)), function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+  usesnps = which(pp > pp0min)
+  zj = lapply(usesnps, function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
 
   # simulate ERR matrix
 
@@ -354,7 +361,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 
   r = W^2/(W^2 + V)
 
-  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
+  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY = FALSE)
 
   # consider different CV as causal in each list
   n_pps = length(pps)
@@ -362,7 +369,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 
   # obtain credible set for each simulation
   d5 <- lapply(1:n_pps, function(x) {
-    credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
+    credsetC(pps[[x]], CV = rep(usesnps[x], dim(pps[[x]])[1]), thr = thr)
   })
 
   d5_trim <- lapply(d5, function(p) p[which(p$nvar==nvar),])
@@ -373,7 +380,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 
   contained <- lapply(d5_trim, function(p) p$covered) %>% unlist()
 
-  pp.vec <- rep(pp, times=nsims)
+  pp.vec <- rep(pp[usesnps], times=nsims)
 
   sum(contained * pp.vec)/sum(pp.vec)
 }
@@ -391,6 +398,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 #' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)
 #' @param CI The size of the confidence interval (as a decimal)
+#' @param pp0min Only average over SNPs with pp0 > pp0min
 #' @return CI for corrected coverage estimate
 #'
 #' @examples
@@ -425,8 +433,8 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 #' @export
 #'
 #' @author Anna Hutchinson
-corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI = 0.95){
-  corrcov_reps = replicate(100, corrcov(z, f, N0, N1, Sigma, thr, W, nrep))
+corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI = 0.95, pp0min = 0.001){
+  corrcov_reps = replicate(100, corrcov(z, f, N0, N1, Sigma, thr, W, nrep, pp0min))
   stats::quantile(corrcov_reps, probs = c((1-CI)/2, (CI+1)/2))
 }
 
@@ -443,6 +451,7 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI
 #' @param W Prior for the standard deviation of the effect size parameter beta
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)
 #' @param CI The size of the confidence interval (as a decimal)
+#' @param pp0min Only average over SNPs with pp0 > pp0min
 #' @return CI for corrected coverage estimate
 #'
 #' @examples
@@ -479,7 +488,7 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI
 #' @export
 #'
 #' @author Anna Hutchinson
-corrcov_CI_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI = 0.95){
-  corrcov_reps = replicate(100, corrcov_bhat(bhat, V, N0, N1, Sigma, thr, W, nrep))
+corrcov_CI_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI = 0.95, pp0min = 0.001){
+  corrcov_reps = replicate(100, corrcov_bhat(bhat, V, N0, N1, Sigma, thr, W, nrep, pp0min))
   stats::quantile(corrcov_reps, probs = c((1-CI)/2, (CI+1)/2))
 }

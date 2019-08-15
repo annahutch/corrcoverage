@@ -4,8 +4,9 @@
 \alias{corrected_cs_bhat}
 \title{Corrected credible set with desired coverage of the CV}
 \usage{
-corrected_cs_bhat(bhat, V, N0, N1, Sigma, lower = 0, upper = 1,
-  desired.cov, acc = 0.005, max.iter = 20)
+corrected_cs_bhat(bhat, V, N0, N1, Sigma, W = 0.2, lower = 0,
+  upper = 1, desired.cov, acc = 0.005, max.iter = 20,
+  pp0min = 0.001)
 }
 \arguments{
 \item{bhat}{Estimated effect sizes}
@@ -18,6 +19,8 @@ corrected_cs_bhat(bhat, V, N0, N1, Sigma, lower = 0, upper = 1,
 
 \item{Sigma}{Correlation matrix of SNPs}
 
+\item{W}{Prior for the standard deviation of the effect size parameter, beta (default 0.2)}
+
 \item{lower}{Lower threshold (default = 0)}
 
 \item{upper}{Upper threshold (default = 1)}
@@ -27,6 +30,8 @@ corrected_cs_bhat(bhat, V, N0, N1, Sigma, lower = 0, upper = 1,
 \item{acc}{Accuracy of corrected coverage to desired coverage (default = 0.005)}
 
 \item{max.iter}{Maximum iterations (default = 20)}
+
+\item{pp0min}{Only average over SNPs with pp0 > pp0min}
 }
 \value{
 List of variants in credible set, required threshold, the corrected coverage and the size of the credible set
@@ -67,6 +72,7 @@ simx <- function(nsnps, nsamples, S, maf=0.1) {
 S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 X <- simx(nsnps,nsamples,S)
 LD <- cor2(X)
+maf <- colMeans(X)
 
 varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 

@@ -20,7 +20,6 @@ test_that("cor2 finds correlation matrix", {
   cor_matrix <- cor2(h)
   expect_true(dim(cor_matrix)[1]==c)
   expect_true(dim(cor_matrix)[2]==c)
-  expect_true(all(dplyr::between(cor_matrix,-1.1,1.1)))
 })
 
 test_that("z_sim simulates the correct number of marginal Z scores", {

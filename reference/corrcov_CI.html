@@ -126,7 +126,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>corrcov_CI</span>(<span class='no'>z</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
-  <span class='kw'>CI</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</pre>
+  <span class='kw'>CI</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>pp0min</span> <span class='kw'>=</span> <span class='fl'>0.001</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,6 +166,10 @@
     <tr>
       <th>CI</th>
       <td><p>The size of the confidence interval (as a decimal)</p></td>
+    </tr>
+    <tr>
+      <th>pp0min</th>
+      <td><p>Only average over SNPs with pp0 &gt; pp0min</p></td>
     </tr>
     </table>
     

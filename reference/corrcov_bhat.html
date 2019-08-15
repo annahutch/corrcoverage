@@ -126,7 +126,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>corrcov_bhat</span>(<span class='no'>bhat</span>, <span class='no'>V</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>,
-  <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
+  <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>pp0min</span> <span class='kw'>=</span> <span class='fl'>0.001</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -162,6 +162,10 @@
     <tr>
       <th>nrep</th>
       <td><p>The number of simulated posterior probability systems to consider for the corrected coverage estimate (default 1000)</p></td>
+    </tr>
+    <tr>
+      <th>pp0min</th>
+      <td><p>Only average over SNPs with pp0 &gt; pp0min</p></td>
     </tr>
     </table>
     
@@ -201,7 +205,7 @@
 
 <span class='no'>bhats</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>, <span class='fl'>0</span>, <span class='fl'>0.2</span>) <span class='co'># log OR</span>
 
-<span class='fu'>corrcov_bhat</span>(<span class='kw'>bhat</span> <span class='kw'>=</span> <span class='no'>bhats</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='no'>varbeta</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>)</div><div class='output co'>#&gt; [1] 0.9970001</div><div class='input'>
+<span class='fu'>corrcov_bhat</span>(<span class='kw'>bhat</span> <span class='kw'>=</span> <span class='no'>bhats</span>, <span class='kw'>V</span> <span class='kw'>=</span> <span class='no'>varbeta</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>)</div><div class='output co'>#&gt; [1] 0.997</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

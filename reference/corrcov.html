@@ -125,7 +125,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>corrcov</span>(<span class='no'>z</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
+    <pre class="usage"><span class='fu'>corrcov</span>(<span class='no'>z</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>pp0min</span> <span class='kw'>=</span> <span class='fl'>0.001</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -162,6 +163,10 @@
       <th>nrep</th>
       <td><p>The number of simulated posterior probability systems to consider for the corrected coverage estimate (default 1000)</p></td>
     </tr>
+    <tr>
+      <th>pp0min</th>
+      <td><p>Only average over SNPs with pp0 &gt; pp0min</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -197,7 +202,7 @@
 <span class='no'>LD</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cor2.html'>cor2</a></span>(<span class='no'>X</span>)
 <span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>X</span>)
 
-<span class='fu'>corrcov</span>(<span class='kw'>z</span> <span class='kw'>=</span> <span class='no'>z_scores</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 0.9960623</div><div class='input'>
+<span class='fu'>corrcov</span>(<span class='kw'>z</span> <span class='kw'>=</span> <span class='no'>z_scores</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 0.996061</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

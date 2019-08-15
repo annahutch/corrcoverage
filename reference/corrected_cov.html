@@ -125,7 +125,8 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>corrected_cov</span>(<span class='no'>pp0</span>, <span class='no'>mu</span>, <span class='no'>V</span>, <span class='no'>Sigma</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>)</pre>
+    <pre class="usage"><span class='fu'>corrected_cov</span>(<span class='no'>pp0</span>, <span class='no'>mu</span>, <span class='no'>V</span>, <span class='no'>Sigma</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
+  <span class='kw'>pp0min</span> <span class='kw'>=</span> <span class='fl'>0.001</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -136,7 +137,7 @@
     </tr>
     <tr>
       <th>mu</th>
-      <td><p>The true effect at the CV (estimate using corrcoverage::mu_est function)</p></td>
+      <td><p>The true effect at the CV (estimate using corrcoverage::est_mu function)</p></td>
     </tr>
     <tr>
       <th>V</th>
@@ -158,6 +159,10 @@
       <th>nrep</th>
       <td><p>Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)</p></td>
     </tr>
+    <tr>
+      <th>pp0min</th>
+      <td><p>Only average over SNPs with pp0 &gt; pp0min</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -166,7 +171,7 @@
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)</p>
+    <p>Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::est_mu function)</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

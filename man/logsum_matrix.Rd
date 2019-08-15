@@ -13,7 +13,7 @@ logsum_matrix(x)
 rowwise sums
 }
 \description{
-logsum rows of a matrix
+matrix-ified version of logsum to avoid needing apply()
 }
 \author{
 Chris Wallace

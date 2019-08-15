@@ -1,7 +1,7 @@
 Package: corrcoverage
 Type: Package
 Title: Corrected the Coverage of Credible Sets from Bayesian Genetic Fine Mapping
-Version: 0.0.1.900
+Version: 0.0.1.9000
 Authors@R: c(
         person("Anna", "Hutchinson", role = c("aut", "cre"), email = "anna.hutchinson@mrc-bsu.cam.ac.uk"),
         person("Chris", "Wallace", role = c("aut")),
@@ -32,12 +32,12 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 LinkingTo: 
-    Rcpp
+    Rcpp, RcppArmadillo
 Imports: 
     data.table,
     magrittr,
     stats,
-    Rcpp,
-    matrixStats
+    matrixStats,
+    Rcpp, RcppArmadillo
 SystemRequirements: C++11
 Remotes: chr1swallace/simGWAS

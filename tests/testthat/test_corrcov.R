@@ -97,7 +97,7 @@ test_that("corrected_cs_bhat reports appropriate list", { # get an error.. canno
   # skip("takes too long")
   se <- 0.2 # assume all beta hats have same standard error
   bhats <- z*se
-  res <- corrected_cs_bhat(bhat = bhats, V = se^2, N0 = N, N1 = N, Sigma = sigma, lower = 0.6, upper = 1, desired.cov = 0.95, max.iter = 1)
+  res <- corrected_cs_bhat(bhat = bhats, V = rep(se^2, length(bhats)), N0 = N, N1 = N, Sigma = sigma, lower = 0.6, upper = 1, desired.cov = 0.95, max.iter = 1)
   expect_true(length(res) == 4)
   expect_true(all(dplyr::between(res$corr.cov,0,1)))
   expect_true(all(dplyr::between(res$req.thr,0,1)))

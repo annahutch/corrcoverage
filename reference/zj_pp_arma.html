@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Correlation matrix of SNPS — cor2 • corrcoverage</title>
+<title>Obtain pp from a matrix of Zj and ERR — zj_pp_arma • corrcoverage</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Correlation matrix of SNPS — cor2" />
+<meta property="og:title" content="Obtain pp from a matrix of Zj and ERR — zj_pp_arma" />
 
-<meta property="og:description" content="Correlation matrix of SNPs" />
+<meta property="og:description" content="Obtain pp from a matrix of Zj and ERR" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -114,35 +114,47 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Correlation matrix of SNPS</h1>
+    <h1>Obtain pp from a matrix of Zj and ERR</h1>
     
-    <div class="hidden name"><code>cor2.Rd</code></div>
+    <div class="hidden name"><code>zj_pp_arma.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Correlation matrix of SNPs</p>
+    <p>Obtain pp from a matrix of Zj and ERR</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>cor2</span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>zj_pp_arma</span>(<span class='no'>Zj</span>, <span class='no'>sigma</span>, <span class='no'>nrep</span>, <span class='no'>ERR</span>, <span class='no'>r</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>Phased haplotype matrix, rows as samples and columns as SNPs</p></td>
+      <th>Zj</th>
+      <td><p>vector of joint Z scores</p></td>
+    </tr>
+    <tr>
+      <th>sigma</th>
+      <td><p>SNP correlation matrix</p></td>
+    </tr>
+    <tr>
+      <th>nrep</th>
+      <td><p>Number of simulations</p></td>
+    </tr>
+    <tr>
+      <th>ERR</th>
+      <td><p>Error matrix</p></td>
+    </tr>
+    <tr>
+      <th>r</th>
+      <td><p>Shrinkage values</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Correlation matrix</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Quick function to find a correlation matrix</p>
+    <p>pp Matrix of posterior probabilities (one row for each simulation)</p>
     
 
   </div>
@@ -152,12 +164,8 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
           </ul>
 
-    <h2>Author</h2>
-    <p>Chris Wallace</p>
   </div>
 </div>
 

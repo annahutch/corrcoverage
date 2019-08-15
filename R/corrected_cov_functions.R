@@ -1,10 +1,10 @@
 #' Corrected coverage estimate of the causal variant in the credible set
 #'
-#' Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::mu_est function)
+#' Requires an estimate of the true effect at the CV (e.g. use maximum absolute z-score or output from corrcoverage::est_mu function)
 #' @rdname corrected_cov
 #' @title Corrected coverage estimate of the causal variant in the credible set
 #' @param pp0 Posterior probabilities of SNPs
-#' @param mu The true effect at the CV (estimate using corrcoverage::mu_est function)
+#' @param mu The true effect at the CV (estimate using corrcoverage::est_mu function)
 #' @param V Variance of the estimated effect size (can be obtained using coloc::Var.beta.cc function)
 #' @param Sigma SNP correlation matrix
 #' @param thr Minimum threshold for fine-mapping experiment (0.95 default)

@@ -18,4 +18,5 @@ docs/*
 *.so
 pkgdown/favicon
 corrcoverage.Rproj
+*.Rhistory
 

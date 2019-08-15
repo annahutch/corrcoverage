@@ -5,11 +5,13 @@
 #' @param N0 Number of controls
 #' @param N1 Number of cases
 #' @param Sigma Correlation matrix of SNPs
+#' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
 #' @param lower Lower threshold (default = 0)
 #' @param upper Upper threshold (default = 1)
 #' @param desired.cov The desired coverage of the causal variant in the credible set
 #' @param acc Accuracy of corrected coverage to desired coverage (default = 0.005)
 #' @param max.iter Maximum iterations (default = 20)
+#' @param pp0min Only average over SNPs with pp0 > pp0min
 #' @return List of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 #'
 #' @examples
@@ -44,6 +46,7 @@
 #' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 #' X <- simx(nsnps,nsamples,S)
 #' LD <- cor2(X)
+#' maf <- colMeans(X)
 #'
 #' names(z_scores) <- seq(1,length(z_scores))
 #'
@@ -54,22 +57,21 @@
 #'
 #' @export
 #' @author Anna Hutchinson
-corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov, acc = 0.005, max.iter = 20){
+corrected_cs <- function(z, f, N0, N1, Sigma, W = 0.2, lower = 0, upper = 1, desired.cov, acc = 0.005, max.iter = 20, pp0min = 0.001){
 
   s = N1/(N0+N1) # proportion of cases
   varbeta = 1/(2 * (N0+N1) * f * (1 - f) * s * (1 - s))
-  W = 0.2
   r = W^2/(W^2 + varbeta)
   pp = ppfunc(z, V = varbeta) # pp of system in question
   muhat = sum(abs(z) * pp)
   nsnps = length(pp)
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
-  zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
+  usesnps=which(pp > pp0min)
+  zj = lapply(usesnps, function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+  
   nrep = 1000
 
   ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
-
-  r = W^2/(W^2 + varbeta)
 
   pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
 
@@ -78,10 +80,10 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 
   f <- function(thr){ # finds the difference between corrcov and desired.cov
     d5 <- lapply(1:n_pps, function(x) {
-      credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
+      credsetC(pps[[x]], CV = rep(usesnps[x], dim(pps[[x]])[1]), thr = thr)
     })
-    prop_cov <- lapply(d5, prop_cov) %>% unlist()
-    sum(prop_cov * pp) - desired.cov
+    propcov <- lapply(d5, prop_cov) %>% unlist()
+    sum(propcov * pp[usesnps])/sum(pp[usesnps]) - desired.cov
   }
 
   o = order(pp, decreasing = TRUE)  # order index for true pp
@@ -129,11 +131,13 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 #' @param N0 Number of controls
 #' @param N1 Number of cases
 #' @param Sigma Correlation matrix of SNPs
+#' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
 #' @param lower Lower threshold (default = 0)
 #' @param upper Upper threshold (default = 1)
 #' @param desired.cov The desired coverage of the causal variant in the credible set
 #' @param acc Accuracy of corrected coverage to desired coverage (default = 0.005)
 #' @param max.iter Maximum iterations (default = 20)
+#' @param pp0min Only average over SNPs with pp0 > pp0min
 #'
 #' @return List of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 #'
@@ -170,6 +174,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 #' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 #' X <- simx(nsnps,nsamples,S)
 #' LD <- cor2(X)
+#' maf <- colMeans(X)
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 #'
@@ -184,49 +189,47 @@ corrected_cs <- function(z, f, N0, N1, Sigma, lower = 0, upper = 1, desired.cov,
 #'
 #' @export
 #' @author Anna Hutchinson
-corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower = 0, upper = 1, desired.cov, acc = 0.005, max.iter = 20){
+corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, W = 0.2, lower = 0, upper = 1, desired.cov, acc = 0.005, max.iter = 20, pp0min = 0.001){
 
   z = bhat/sqrt(V)
-  W = 0.2
   r = W^2/(W^2 + V)
   pp = ppfunc(z, V = V) # pp of system in question
   muhat = sum(abs(z) * pp)
   nsnps = length(pp)
   temp = diag(x = muhat, nrow = nsnps, ncol = nsnps)
-  zj = lapply(seq_len(nrow(temp)), function(i) temp[i,]) # nsnp zj vectors for each snp considered causal
+  usesnps=which(pp > pp0min)
+  zj = lapply(usesnps, function(i) temp[i, ])  # nsnp zj vectors for each snp considered causal
+  
   nrep = 1000
-
-  # simulate ERR matrix
+  
   ERR = mvtnorm::rmvnorm(nrep, rep(0, ncol(Sigma)), Sigma)
-
-  r = W^2/(W^2 + V)
-
+  
   pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
-
+  
   n_pps = length(pps)
   args = 1:length(pp)
-
+  
   f <- function(thr){ # finds the difference between corrcov and desired.cov
     d5 <- lapply(1:n_pps, function(x) {
-      credsetC(pps[[x]], CV = rep(args[x], dim(pps[[x]])[1]), thr = thr)
+      credsetC(pps[[x]], CV = rep(usesnps[x], dim(pps[[x]])[1]), thr = thr)
     })
-    prop_cov <- lapply(d5, prop_cov) %>% unlist()
-    sum(prop_cov * pp) - desired.cov
+    propcov <- lapply(d5, prop_cov) %>% unlist()
+    sum(propcov * pp[usesnps])/sum(pp[usesnps]) - desired.cov
   }
-
+  
   o = order(pp, decreasing = TRUE)  # order index for true pp
   cumpp = cumsum(pp[o])  # cum sums of ordered pps
-
+  
   corrcov.tmp <- f(desired.cov)
   nvar.tmp <- which(cumpp > desired.cov)[1]
-
+  
   if(corrcov.tmp > 0 & nvar.tmp == 1) stop("Cannot make credible set smaller")
-
+  
   # initalize
   N=1
   fa = f(lower)
   fb = f(upper)
-
+  
   if (fa * fb > 0) {
     stop("No root in range, increase window")
   } else {
@@ -235,7 +238,7 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower = 0, upper = 1, desi
       c = lower + (upper-lower)/2
       fc = f(c)
       print(paste("thr: ", c, ", cov: ", desired.cov + fc))
-
+      
       if (fa * fc < 0) {
         upper = c
         fb = fc
@@ -247,7 +250,6 @@ corrected_cs_bhat <- function(bhat, V, N0, N1, Sigma, lower = 0, upper = 1, desi
     }
   }
   wh = which(cumpp > c)[1]  # how many needed to exceed thr
-
   size = cumpp[wh]
   names(size) = NULL
   list(credset = names(pp)[o[1:wh]], req.thr = c, corr.cov = desired.cov + fc, size = size)

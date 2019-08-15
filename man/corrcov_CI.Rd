@@ -5,7 +5,7 @@
 \title{Confidence interval for corrected coverage estimate using Z-scores and mafs}
 \usage{
 corrcov_CI(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000,
-  CI = 0.95)
+  CI = 0.95, pp0min = 0.001)
 }
 \arguments{
 \item{z}{Marginal Z-scores}
@@ -25,6 +25,8 @@ corrcov_CI(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000,
 \item{nrep}{The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)}
 
 \item{CI}{The size of the confidence interval (as a decimal)}
+
+\item{pp0min}{Only average over SNPs with pp0 > pp0min}
 }
 \value{
 CI for corrected coverage estimate

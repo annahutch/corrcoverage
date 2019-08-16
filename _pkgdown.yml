@@ -1,31 +1,24 @@
 URL: https://annahutch.github.io/corrcoverage
 navbar:
   type: inverse
-  structure:
-    left:
-    - home
-    - intro
-    - reference
-    - articles
-    - tutorials
-    - news
-    right: github
-  components:
-    home:
-      icon: fa-home fa-lg
-      href: index.html
-    reference:
-      text: Reference
-      href: reference/index.html
-    articles:
-      text: Articles
-      menu:
+  left:
+  - icon: fa-home fa-lg
+    href: index.html
+  - text: Reference
+    href: reference/index.html
+  - text: Articles
+    menu:
+      - text: GWAS to Credible Set
+        href: articles/a01_gwas_to_cs.html
       - text: Corrected Coverage
         href: articles/Corrected-Coverage.html
       - text: New Credible Set
         href: articles/New-Credible-Set.html
-      - text: Useful Info
+      - text: Additional Useful Functions
         href: articles/Useful-Info.html
+  right:
+  - icon: github
+    href: https://github.com/annahutch/corrcoverage
 
 articles:
 - title: All vignettes

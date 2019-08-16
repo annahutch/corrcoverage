@@ -1,0 +1,61 @@
+---
+title: "From GWAS Summary Statistics to Credible Sets"
+author: "Anna Hutchinson"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{From GWAS Summary Statistics to Credible Sets}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+[Maller et al. (2012)](https://www.nature.com/articles/ng.2435) proposed a method to find credible sets of putative causal variants, assuming that there is only one causal variant (CV) per associated region and that this is typed in the study. This method can be used in instances where only single variant summary statistics are available thanks to [Wakefield's approximation of Bayes factors](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359).
+
+Let $\beta_i$, for $i=1,...,k$ SNPs in a genomic region, be the regression coefficient from a single-SNP logistic regression model, quantifying the evidence of an association between SNP $i$ and the disease. Assuming that there is only one CV per region and that this is typed in the study, then if SNP $i$ is causal, $\beta_i\neq 0$ and $\beta_j$ (for $j\neq i$) is non-zero only through LD between SNPs $i$ and $j$. Note that no parametric assumptions are required for $\beta_i$ yet, so we write that it is sampled from some distribution, $\beta_i \sim []$. We can then write down the likelihood,
+\begin{equation}
+\begin{split}
+        P(D|\beta_i\sim\text{[ ]},\text{ }i\text{ causal}) & = P(D_i
+|\beta_i\sim\text{[ ]},\text{ }i\text{ causal}) \times P(D_{-i}|D_i,\text{ }\beta_i\sim\text{[ ]},\text{ }i\text{ causal})\\
+    & = P(D_i
+|\beta_i\sim\text{[ ]},\text{ }i\text{ causal}) \times P(D_{-i}|D_i,\text{ }i\text{ causal})\,,
+\end{split}
+    \end{equation}
+    
+since $D_{-i}$ is independent of $\beta_i$ given $D_i$. Here, $D$ is the genotype data (0, 1 or 2 counts of the minor allele) for the entire genomic region and $i$ is a SNP in the region, such that $D_i$ and $D_{-i}$ are the genotype data at SNP $i$ and at the remaining SNPs in the genomic region, respectively. 
+
+We can now place some parametric assumptions on SNP $i$'s true effect on disease. This is typically quantified as log odds ratio (OR), and is assumed to be sampled from a Gaussian distribution, $\beta_i\sim N(0,W)$, where $W$ is chosen to reflect the researcher's prior belief on the variability of the true OR. We chose to set to $W=0.2$ in our method, reflecting a belief that 95\% of ORs range from $exp(-1.96\times 0.2)=0.68$ to $exp(1.96\times 0.2)=1.48$.
+
+The posterior probabilities of causality (PP) for each SNP $i$ in an associated genomic region with $k$ SNPs can be calculated where,
+\begin{equation}
+        PP_i=P(\beta_i \sim N(0,W),\text{ }i \text{ causal}|D)\,, \quad i \in \{1,...,k\}.
+\end{equation}
+
+Under the assumption that each SNP is \textit{a priori} equally likely to be causal, then 
+\begin{equation}
+P(\beta_i \sim N(0,W),\text{ }i\text{ causal})=\dfrac{1}{k}\,, \quad i \in \{1,...,k\}
+\end{equation}
+and Bayes theorem can be used to write
+\begin{equation}
+\begin{aligned}
+    PP_i=P(\beta_i \sim N(0,W),\text{ }i \text{ causal}|D)\propto P(D|\beta_i\sim N(0,W),\text{ }i\text{ causal}).
+\end{aligned}
+\end{equation}
+
+Dividing through by the probability of the genotype data given the null model of no genetic effect, $H_0$, yields a likelihood ratio,
+\begin{equation}
+    PP_i\propto \dfrac{P(D|\beta_i \sim N(0,W),\text{ }i \text{ causal)}}{P(D|H_0)},
+\end{equation}
+
+\noindent from which Equation (1) can be used to derive,
+\begin{equation}
+    PP_i\propto \frac{P(D_i|\beta_i \sim N(0,W),\text{ }i \text{ causal})}{P(D_i|H_0)}= BF_i\,,
+\end{equation}
+where $BF_i$ is the Bayes factor for SNP $i$, measuring the ratio of the probabilities of the data at SNP $i$ given the alternative (SNP $i$ is causal) and the null (no genetic effect) models.
+
+In genetic association studies where sample sizes are usually large, these BFs can be approximated using Wakefield's asymptotic Bayes factors (ABFs). Given that $\hat\beta_i\sim N(\beta_i,V_i)$ and \textit{a priori} $\beta_i\sim N(0,W)$,
+
+\begin{equation}
+    ABF_i=\sqrt{\frac{V_i}{V_i+W}}exp\left(\frac{Z_i^2}{2}\frac{W}{(V_i+W)}\right)\,,
+\end{equation}
+where $Z_i^2=\dfrac{\hat\beta_i^2}{V_i}$ is the squared marginal $Z$ score for SNP $i$.
+
+In Bayesian fine-mapping, PPs are calculated for all SNPs in the genomic region and the variants are sorted into descending order of their PP. The PPs are then cumulatively summed until some threshold, $\alpha$, is exceeded. The variants required to exceed this threshold form the $\alpha$-level credible set.

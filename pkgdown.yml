@@ -4,5 +4,6 @@ pkgdown_sha: ~
 articles:
   New-Credible-Set: New-Credible-Set.html
   Useful-Info: Useful-Info.html
+  a01_gwas_to_cs: a01_gwas_to_cs.html
   corrected-coverage: corrected-coverage.html
 

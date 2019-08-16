@@ -11,7 +11,7 @@ navbar:
       - text: GWAS to Credible Set
         href: articles/a01_gwas_to_cs.html
       - text: Corrected Coverage
-        href: articles/Corrected-Coverage.html
+        href: articles/corrected-coverage.html
       - text: New Credible Set
         href: articles/New-Credible-Set.html
       - text: Additional Useful Functions

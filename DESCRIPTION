@@ -8,12 +8,12 @@ Authors@R: c(
         person("Kevin", "Kunzmann", role = c("ctb"))
     )
 Maintainer: Anna Hutchinson <anna.hutchinson@mrc-bsu.cam.ac.uk>
-Description: The package uses a computationally efficient method to find the
-    "Corrected Coverage Estimate" of a credible set of putative
-    causal variants from Bayesian genetic fine-mapping. The package can 
-    also be used to obtain a "Corrected Credible Set" if required; 
-    that is, the smallest set of variants required such that the
-    corrected coverage estimate of the resultant credible set is  
+Description: Using a computationally efficient method, the package can
+    be used to find the "Corrected Coverage Estimate" of a credible set 
+    of putative causal variants from Bayesian genetic fine-mapping. 
+    The package can also be used to obtain a "Corrected Credible Set" 
+    if required; that is, the smallest set of variants required such 
+    that the corrected coverage estimate of the resultant credible set is  
     within some user defined accuracy of the desired coverage. 
 URL: https://annahutch.github.io/corrcoverage
 License: MIT + file LICENSE

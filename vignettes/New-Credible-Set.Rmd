@@ -22,7 +22,7 @@ This vignette will show users how the `corrcoverage` R package can be used to ob
 
 ---
 
-As in the [corrected coverage vignette](https://annahutch.github.io/corrcoverage/articles/Corrected-Coverage.html), let's begin by simulating some GWAS data using the `simGWAS` package.
+As in the [corrected coverage vignette](https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html), let's begin by simulating some GWAS data using the `simGWAS` package.
 
 ```{r}
 library(simGWAS)
@@ -86,7 +86,7 @@ muhat
 
 The `corrected_cov` function is used to find the corrected coverage of a credible set with specified threshold, say 0.9.
 
-Note that this function is similar to using `corrcov` as explained in the ["Corrected Coverage" vignette](https://annahutch.github.io/corrcoverage/articles/Corrected-Coverage.html); which would require $Z$-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the `corrcov` function (muhat, varbeta etc.) so we can use `corrected_cov` instead.
+Note that this function is similar to using `corrcov` as explained in the ["Corrected Coverage" vignette](https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html); which would require $Z$-scores, minor allele frequencies and sample sizes. Here, we have already calculated some of the intermediaries calculated in the `corrcov` function (muhat, varbeta etc.) so we can use `corrected_cov` instead.
 
 ```{r}
 thr = 0.9

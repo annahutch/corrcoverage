@@ -1,7 +1,7 @@
 Package: corrcoverage
 Type: Package
 Title: Corrected the Coverage of Credible Sets from Bayesian Genetic Fine Mapping
-Version: 0.0.1.9000
+Version: 1.0.0
 Authors@R: c(
         person("Anna", "Hutchinson", role = c("aut", "cre"), email = "anna.hutchinson@mrc-bsu.cam.ac.uk"),
         person("Chris", "Wallace", role = c("aut")),

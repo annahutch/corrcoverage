@@ -14,7 +14,8 @@ src/.gitignore
 pkgdown/
 /*_cache/
 /cache/
-/vignette/my-vignette_cache/html
 .Rproj.user
 ^deploy.sh$
 Index.Rmd
+^cran-comments.md$
+^cran-comments\.md$

@@ -29,20 +29,21 @@ arma::mat zj_pp_arma(const arma::vec & Zj,
   // process each rep in a loop
   for(int i=0; i < nrep; i++) {
     arma::mat zstar = exp_zm + ERR.row(i);
-    // arma::vec bf(zstar.size());
+    int nz=zstar.size();
+    // arma::vec bf(nz);
     double maxbf=-1.0; // stores max log bf, to remove when calculating sum(exp(bf))
-    for(int j=0; j<zstar.size(); j++) {
+    for(int j=0; j<nz; j++) {
       out(i,j) = (log(1-r(j)) + r(j) * pow(zstar(j),2.0))/2.0;
       if(out(i,j) > maxbf)
         maxbf=out(i,j);
     }
     // sumbf 
     double sumbf=0.0;
-    for(int j=0; j<zstar.size(); j++) {
+    for(int j=0; j<nz; j++) {
       sumbf += exp(out(i,j)-maxbf);
     }
     sumbf=maxbf + log(sumbf);
-    for(int j=0; j<zstar.size(); j++)
+    for(int j=0; j<nz; j++)
       out(i,j) = exp(out(i,j) - sumbf);
   }
   return out;

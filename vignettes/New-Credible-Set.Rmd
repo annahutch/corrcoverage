@@ -53,7 +53,7 @@ N1 <- 10000 # number of cases
   
 z0 <- simulated_z_score(N0 = N0, # number of controls
                         N1 = N1, # number of cases
-                        snps = snps, # column names in freq of SNPs for which Z scores should be generated
+                        snps = snps, # column names in freq
                         W = CV, # causal variants, subset of snps
                         gamma.W = log(OR), # log odds ratios
                         freq = freq) # reference haplotypes
@@ -62,7 +62,8 @@ z0 <- simulated_z_score(N0 = N0, # number of controls
 To calculate $V$, the prior variance for the estimated effect size, we use `Var.data.cc`.
 
 ```{r}
-varbeta <- Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of estimated effect size
+varbeta <- Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of 
+                                                       # estimated effect size
 ```
 
 We can then use the `ppfunc` function to calculate the posterior probabilities of causality for each variant.
@@ -90,7 +91,8 @@ Note that this function is similar to using `corrcov` as explained in the ["Corr
 
 ```{r}
 thr = 0.9
-corrcov <- corrected_cov(pp0 = postprobs, mu = muhat, V = varbeta, Sigma = LD, thr = thr, nrep = 1000)
+corrcov <- corrected_cov(pp0 = postprobs, mu = muhat, V = varbeta, 
+                         Sigma = LD, thr = thr, nrep = 1000)
 cs <- credset(pp = postprobs, thr = thr)
 data.frame(claimed.cov = cs$claimed.cov, corr.cov =  corrcov, nvar = cs$nvar)
 ```
@@ -108,16 +110,17 @@ Again, for the purpose of this vignette we can investigate how accurate this est
 ```{r}
 z0.tmp <- simulated_z_score(N0 = N0, # number of controls
                             N1 = N1, # number of cases
-                            snps = snps, # column names in freq of SNPs for which Z scores should be generated
+                            snps = snps, # column names in freq
                             W = CV, # causal variants, subset of snps
                             gamma.W = log(OR), # log odds ratios
                             freq = freq, # reference haplotypes
                             nrep = 5000) 
 
-pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta)  # find pps from a matrix of simulations
+pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta)  # find pps 
 cs.cov <- apply(pps, 1, function(x) credset(x, CV = iCV, thr = thr)$cov)
 true.cov.est <- mean(cs.cov)
-data.frame(claimed.cov = cs$claimed.cov, corr.cov =  corrcov, true.cov = true.cov.est, nvar = cs$nvar)
+data.frame(claimed.cov = cs$claimed.cov, corr.cov =  corrcov, 
+           true.cov = true.cov.est, nvar = cs$nvar)
 ```
 
 We find that our corrected coverage value is very close to the empirical coverage of the credible set.

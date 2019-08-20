@@ -79,7 +79,7 @@ Then, we simulate marginal $Z$-scores. Here, we consider a (relatively small) GW
 ```{r}
 z0 <- simulated_z_score(N0=5000, # number of controls
               N1=5000, # number of cases
-              snps=snps, # column names in freq of SNPs for which Z scores should be generated
+              snps=snps, # column names in freq of SNPs
               W=CV, # causal variants, subset of snps
               gamma.W=log(OR), # log odds ratios
               freq=freq # reference haplotypes
@@ -102,7 +102,8 @@ The `ppfunc` function is used to convert the marginal $Z$-scores to posterior pr
 N0 <- 5000 # number of controls
 N1 <- 5000 # number of cases
 
-varbeta <- Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of estimated effect size
+varbeta <- Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of 
+                                                         # estimated effect size
 
 postprobs <- ppfunc(z = z0, V = varbeta)
 
@@ -171,7 +172,8 @@ corrected_cov_estimate <- corrcov(z = z0, f = MAF, N0, N1, Sigma = LD, thr = thr
 ```
 
 ```{r echo = FALSE}
-df <- data.frame("Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)
+df <- data.frame("Corrected Coverage" = corrected_cov_estimate, 
+                 "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)
 print(df, row.names = FALSE)
 ```
 
@@ -195,7 +197,7 @@ z0.tmp <- simulated_z_score(N0=5000, # number of controls
                             nrep = 5000 # 5000 simulations
 )
 
-pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta) # find pps from a matrix of simulated Z scores
+pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta) # find pps
 cs <- apply(pps, 1, function(x) credset(x, CV = iCV, thr = thresh)$cov)
 true.cov.est <- mean(cs)
 true.cov.est
@@ -204,7 +206,8 @@ true.cov.est
 The estimated empirical coverage is found to be approximately 98%, showing that our corrected coverage estimate was indeed accurate - far more so than the standard claimed coverage of ~90%. 
 
 ```{r echo = FALSE}
-df.new <- data.frame("Empirical Coverage" = true.cov.est, "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)[1,]
+df.new <- data.frame("Empirical Coverage" = true.cov.est, 
+                     "Corrected Coverage" = corrected_cov_estimate, "Claimed Coverage" = credibleset$claimed.cov, "Threshold" = thresh)[1,]
 print(df.new, row.names = FALSE)
 ```
 

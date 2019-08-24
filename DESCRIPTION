@@ -15,8 +15,8 @@ Description: Using a computationally efficient method, the package can
     if required; that is, the smallest set of variants required such 
     that the corrected coverage estimate of the resultant credible set is  
     within some user defined accuracy of the desired coverage. 
-    Maller et al. (2012) <doi:10.1038/ng.2435>
-    Wakefield (2009) <doi:10.1002/gepi.20359>
+    Maller et al. (2012) <doi:10.1038/ng.2435>.
+    Wakefield (2009) <doi:10.1002/gepi.20359>.
     Fortune and Wallace (2018) <doi:10.1093/bioinformatics/bty898>.
 URL: https://annahutch.github.io/corrcoverage
 License: MIT + file LICENSE
@@ -30,6 +30,7 @@ Suggests:
     mvtnorm,
     rmarkdown,
     testthat,
+    simGWAS,
     pkgdown
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
@@ -40,6 +41,5 @@ Imports:
     magrittr,
     stats,
     matrixStats,
-    simGWAS,
     Rcpp, RcppArmadillo
 SystemRequirements: C++11

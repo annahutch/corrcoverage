@@ -42,5 +42,5 @@ Imports:
     magrittr,
     stats,
     matrixStats,
-    Rcpp, RcppArmadillo
+    Rcpp
 SystemRequirements: C++11

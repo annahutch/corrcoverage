@@ -21,6 +21,7 @@ Description: Using a computationally efficient method, the package can
 URL: https://annahutch.github.io/corrcoverage
 License: MIT + file LICENSE
 BugReports: https://github.com/annahutch/corrcoverage/issues
+OS_type: unix
 Encoding: UTF-8
 LazyData: true
 Suggests: 

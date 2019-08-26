@@ -14,10 +14,7 @@ Description: Using a computationally efficient method, the package can
     The package can also be used to obtain a "corrected credible set" 
     if required; that is, the smallest set of variants required such 
     that the corrected coverage estimate of the resultant credible set is  
-    within some user defined accuracy of the desired coverage. 
-    Maller et al. (2012) <doi:10.1038/ng.2435>.
-    Wakefield (2009) <doi:10.1002/gepi.20359>.
-    Fortune and Wallace (2018) <doi:10.1093/bioinformatics/bty898>.
+    within some user defined accuracy of the desired coverage.
 URL: https://annahutch.github.io/corrcoverage
 License: MIT + file LICENSE
 BugReports: https://github.com/annahutch/corrcoverage/issues

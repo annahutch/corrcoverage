@@ -1,19 +1,11 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Updated description field in DESCRIPTION file to include citations
-  and remove incorrect quotation marks. 
+* Updated description field in DESCRIPTION remove incorrect quotation marks. 
 
 * Updated authors of functions and correctly added these in the 
-  Authors@R field with the appropriate roles.
-  
-* Replaced \dontrun{} with \donttest{} in long running (> 5 sec)
-  examples.
-  
-* Removed any commented out code lines from examples.
-
-* Removed code from vignettes that changes user's options
-  (options(width = 3000)).
+  Authors@R field with the appropriate roles. Note that Claudia 
+  Giambartolomei is no author or contributor of any kind.
 
 ## Test environments
 

@@ -20,4 +20,6 @@ pkgdown/favicon
 corrcoverage.Rproj
 *.Rhistory
 inst/*
+^cran-comments.md$
+^cran-comments\.md$
 

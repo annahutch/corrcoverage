@@ -4,8 +4,8 @@
 \alias{corrcov_bhat}
 \title{Corrected coverage estimate using estimated effect sizes and their standard errors}
 \usage{
-corrcov_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
-  nrep = 1000, pp0min = 0.001)
+corrcov_bhat(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000,
+  pp0min = 0.001)
 }
 \arguments{
 \item{bhat}{Estimated effect sizes from single-SNP logistic regressions}
@@ -18,7 +18,7 @@ corrcov_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
 
 \item{Sigma}{SNP correlation matrix}
 
-\item{thr}{Minimum threshold for fine-mapping experiment (default 0.95)}
+\item{thr}{Minimum threshold for fine-mapping experiment}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta (default 0.2)}
 
@@ -62,7 +62,7 @@ varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 
 bhats = rnorm(nsnps, 0, 0.2) # log OR
 
-corrcov_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD)
+corrcov_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, thr = 0.95)
 
 }
 \author{

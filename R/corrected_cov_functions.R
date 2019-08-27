@@ -7,7 +7,7 @@
 #' @param mu The true effect at the CV (estimate using corrcoverage::est_mu function)
 #' @param V Variance of the estimated effect size (can be obtained using coloc::Var.beta.cc function)
 #' @param Sigma SNP correlation matrix
-#' @param thr Minimum threshold for fine-mapping experiment (0.95 default)
+#' @param thr Minimum threshold for fine-mapping experiment
 #' @param W Prior for the standard deviation of the effect size parameter, beta (W=0.2 default)
 #' @param nrep Number of posterior probability systems to simulate for each variant considered causal (nrep = 1000 default)
 #' @param pp0min Only average over SNPs with pp0 > pp0min
@@ -46,7 +46,7 @@
 #'
 #' @export
 #' @author Anna Hutchinson
-corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000, pp0min = 0.001) {
+corrected_cov <- function(pp0, mu, V, Sigma, thr, W = 0.2, nrep = 1000, pp0min = 0.001) {
 
   nsnps = length(pp0)
   temp = diag(x = mu, nrow = nsnps, ncol = nsnps)
@@ -85,7 +85,7 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000, p
 #' @param N0 Number of controls
 #' @param N1 Number of cases
 #' @param Sigma SNP correlation matrix
-#' @param thr Minimum threshold for fine-mapping experiment (default 0.95)
+#' @param thr Minimum threshold for fine-mapping experiment
 #' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (default 1000)
 #' @param pp0min Only average over SNPs with pp0 > pp0min
@@ -119,7 +119,7 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000, p
 #'
 #' @export
 #' @author Anna Hutchinson
-corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, pp0min = 0.001) {
+corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000, pp0min = 0.001) {
 
     varbeta = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
 
@@ -140,7 +140,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, pp0mi
 #' @param N0 Number of controls
 #' @param N1 Number of cases
 #' @param Sigma SNP correlation matrix
-#' @param thr Minimum threshold for fine-mapping experiment (default 0.95)
+#' @param thr Minimum threshold for fine-mapping experiment
 #' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (default 1000)
 #' @param pp0min Only average over SNPs with pp0 > pp0min
@@ -173,11 +173,11 @@ corrcov <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, pp0mi
 #'
 #' bhats = rnorm(nsnps, 0, 0.2) # log OR
 #'
-#' corrcov_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD)
+#' corrcov_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, thr = 0.95)
 #'
 #' @export
 #' @author Anna Hutchinson
-corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, pp0min = 0.001) {
+corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000, pp0min = 0.001) {
 
     z = bhat/sqrt(V)
 
@@ -199,11 +199,9 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 #' @param N1 Number of cases
 #' @param Sigma SNP correlation matrix
 #' @param nvar The number of variants that simulated credible sets used for estimation should contain
-#' @param thr Minimum threshold for fine-mapping experiment (default 0.95)
+#' @param thr Minimum threshold for fine-mapping experiment
 #' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
-#' @param nrep The number of simulated posterior probability systems to consider for the corrected
-#'            coverage estimate (nrep = 10000 default because we trim out the ones without correct
-#'            nvar so need this to be high)
+#' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 10000 default due to trimming)
 #' @param pp0min Only average over SNPs with pp0 > pp0min
 #' @return Corrected coverage estimate
 #'
@@ -231,7 +229,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 #' LD <- cor2(X)
 #' maf <- colMeans(X)
 #'
-#' corrcov_nvar(z = z_scores, f = maf, N0, N1, Sigma = LD, nvar = 1, nrep = 100)
+#' corrcov_nvar(z = z_scores, f = maf, N0, N1, Sigma = LD, thr = 0.95, nvar = 1, nrep = 100)
 #'
 #' # note that nrep should be at least the default value (nrep = 10000) but is
 #' # lower here for speed of computation
@@ -239,7 +237,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 100
 #' @export
 
 #' @author Anna Hutchinson
-corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 10000, pp0min = 0.001) {
+corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr, W = 0.2, nrep = 10000, pp0min = 0.001) {
 
   varbeta = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
 
@@ -296,11 +294,9 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 #' @param N1 Number of cases
 #' @param Sigma SNP correlation matrix
 #' @param nvar The number of variants that simulated credible sets used for estimation should contain
-#' @param thr Minimum threshold for fine-mapping experiment (default 0.95)
+#' @param thr Minimum threshold for fine-mapping experiment
 #' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
-#' @param nrep The number of simulated posterior probability systems to consider for the corrected
-#'            coverage estimate (nrep = 10000 default because we trim out the ones without correct
-#'            nvar so need this to be high)
+#' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 10000 default due to trimming)
 #' @param pp0min Only average over SNPs with pp0 > pp0min
 #' @return Corrected coverage estimate
 #'
@@ -331,7 +327,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 #'
 #' bhats = rnorm(nsnps,0,0.2) # log OR
 #'
-#' corrcov_nvar_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, nvar = 1, nrep = 1000)
+#' corrcov_nvar_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, thr = 0.95, nvar = 1, nrep = 1000)
 #'
 #' # note that nrep should be at least the default value (nrep = 10000) but is
 #' # lower here for speed of computation
@@ -339,7 +335,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 
 #' @export
 #'
 #' @author Anna Hutchinson
-corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2, nrep = 10000, pp0min = 0.001) {
+corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr, W = 0.2, nrep = 10000, pp0min = 0.001) {
 
   z = bhat/sqrt(V)
 
@@ -394,7 +390,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 #' @param N0 Number of controls
 #' @param N1 Number of cases
 #' @param Sigma SNP correlation matrix
-#' @param thr Minimum threshold for fine-mapping experiment (default 0.95)
+#' @param thr Minimum threshold for fine-mapping experiment
 #' @param W Prior for the standard deviation of the effect size parameter, beta (default 0.2)
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)
 #' @param CI The size of the confidence interval (as a decimal)
@@ -403,7 +399,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 #'
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'
 #'  # this is a long running example
 #' set.seed(1)
@@ -426,14 +422,15 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 #' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 #' X <- simx(nsnps,nsamples,S)
 #' LD <- cor2(X)
+#' maf <- colMeans(X)
 #'
-#' corrcov_CI(z = z_scores, f = maf, N0, N1, Sigma = LD)
+#' corrcov_CI(z = z_scores, f = maf, N0, N1, Sigma = LD, thr = 0.95)
 #' }
 #'
 #' @export
 #'
 #' @author Anna Hutchinson
-corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI = 0.95, pp0min = 0.001){
+corrcov_CI <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000, CI = 0.95, pp0min = 0.001){
   corrcov_reps = replicate(100, corrcov(z, f, N0, N1, Sigma, thr, W, nrep, pp0min))
   stats::quantile(corrcov_reps, probs = c((1-CI)/2, (CI+1)/2))
 }
@@ -447,7 +444,7 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI
 #' @param N0 Number of controls
 #' @param N1 Number of cases
 #' @param Sigma SNP correlation matrix
-#' @param thr Minimum threshold for fine-mapping experiment (default is 0.95)
+#' @param thr Minimum threshold for fine-mapping experiment
 #' @param W Prior for the standard deviation of the effect size parameter beta
 #' @param nrep The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 1000 default)
 #' @param CI The size of the confidence interval (as a decimal)
@@ -456,7 +453,7 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI
 #'
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'  # this is a long running example
 #' set.seed(1)
 #' nsnps <- 100
@@ -477,6 +474,7 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI
 #' S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 #' X <- simx(nsnps,nsamples,S)
 #' LD <- cor2(X)
+#' maf <- colMeans(X)
 #'
 #' varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 #'
@@ -488,7 +486,7 @@ corrcov_CI <- function(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI
 #' @export
 #'
 #' @author Anna Hutchinson
-corrcov_CI_bhat <- function(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000, CI = 0.95, pp0min = 0.001){
+corrcov_CI_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000, CI = 0.95, pp0min = 0.001){
   corrcov_reps = replicate(100, corrcov_bhat(bhat, V, N0, N1, Sigma, thr, W, nrep, pp0min))
   stats::quantile(corrcov_reps, probs = c((1-CI)/2, (CI+1)/2))
 }

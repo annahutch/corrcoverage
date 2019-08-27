@@ -20,5 +20,5 @@ This function calculates the log of the sum of the exponentiated
 logs taking out the max, i.e. insuring that the sum is not Inf
 }
 \author{
-Claudia Giambartolomei
+Chris Wallace
 }

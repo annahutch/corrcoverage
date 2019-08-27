@@ -4,8 +4,8 @@
 \alias{corrcov_CI}
 \title{Confidence interval for corrected coverage estimate using Z-scores and mafs}
 \usage{
-corrcov_CI(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000,
-  CI = 0.95, pp0min = 0.001)
+corrcov_CI(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000, CI = 0.95,
+  pp0min = 0.001)
 }
 \arguments{
 \item{z}{Marginal Z-scores}
@@ -18,7 +18,7 @@ corrcov_CI(z, f, N0, N1, Sigma, thr = 0.95, W = 0.2, nrep = 1000,
 
 \item{Sigma}{SNP correlation matrix}
 
-\item{thr}{Minimum threshold for fine-mapping experiment (default 0.95)}
+\item{thr}{Minimum threshold for fine-mapping experiment}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta (default 0.2)}
 
@@ -36,7 +36,7 @@ Obtain confidence interval for corrected coverage estimate using Z-scores and ma
 }
 \examples{
 
-\dontrun{
+\donttest{
 
  # this is a long running example
 set.seed(1)
@@ -59,8 +59,9 @@ simx <- function(nsnps, nsamples, S, maf=0.1) {
 S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 X <- simx(nsnps,nsamples,S)
 LD <- cor2(X)
+maf <- colMeans(X)
 
-corrcov_CI(z = z_scores, f = maf, N0, N1, Sigma = LD)
+corrcov_CI(z = z_scores, f = maf, N0, N1, Sigma = LD, thr = 0.95)
 }
 
 }

@@ -29,5 +29,5 @@ Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 
 }
 \author{
-Claudia Giambartolomei
+Chris Wallace
 }

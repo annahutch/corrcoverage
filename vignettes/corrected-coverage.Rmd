@@ -11,7 +11,6 @@ vignette: >
 
 ```{r setup, set.seed(2), include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-options(width = 3000)
 set.seed(2)
 ```
 
@@ -19,7 +18,7 @@ set.seed(2)
 
 This guide will show users how the `corrcoverage` package can be used for statistical single causal variant fine-mapping, including obtaining an accurate coverage estimate for the causal variant in a credible set (corrected coverage estimate). This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. [here](https://www.ncbi.nlm.nih.gov/pubmed/23104008), which utilities approximate Bayes factors for genetic association studies described by Wakefield [here](https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359).
 
-The `corrcoverage` R package requires only GWAS summary statistics to provide users with a "corrected coverage estimate" that the true causal variant is contained within the credible set, for example calculating that a 90% credible set actually has 99% probability of containing the true causal variant. In this vignette, we walk-through how the `corrcoverage` R package can be used to perform single causal variant Bayesian fine-mapping and to derive a corrected coverage estimate.
+The `corrcoverage` R package requires only GWAS summary statistics to provide users with a corrected coverage estimate that the true causal variant is contained within the credible set, for example calculating that a 90% credible set actually has 99% probability of containing the true causal variant. In this vignette, we walk-through how the `corrcoverage` R package can be used to perform single causal variant Bayesian fine-mapping and to derive a corrected coverage estimate.
 
 ---
 
@@ -217,7 +216,7 @@ print(df.new, row.names = FALSE)
 
 This vignette has shown readers how to use the `corrcoverage` R package to obtain a more accurate coverage estimate of the causal variant in a credible set. Obtaining accurate coverage estimates will allow researchers to report more specific findings from their fine-mapping analysis, and we hope that our correction will be used as an extra step in the single causal variant fine-mapping pipeline. Finally, reporting these corrected coverage estimates will allow for more efficient allocation and expenditure of resources in the laborious follow-up wet lab analyses of the variants in the credible set.
 
-This method can be extended to find a "corrected credible set", please see https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html. 
+This method can be extended to find a corrected credible set, please see https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html. 
 
 ---
 

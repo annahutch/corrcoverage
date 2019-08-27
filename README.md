@@ -22,7 +22,7 @@ The package only requires GWAS summary statistics and can be used to:
   - Estimate the true genetic effect at the causal variant (see `est_mu`
     function)
   - Obtain an accurate coverage estimate that the causal variant 
-    is contained within a credible set, the "corrected coverage estimate"
+    is contained within a credible set, the corrected coverage estimate
     (see `corrcov` function and "Corrected Coverage"" vignette)
   - Find a new "corrected" credible set with the desired coverage of the
     true causal variant (see `corrected_cs` function and 

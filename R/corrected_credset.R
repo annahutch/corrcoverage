@@ -15,7 +15,7 @@
 #' @return List of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'  # this is a long running example
 #'
 #' # In this example, the function is used to find a corrected 95% credible set
@@ -143,7 +143,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, W = 0.2, lower = 0, upper = 1, des
 #'
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #'  # this is a long running example
 #'
 #' # In this example, the function is used to find a corrected 95% credible set

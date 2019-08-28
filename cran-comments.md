@@ -1,7 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Updated description field in DESCRIPTION remove incorrect quotation marks. 
+* Updated description field in DESCRIPTION to remove incorrect quotation marks. 
 
 * Updated authors of functions and correctly added these in the 
   Authors@R field with the appropriate roles. Note that Claudia 

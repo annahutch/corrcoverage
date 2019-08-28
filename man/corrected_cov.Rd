@@ -4,7 +4,7 @@
 \alias{corrected_cov}
 \title{Corrected coverage estimate of the causal variant in the credible set}
 \usage{
-corrected_cov(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000,
+corrected_cov(pp0, mu, V, Sigma, thr, W = 0.2, nrep = 1000,
   pp0min = 0.001)
 }
 \arguments{
@@ -16,7 +16,7 @@ corrected_cov(pp0, mu, V, Sigma, thr = 0.95, W = 0.2, nrep = 1000,
 
 \item{Sigma}{SNP correlation matrix}
 
-\item{thr}{Minimum threshold for fine-mapping experiment (0.95 default)}
+\item{thr}{Minimum threshold for fine-mapping experiment}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta (W=0.2 default)}
 

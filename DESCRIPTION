@@ -9,18 +9,19 @@ Authors@R: c(
     )
 Maintainer: Anna Hutchinson <anna.hutchinson@mrc-bsu.cam.ac.uk>
 Description: Using a computationally efficient method, the package can
-    be used to find the "corrected coverage estimate" of a credible set 
+    be used to find the corrected coverage estimate of a credible set 
     of putative causal variants from Bayesian genetic fine-mapping. 
-    The package can also be used to obtain a "corrected credible set" 
+    The package can also be used to obtain a corrected credible set
     if required; that is, the smallest set of variants required such 
     that the corrected coverage estimate of the resultant credible set is  
-    within some user defined accuracy of the desired coverage. 
-    Maller et al. (2012) <doi:10.1038/ng.2435>
-    Wakefield (2009) <doi:10.1002/gepi.20359>
+    within some user defined accuracy of the desired coverage.
+    Maller et al. (2012) <doi:10.1038/ng.2435>,
+    Wakefield (2009) <doi:10.1002/gepi.20359>,
     Fortune and Wallace (2018) <doi:10.1093/bioinformatics/bty898>.
 URL: https://annahutch.github.io/corrcoverage
 License: MIT + file LICENSE
 BugReports: https://github.com/annahutch/corrcoverage/issues
+OS_type: unix
 Encoding: UTF-8
 LazyData: true
 Suggests: 
@@ -30,6 +31,7 @@ Suggests:
     mvtnorm,
     rmarkdown,
     testthat,
+    simGWAS,
     pkgdown
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
@@ -40,6 +42,5 @@ Imports:
     magrittr,
     stats,
     matrixStats,
-    simGWAS,
-    Rcpp, RcppArmadillo
+    Rcpp
 SystemRequirements: C++11

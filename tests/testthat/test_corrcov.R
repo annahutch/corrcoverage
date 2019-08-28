@@ -60,7 +60,7 @@ test_that("corrcov_nvar_bhat function returns a probability", {
 })
 
 test_that("corrcov_CI returns an appropriate confidence interval", {
-  CI <- corrcov_CI(z = z, f = maf, N0 = N, N1 = N, Sigma = sigma, nrep = 1)
+  CI <- corrcov_CI(z = z, f = maf, N0 = N, N1 = N, Sigma = sigma, thr = 0.9, nrep = 1)
   expect_true(dplyr::between(CI[[1]],-0.1,1.1))
   expect_true(dplyr::between(CI[[2]],-0.1,1.1))
 })
@@ -68,7 +68,7 @@ test_that("corrcov_CI returns an appropriate confidence interval", {
 test_that("corrcov_CI_bhat returns an appropriate confidence interval", {
   se <- 0.2 # assume all beta hats have same standard error
   bhats <- z*se
-  CI <- corrcov_CI_bhat(bhat = bhats, V = V, N0 = N, N1 = N, Sigma = sigma, nrep = 1)
+  CI <- corrcov_CI_bhat(bhat = bhats, V = V, N0 = N, N1 = N, Sigma = sigma, thr = 0.9, nrep = 1)
   expect_true(dplyr::between(CI[[1]],-0.1,1.1))
   expect_true(dplyr::between(CI[[2]],-0.0,1.1))
 })

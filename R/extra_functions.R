@@ -5,7 +5,7 @@
 #' @param N Total sample size (N0+N1)
 #' @param s Proportion of cases (N1/N0+N1)
 #' @return Variance of estimated effect size \eqn{\hat{\beta}}, V.
-#' @author Claudia Giambartolomei
+#' @author Chris Wallace
 #'
 #' @examples
 #'
@@ -27,7 +27,7 @@ Var.data.cc <- function(f, N, s) {
 ##' @title logsum
 ##' @param x numeric vector
 ##' @return max(x) + log(sum(exp(x - max(x))))
-##' @author Claudia Giambartolomei
+##' @author Chris Wallace
 ##' @export
 logsum <- function(x) {
     my.max <- max(x)
@@ -138,7 +138,7 @@ est_mu_bhat <- function(bhat, V, N0, N1, p1 = 1e-4, W = 0.2) {
 #' @title Credible set of genetic variants
 #' @param pp Vector of posterior probabilities of causality
 #' @param CV Optional parameter: Index of CV
-#' @param thr Minimum threshold for credible set size (default is 0.95)
+#' @param thr Minimum threshold for credible set size
 #' @return list of the variants in the credible set, the claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)
 #'
 #' @examples
@@ -156,7 +156,7 @@ est_mu_bhat <- function(bhat, V, N0, N1, p1 = 1e-4, W = 0.2) {
 #'
 #' @export
 #' @author Anna Hutchinson
-credset <- function(pp, CV, thr = 0.95) {
+credset <- function(pp, CV, thr) {
   o = order(pp, decreasing = TRUE)  # order index for true pp
   cumpp = cumsum(pp[o])  # cum sums of ordered pps
   wh = which(cumpp > thr)[1]  # how many needed to exceed thr
@@ -176,7 +176,7 @@ credset <- function(pp, CV, thr = 0.95) {
 #' @title Credible set of variants from matrix of PPs
 #' @param pp Matrix of posterior probabilities of causality (one row per system)
 #' @param CV Vector of CV indices (one per system/row)
-#' @param thr Minimum threshold for credible set size (default is 0.95)
+#' @param thr Minimum threshold for credible set size
 #'
 #' @return Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants (nvar).
 #' @useDynLib corrcoverage
@@ -193,14 +193,13 @@ credset <- function(pp, CV, thr = 0.95) {
 #' pp <- matrix(rnorm(nsnps*100, 0.3, 0.05), ncol = nsnps)
 #' pp <- pp/rowSums(pp)
 #'
-#' iCV <- 71
+#' iCV <- rep(71, times = dim(pp)[1])
 #'
-#' # credsetC(pp, CV = iCV, thr = 0.9)
-#'
+#' credsetC(pp, CV = iCV, thr = 0.9)
 #'
 #' @export
-credsetC <- function(pp, CV, thr = 0.95) {
-  ret = credsetmat(pp, CV, thr)  ## list 1 = wh, 2 = size, 3=contained
+credsetC <- function(pp, CV, thr) {
+  ret = credsetmat(pp, CV, thr)  # list 1 = wh, 2 = size, 3=contained
   data.frame(claimed.cov = ret[[2]], covered = ret[[3]], nvar = ret[[1]])
 }
 

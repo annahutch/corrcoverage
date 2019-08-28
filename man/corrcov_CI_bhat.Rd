@@ -4,8 +4,8 @@
 \alias{corrcov_CI_bhat}
 \title{Confidence interval for corrected coverage estimate using estimated effect sizes and their standard errors}
 \usage{
-corrcov_CI_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
-  nrep = 1000, CI = 0.95, pp0min = 0.001)
+corrcov_CI_bhat(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000,
+  CI = 0.95, pp0min = 0.001)
 }
 \arguments{
 \item{bhat}{Estimated effect sizes from single-SNP logistic regressions}
@@ -18,7 +18,7 @@ corrcov_CI_bhat(bhat, V, N0, N1, Sigma, thr = 0.95, W = 0.2,
 
 \item{Sigma}{SNP correlation matrix}
 
-\item{thr}{Minimum threshold for fine-mapping experiment (default is 0.95)}
+\item{thr}{Minimum threshold for fine-mapping experiment}
 
 \item{W}{Prior for the standard deviation of the effect size parameter beta}
 
@@ -36,7 +36,7 @@ Obtain confidence interval for corrected coverage estimate using estimated effec
 }
 \examples{
 
-\dontrun{
+\donttest{
  # this is a long running example
 set.seed(1)
 nsnps <- 100
@@ -57,6 +57,7 @@ simx <- function(nsnps, nsamples, S, maf=0.1) {
 S <- (1 - (abs(outer(1:nsnps,1:nsnps,`-`))/nsnps))^4
 X <- simx(nsnps,nsamples,S)
 LD <- cor2(X)
+maf <- colMeans(X)
 
 varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 

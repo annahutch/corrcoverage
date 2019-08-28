@@ -22,11 +22,11 @@ The package only requires GWAS summary statistics and can be used to:
   - Estimate the true genetic effect at the causal variant (see `est_mu`
     function)
   - Obtain an accurate coverage estimate that the causal variant 
-    is contained within a credible set, the "corrected coverage estimate"
-    (see `corrcov` function and "Corrected Coverage"" vignette)
-  - Find a new "corrected" credible set with the desired coverage of the
+    is contained within a credible set, the corrected coverage estimate
+    (see `corrcov` function and Corrected Coverage vignette)
+  - Find a new corrected credible set with the desired coverage of the
     true causal variant (see `corrected_cs` function and 
-    "Corrected Credible Set"" vignette)
+    Corrected Credible Set vignette)
 
 We've strived to make our R package as easy to use as possible. 
 Please see the flowchart below to decide which function is best to solve
@@ -53,19 +53,19 @@ devtools::install_github("annahutch/corrcoverage")
 
 For examples, please see the relevant vignettes.
 
-1. The "Corrected Coverage" vignette
+1. The Corrected Coverage vignette
 [here](https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html)
 should be read first. This shows readers how to use the `corrcoverage` R
 package to get an accurate coverage estimate of the causal variant in a
 credible set.
 
-2. The "Corrected Credible Set" vignette
+2. The Corrected Credible Set vignette
 [here](https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html)
-follows on from the "Corrected Coverage"" vignette and shows readers how
+follows on from the Corrected Coverage vignette and shows readers how
 the `corrcoverage` R package can be used to obtain a new credible set with
 the desired coverage of the causal variant.
 
-3. The ‘Useful Info’ vignette
+3. The Useful Info vignette
 [here](https://annahutch.github.io/corrcoverage/articles/Useful-Info.html)
 provides supplementary information about the usage of the package,
 including information about other useful functions.
@@ -73,7 +73,7 @@ including information about other useful functions.
 -----
 
 In brief, the correction method involves simulating many credible sets
-from "the same system as the original" and calculating what proportion of
+from the same system as the original and calculating what proportion of
 these contain the true causal variant. Since the true causal variant is 
 unknown, each variant is considered as causal in turn and the proportions 
 are normalised by that variant’s posterior probability of causality.

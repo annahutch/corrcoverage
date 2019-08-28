@@ -4,7 +4,7 @@
 \alias{corrcov_nvar_bhat}
 \title{Corrected coverage estimate using estimated effect sizes and their standard errors (fixing nvar)}
 \usage{
-corrcov_nvar_bhat(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
+corrcov_nvar_bhat(bhat, V, N0, N1, Sigma, nvar, thr, W = 0.2,
   nrep = 10000, pp0min = 0.001)
 }
 \arguments{
@@ -20,13 +20,11 @@ corrcov_nvar_bhat(bhat, V, N0, N1, Sigma, nvar, thr = 0.95, W = 0.2,
 
 \item{nvar}{The number of variants that simulated credible sets used for estimation should contain}
 
-\item{thr}{Minimum threshold for fine-mapping experiment (default 0.95)}
+\item{thr}{Minimum threshold for fine-mapping experiment}
 
 \item{W}{Prior for the standard deviation of the effect size parameter, beta (default 0.2)}
 
-\item{nrep}{The number of simulated posterior probability systems to consider for the corrected
-coverage estimate (nrep = 10000 default because we trim out the ones without correct
-nvar so need this to be high)}
+\item{nrep}{The number of simulated posterior probability systems to consider for the corrected coverage estimate (nrep = 10000 default due to trimming)}
 
 \item{pp0min}{Only average over SNPs with pp0 > pp0min}
 }
@@ -66,7 +64,7 @@ varbeta <- Var.data.cc(f = maf, N = N0 + N1, s = N1/(N0+N1))
 
 bhats = rnorm(nsnps,0,0.2) # log OR
 
-corrcov_nvar_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, nvar = 1, nrep = 1000)
+corrcov_nvar_bhat(bhat = bhats, V = varbeta, N0, N1, Sigma = LD, thr = 0.95, nvar = 1, nrep = 1000)
 
 # note that nrep should be at least the default value (nrep = 10000) but is
 # lower here for speed of computation

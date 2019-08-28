@@ -41,7 +41,7 @@ Corrected credible set with desired coverage of the CV
 }
 \examples{
 
-\dontrun{
+\donttest{
  # this is a long running example
 
 # In this example, the function is used to find a corrected 95\% credible set

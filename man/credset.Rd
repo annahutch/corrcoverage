@@ -4,14 +4,14 @@
 \alias{credset}
 \title{Credible set of genetic variants}
 \usage{
-credset(pp, CV, thr = 0.95)
+credset(pp, CV, thr)
 }
 \arguments{
 \item{pp}{Vector of posterior probabilities of causality}
 
 \item{CV}{Optional parameter: Index of CV}
 
-\item{thr}{Minimum threshold for credible set size (default is 0.95)}
+\item{thr}{Minimum threshold for credible set size}
 }
 \value{
 list of the variants in the credible set, the claimed.cov (cumulative sum of the posterior probabilities of the variants forming the credible set), binary covered indicator (1 if CV is contained in the credible set) and nvar (number of variants in the set)

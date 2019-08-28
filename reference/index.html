@@ -137,7 +137,7 @@
       <tr>
         <th colspan="2">
           <h2 id="section-corrected-coverage-estimate" class="hasAnchor"><a href="#section-corrected-coverage-estimate" class="anchor"></a>Corrected Coverage Estimate</h2>
-          <p class="section-desc"><p>Functions to find the corrected coverage estimate</p></p>
+          <p class="section-desc"><p>Functions to find the corrected coverage estimate of a credible set</p></p>
         </th>
       </tr>
       <tr>
@@ -145,25 +145,19 @@
         <td>
           <p><code><a href="corrcov.html">corrcov()</a></code> </p>
         </td>
-        <td><p>Corrected coverage estimate using Z-scores and mafs</p></td>
+        <td><p>Corrected coverage estimate using Z-scores and MAFs</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="corrcov_bhat.html">corrcov_bhat()</a></code> </p>
         </td>
         <td><p>Corrected coverage estimate using estimated effect sizes and their standard errors</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="corrected_cov.html">corrected_cov()</a></code> </p>
-        </td>
-        <td><p>Corrected coverage estimate of the causal variant in the credible set</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
           <h2 id="section-corrected-credible-set" class="hasAnchor"><a href="#section-corrected-credible-set" class="anchor"></a>Corrected Credible Set</h2>
-          <p class="section-desc"><p>Functions to find the corrected credible set</p></p>
+          <p class="section-desc"><p>Functions to find a corrected credible set</p></p>
         </th>
       </tr>
       <tr>
@@ -171,19 +165,19 @@
         <td>
           <p><code><a href="corrected_cs.html">corrected_cs()</a></code> </p>
         </td>
-        <td><p>Corrected credible set with desired coverage of the CV</p></td>
+        <td><p>Corrected credible set using Z-scores and MAFs</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="corrected_cs_bhat.html">corrected_cs_bhat()</a></code> </p>
         </td>
-        <td><p>Corrected credible set with desired coverage of the CV</p></td>
+        <td><p>Corrected credible set using estimated effect sizes and their standard errors</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-confidence-interval-for-coverage-estimate" class="hasAnchor"><a href="#section-confidence-interval-for-coverage-estimate" class="anchor"></a>Confidence Interval for Coverage Estimate</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-confidence-interval-for-coverage-estimate" class="hasAnchor"><a href="#section-confidence-interval-for-coverage-estimate" class="anchor"></a>Confidence interval for coverage estimate</h2>
+          <p class="section-desc"><p>Functions to find a confidence interval for the corrected coverage estimate</p></p>
         </th>
       </tr>
       <tr>
@@ -191,7 +185,7 @@
         <td>
           <p><code><a href="corrcov_CI.html">corrcov_CI()</a></code> </p>
         </td>
-        <td><p>Confidence interval for corrected coverage estimate using Z-scores and mafs</p></td>
+        <td><p>Confidence interval for corrected coverage estimate using Z-scores and MAFs</p></td>
       </tr><tr>
         
         <td>
@@ -202,8 +196,8 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-corrected-coverage-estimate-fixing-nvar" class="hasAnchor"><a href="#section-corrected-coverage-estimate-fixing-nvar" class="anchor"></a>Corrected Coverage Estimate Fixing nvar</h2>
-          <p class="section-desc"><p>Only use these functions with prior knowledge of how many variants should be in the credible set</p></p>
+          <h2 id="section-corrected-coverage-estimate-fixing-nvar" class="hasAnchor"><a href="#section-corrected-coverage-estimate-fixing-nvar" class="anchor"></a>Corrected coverage estimate fixing nvar</h2>
+          <p class="section-desc"><p>Functions to find a corrected coverage estimate when fixing the number of variants in the credible set</p></p>
         </th>
       </tr>
       <tr>
@@ -211,7 +205,7 @@
         <td>
           <p><code><a href="corrcov_nvar.html">corrcov_nvar()</a></code> </p>
         </td>
-        <td><p>Corrected coverage estimate using Z-scores and mafs (fixing nvar)</p></td>
+        <td><p>Corrected coverage estimate using Z-scores and MAFs (fixing nvar)</p></td>
       </tr><tr>
         
         <td>
@@ -222,8 +216,8 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-estimate-true-effect-at-causal-variant" class="hasAnchor"><a href="#section-estimate-true-effect-at-causal-variant" class="anchor"></a>Estimate True Effect at Causal Variant</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-estimate-true-effect-at-the-causal-variant" class="hasAnchor"><a href="#section-estimate-true-effect-at-the-causal-variant" class="anchor"></a>Estimate true effect at the causal variant</h2>
+          <p class="section-desc"><p>Functions to estimate the joint Z score at the causal variant</p></p>
         </th>
       </tr>
       <tr>
@@ -243,8 +237,8 @@ effect sizes and their standard errors</p></td>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-conversion-functions" class="hasAnchor"><a href="#section-conversion-functions" class="anchor"></a>Conversion Functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-conversion-functions" class="hasAnchor"><a href="#section-conversion-functions" class="anchor"></a>Conversion functions</h2>
+          <p class="section-desc"><p>Functions to convert between p-values, Z-scores, ABFs and PPs</p></p>
         </th>
       </tr>
       <tr>
@@ -287,7 +281,7 @@ effect sizes and their standard errors</p></td>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-other-functions" class="hasAnchor"><a href="#section-other-functions" class="anchor"></a>Other Functions</h2>
+          <h2 id="section-miscellaneous-functions" class="hasAnchor"><a href="#section-miscellaneous-functions" class="anchor"></a>Miscellaneous functions</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -319,11 +313,11 @@ effect sizes and their standard errors</p></td>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#section-corrected-coverage-estimate">Corrected Coverage Estimate</a></li>
       <li><a href="#section-corrected-credible-set">Corrected Credible Set</a></li>
-      <li><a href="#section-confidence-interval-for-coverage-estimate">Confidence Interval for Coverage Estimate</a></li>
-      <li><a href="#section-corrected-coverage-estimate-fixing-nvar">Corrected Coverage Estimate Fixing nvar</a></li>
-      <li><a href="#section-estimate-true-effect-at-causal-variant">Estimate True Effect at Causal Variant</a></li>
-      <li><a href="#section-conversion-functions">Conversion Functions</a></li>
-      <li><a href="#section-other-functions">Other Functions</a></li>
+      <li><a href="#section-confidence-interval-for-coverage-estimate">Confidence interval for coverage estimate</a></li>
+      <li><a href="#section-corrected-coverage-estimate-fixing-nvar">Corrected coverage estimate fixing nvar</a></li>
+      <li><a href="#section-estimate-true-effect-at-the-causal-variant">Estimate true effect at the causal variant</a></li>
+      <li><a href="#section-conversion-functions">Conversion functions</a></li>
+      <li><a href="#section-miscellaneous-functions">Miscellaneous functions</a></li>
     </ul>
   </div>
 </div>

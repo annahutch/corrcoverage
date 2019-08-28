@@ -106,8 +106,8 @@
 <ul>
 <li>Perform single causal variant Bayesian fine-mapping</li>
 <li>Estimate the true genetic effect at the causal variant (see <code>est_mu</code> function)</li>
-<li>Obtain an accurate coverage estimate that the causal variant is contained within a credible set, the corrected coverage estimate (see <code>corrcov</code> function and Corrected Coverage vignette)</li>
-<li>Find a new corrected credible set with the desired coverage of the true causal variant (see <code>corrected_cs</code> function and Corrected Credible Set vignette)</li>
+<li>Obtain an accurate coverage estimate that the causal variant is contained within a credible set, the corrected coverage estimate (see <a href="https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html">Corrected Coverage vignette</a>)</li>
+<li>Find a new corrected credible set with the desired coverage of the true causal variant (see <a href="https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html">Corrected Credible Set vignette</a>)</li>
 </ul>
 <p>We’ve strived to make our R package as easy to use as possible. Please see the flowchart below to decide which function is best to solve your problem. The interactive version (click-to-functions) is <a href="https://annahutch.github.io/PhD/package_flowchart.html">available here</a>.</p>
 <p><img src="https://annahutch.github.io/PhD/package_flowchart.svg"></p>
@@ -115,9 +115,12 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the released version of <code>corrcoverage</code> from <a href="https://github.com/">github</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"devtools"</span>) <span class="co"># if not already installed</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"annahutch/corrcoverage"</span>)</a></code></pre></div>
+<p>This package can be installed from CRAN with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"corrcoverage"</span>)</a></code></pre></div>
+<p>Alternatively, you can install the released version of <code>corrcoverage</code> from <a href="https://github.com/">github</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"devtools"</span>) <span class="co"># if not already installed</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"annahutch/corrcoverage"</span>)</a></code></pre></div>
+<p>Windows users are required to download the package from github rather than CRAN.</p>
 <hr>
 </div>
 <div id="examples" class="section level2">
@@ -136,10 +139,10 @@
 <div id="abstract" class="section level2">
 <h2 class="hasAnchor">
 <a href="#abstract" class="anchor"></a>Abstract</h2>
-<p>Genome Wide Association Studies (GWAS) have successfully identified thousands of loci associated with human diseases. Bayesian genetic fine-mapping studies aim to identify the specific causal variants within GWAS loci responsible for the disease, reporting credible sets of plausible causal variants, which are interpreted as containing the causal variant with some ‘coverage probability’.</p>
-<p>Here, we investigate the coverage probabilities of credible sets through simulations and find them to be systematically biased. We present a method to re-estimate the coverage of credible sets using rapid simulations based on the observed, or estimated, SNP correlation structure, we call this re-estimation the “corrected coverage estimate”. This is extended to find “corrected credible sets”, which are the smallest set of variants such that the corrected coverage probability is accurate.</p>
-<p>We show that our method can be used to improve the resolution of fine-mapping studies using empirical type 1 diabetes data. Specifically, we found that in 29 out of 39 associated genomic regions, our method could be used to reduce the number of potentially causal variants to consider for follow-up – leading to more powerful and reliable follow up studies.</p>
-<p>Crucially, our correction method requires only genetic association summary test statistics and remains accurate when SNP correlations are estimated from a large reference panel. Using our method to improve the resolution of fine-mapping experiments will enable more efficient expenditure of resources in the follow-up process of annotating the variants in the credible set to determine the implicated genes and pathways.</p>
+<p>Genome Wide Association Studies (GWAS) have successfully identified thousands of loci associated with human diseases. Bayesian genetic fine-mapping studies aim to identify the specific causal variants within GWAS loci responsible for each association, reporting credible sets of plausible causal variants, which are interpreted as containing the causal variant with some “coverage probability”.</p>
+<p>Here, we investigate the coverage probabilities of credible sets through simulations and find that these are systematically biased. We present a method to re-estimate the coverage of credible sets using rapid simulations based on the observed, or estimated, SNP correlation structure, we call this the “corrected coverage estimate”. This is extended to find “corrected credible sets”, which are the smallest set of variants such that their corrected coverage estimate meets the target coverage.</p>
+<p>We use our method to improve the resolution of a fine-mapping study of type 1 diabetes. We found that in 27 out of 39 associated genomic regions our method could reduce the number of potentially causal variants to consider for follow-up, and found that none of the 95% or 99% credible sets required the inclusion of more variants – a pattern matched in simulations of well powered GWAS.</p>
+<p>Crucially, our correction method requires only GWAS summary statistics and remains accurate when SNP correlations are estimated from a large reference panel. Using our method to improve the resolution of fine-mapping studies will enable more efficient expenditure of resources in the follow-up process of annotating the variants in the credible set to determine the implicated genes and pathways in human diseases.</p>
 <hr>
 </div>
 </div>

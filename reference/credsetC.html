@@ -8,11 +8,13 @@
 
 <title>Credible set of variants from matrix of PPs — credsetC • corrcoverage</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -30,12 +32,12 @@
 
 
 
+
 <meta property="og:title" content="Credible set of variants from matrix of PPs — credsetC" />
-
 <meta property="og:description" content="Quick credset function for matrix of posterior probabilities (using RCpp)" />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -102,7 +104,6 @@
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/annahutch/corrcoverage">
@@ -128,13 +129,11 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Quick credset function for matrix of posterior probabilities (using RCpp)</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>credsetC</span>(<span class='no'>pp</span>, <span class='no'>CV</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>credsetC</span>(<span class='no'>pp</span>, <span class='no'>CV</span>, <span class='no'>thr</span>)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -148,14 +147,13 @@
     </tr>
     <tr>
       <th>thr</th>
-      <td><p>Minimum threshold for credible set size (default is 0.95)</p></td>
+      <td><p>Minimum threshold for credible set size</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Data.frame of claimed coverage (sum of posterior probabilities of variants in the set), binary covered indicator and number of variants (nvar).</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -168,17 +166,116 @@
 <span class='no'>pp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>nsnps</span>*<span class='fl'>100</span>, <span class='fl'>0.3</span>, <span class='fl'>0.05</span>), <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='no'>nsnps</span>)
 <span class='no'>pp</span> <span class='kw'>&lt;-</span> <span class='no'>pp</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>rowSums</a></span>(<span class='no'>pp</span>)
 
-<span class='no'>iCV</span> <span class='kw'>&lt;-</span> <span class='fl'>71</span>
+<span class='no'>iCV</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fl'>71</span>, <span class='kw'>times</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/dim'>dim</a></span>(<span class='no'>pp</span>)[<span class='fl'>1</span>])
 
-<span class='co'># credsetC(pp, CV = iCV, thr = 0.9)</span></div></pre>
+<span class='fu'>credsetC</span>(<span class='no'>pp</span>, <span class='kw'>CV</span> <span class='kw'>=</span> <span class='no'>iCV</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.9</span>)</div><div class='output co'>#&gt;     claimed.cov covered nvar
+#&gt; 1     0.9028106       0   87
+#&gt; 2     0.9043994       1   87
+#&gt; 3     0.9066858       1   87
+#&gt; 4     0.9073203       1   87
+#&gt; 5     0.9016568       1   87
+#&gt; 6     0.9066431       1   87
+#&gt; 7     0.9023015       1   87
+#&gt; 8     0.9073503       1   88
+#&gt; 9     0.9051947       1   87
+#&gt; 10    0.9065068       1   87
+#&gt; 11    0.9003956       1   86
+#&gt; 12    0.9022983       1   87
+#&gt; 13    0.9037407       1   87
+#&gt; 14    0.9075461       1   87
+#&gt; 15    0.9006862       0   86
+#&gt; 16    0.9072241       1   86
+#&gt; 17    0.9044851       1   87
+#&gt; 18    0.9005781       0   86
+#&gt; 19    0.9013418       1   87
+#&gt; 20    0.9032404       1   87
+#&gt; 21    0.9058975       1   87
+#&gt; 22    0.9009720       1   87
+#&gt; 23    0.9045454       0   87
+#&gt; 24    0.9018952       1   86
+#&gt; 25    0.9014670       1   87
+#&gt; 26    0.9058481       1   87
+#&gt; 27    0.9077576       0   87
+#&gt; 28    0.9070294       1   87
+#&gt; 29    0.9043705       0   87
+#&gt; 30    0.9041687       1   87
+#&gt; 31    0.9049257       1   87
+#&gt; 32    0.9043269       1   86
+#&gt; 33    0.9004033       1   86
+#&gt; 34    0.9035822       1   87
+#&gt; 35    0.9029281       1   87
+#&gt; 36    0.9059044       1   87
+#&gt; 37    0.9007131       1   86
+#&gt; 38    0.9079439       1   87
+#&gt; 39    0.9053566       1   87
+#&gt; 40    0.9032632       1   87
+#&gt; 41    0.9024774       1   86
+#&gt; 42    0.9076526       1   87
+#&gt; 43    0.9057440       1   87
+#&gt; 44    0.9042658       1   87
+#&gt; 45    0.9074380       1   87
+#&gt; 46    0.9050979       1   87
+#&gt; 47    0.9026150       0   87
+#&gt; 48    0.9043232       1   87
+#&gt; 49    0.9002837       1   86
+#&gt; 50    0.9023159       0   87
+#&gt; 51    0.9007277       1   86
+#&gt; 52    0.9010689       1   87
+#&gt; 53    0.9038356       1   87
+#&gt; 54    0.9052344       1   87
+#&gt; 55    0.9068687       1   87
+#&gt; 56    0.9016287       1   86
+#&gt; 57    0.9046650       1   86
+#&gt; 58    0.9023235       1   87
+#&gt; 59    0.9034334       1   87
+#&gt; 60    0.9048217       1   87
+#&gt; 61    0.9062914       1   87
+#&gt; 62    0.9023418       0   87
+#&gt; 63    0.9056378       1   87
+#&gt; 64    0.9034765       1   87
+#&gt; 65    0.9016205       1   86
+#&gt; 66    0.9079594       1   87
+#&gt; 67    0.9013745       0   86
+#&gt; 68    0.9000213       1   86
+#&gt; 69    0.9083436       1   88
+#&gt; 70    0.9042942       1   87
+#&gt; 71    0.9072779       0   87
+#&gt; 72    0.9040201       1   87
+#&gt; 73    0.9049649       1   87
+#&gt; 74    0.9059295       1   87
+#&gt; 75    0.9022478       1   87
+#&gt; 76    0.9058106       1   87
+#&gt; 77    0.9030499       1   86
+#&gt; 78    0.9073147       1   87
+#&gt; 79    0.9067678       1   87
+#&gt; 80    0.9033786       0   87
+#&gt; 81    0.9000792       1   87
+#&gt; 82    0.9054505       1   87
+#&gt; 83    0.9012045       1   87
+#&gt; 84    0.9023899       0   87
+#&gt; 85    0.9014795       0   86
+#&gt; 86    0.9036947       1   87
+#&gt; 87    0.9078739       1   87
+#&gt; 88    0.9003364       1   87
+#&gt; 89    0.9002072       1   86
+#&gt; 90    0.9009011       1   87
+#&gt; 91    0.9045547       1   87
+#&gt; 92    0.9019096       1   87
+#&gt; 93    0.9007869       0   86
+#&gt; 94    0.9028258       1   87
+#&gt; 95    0.9053618       1   87
+#&gt; 96    0.9032200       1   87
+#&gt; 97    0.9004761       1   86
+#&gt; 98    0.9062791       1   87
+#&gt; 99    0.9073267       1   87
+#&gt; 100   0.9009760       1   86</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

@@ -8,11 +8,13 @@
 
 <title>Confidence interval for corrected coverage estimate using Z-scores and mafs — corrcov_CI • corrcoverage</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -30,12 +32,12 @@
 
 
 
+
 <meta property="og:title" content="Confidence interval for corrected coverage estimate using Z-scores and mafs — corrcov_CI" />
-
 <meta property="og:description" content="Obtain confidence interval for corrected coverage estimate using Z-scores and mafs" />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -102,7 +104,6 @@
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/annahutch/corrcoverage">
@@ -128,14 +129,12 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Obtain confidence interval for corrected coverage estimate using Z-scores and mafs</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>corrcov_CI</span>(<span class='no'>z</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>,
-  <span class='kw'>CI</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>pp0min</span> <span class='kw'>=</span> <span class='fl'>0.001</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>corrcov_CI</span>(<span class='no'>z</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='no'>thr</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>CI</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>pp0min</span> <span class='kw'>=</span> <span class='fl'>0.001</span>)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -161,7 +160,7 @@
     </tr>
     <tr>
       <th>thr</th>
-      <td><p>Minimum threshold for fine-mapping experiment (default 0.95)</p></td>
+      <td><p>Minimum threshold for fine-mapping experiment</p></td>
     </tr>
     <tr>
       <th>W</th>
@@ -180,15 +179,14 @@
       <td><p>Only average over SNPs with pp0 &gt; pp0min</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>CI for corrected coverage estimate</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-</div><span class='co'># NOT RUN {</span>
+</div><div class='input'>
  <span class='co'># this is a long running example</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>1</span>)
 <span class='no'>nsnps</span> <span class='kw'>=</span> <span class='fl'>100</span>
@@ -210,18 +208,17 @@
 <span class='no'>S</span> <span class='kw'>&lt;-</span> (<span class='fl'>1</span> - (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/outer'>outer</a></span>(<span class='fl'>1</span>:<span class='no'>nsnps</span>,<span class='fl'>1</span>:<span class='no'>nsnps</span>,<span class='no'>`-`</span>))/<span class='no'>nsnps</span>))^<span class='fl'>4</span>
 <span class='no'>X</span> <span class='kw'>&lt;-</span> <span class='fu'>simx</span>(<span class='no'>nsnps</span>,<span class='no'>nsamples</span>,<span class='no'>S</span>)
 <span class='no'>LD</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cor2.html'>cor2</a></span>(<span class='no'>X</span>)
+<span class='no'>maf</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colSums'>colMeans</a></span>(<span class='no'>X</span>)
 
-<span class='fu'>corrcov_CI</span>(<span class='kw'>z</span> <span class='kw'>=</span> <span class='no'>z_scores</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>)
-<span class='co'># }</span><div class='input'>
+<span class='fu'>corrcov_CI</span>(<span class='kw'>z</span> <span class='kw'>=</span> <span class='no'>z_scores</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>, <span class='kw'>thr</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</div><div class='output co'>#&gt;      2.5%     97.5% 
+#&gt; 0.9945937 0.9999510 </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

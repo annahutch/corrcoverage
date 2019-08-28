@@ -90,7 +90,7 @@
       <h1>Correcting the Coverage of Credible Sets</h1>
                         <h4 class="author">Anna Hutchinson</h4>
             
-            <h4 class="date">2019-08-27</h4>
+            <h4 class="date">2019-08-28</h4>
       
       
       <div class="hidden name"><code>corrected-coverage.Rmd</code></div>
@@ -101,7 +101,7 @@
     
 <hr>
 <p>This guide will show users how the <code>corrcoverage</code> package can be used for statistical single causal variant fine-mapping, including obtaining an accurate coverage estimate for the causal variant in a credible set (corrected coverage estimate). This package is specific to credible sets obtained using the Bayesian approach to fine-mapping, described by Maller et al. <a href="https://www.ncbi.nlm.nih.gov/pubmed/23104008">here</a>, which utilities approximate Bayes factors for genetic association studies described by Wakefield <a href="https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20359">here</a>.</p>
-<p>The <code>corrcoverage</code> R package requires only GWAS summary statistics to provide users with a “corrected coverage estimate” that the true causal variant is contained within the credible set, for example calculating that a 90% credible set actually has 99% probability of containing the true causal variant. In this vignette, we walk-through how the <code>corrcoverage</code> R package can be used to perform single causal variant Bayesian fine-mapping and to derive a corrected coverage estimate.</p>
+<p>The <code>corrcoverage</code> R package requires only GWAS summary statistics to provide users with a corrected coverage estimate that the true causal variant is contained within the credible set, for example calculating that a 90% credible set actually has 99% probability of containing the true causal variant. In this vignette, we walk-through how the <code>corrcoverage</code> R package can be used to perform single causal variant Bayesian fine-mapping and to derive a corrected coverage estimate.</p>
 <hr>
 <p>Firstly, load the library.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">2</span>)</a>
@@ -191,7 +191,8 @@
 <a class="sourceLine" id="cb12-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb12-5" data-line-number="5">credibleset</a></code></pre></div>
 <pre><code>## $credset
-##  [1]   4 160  24   3 158  25 156 157 128  69 127   2  53  42 124 162 126 152  51 123 171  52 145
+##  [1]   4 160  24   3 158  25 156 157 128  69 127   2  53  42 124 162 126
+## [18] 152  51 123 171  52 145
 ## 
 ## $claimed.cov
 ## [1] 0.9007093
@@ -206,7 +207,8 @@
 <a class="sourceLine" id="cb14-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb14-7" data-line-number="7">credibleset</a></code></pre></div>
 <pre><code>## $credset
-##  [1]   4 160  24   3 158  25 156 157 128  69 127   2  53  42 124 162 126 152  51 123 171  52 145
+##  [1]   4 160  24   3 158  25 156 157 128  69 127   2  53  42 124 162 126
+## [18] 152  51 123 171  52 145
 ## 
 ## $claimed.cov
 ## [1] 0.9007093
@@ -272,7 +274,7 @@
 <h3 class="hasAnchor">
 <a href="#so-what" class="anchor"></a>So what?</h3>
 <p>This vignette has shown readers how to use the <code>corrcoverage</code> R package to obtain a more accurate coverage estimate of the causal variant in a credible set. Obtaining accurate coverage estimates will allow researchers to report more specific findings from their fine-mapping analysis, and we hope that our correction will be used as an extra step in the single causal variant fine-mapping pipeline. Finally, reporting these corrected coverage estimates will allow for more efficient allocation and expenditure of resources in the laborious follow-up wet lab analyses of the variants in the credible set.</p>
-<p>This method can be extended to find a “corrected credible set”, please see <a href="https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html" class="uri">https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html</a>.</p>
+<p>This method can be extended to find a corrected credible set, please see <a href="https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html" class="uri">https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html</a>.</p>
 <hr>
 </div>
 <div id="references" class="section level3">
@@ -291,6 +293,7 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
       </div>
 
 </div>

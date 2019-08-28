@@ -8,11 +8,13 @@
 
 <title>Corrected credible set with desired coverage of the CV — corrected_cs • corrcoverage</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -30,12 +32,12 @@
 
 
 
+
 <meta property="og:title" content="Corrected credible set with desired coverage of the CV — corrected_cs" />
-
 <meta property="og:description" content="Corrected credible set with desired coverage of the CV" />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -102,7 +104,6 @@
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/annahutch/corrcoverage">
@@ -128,14 +129,12 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Corrected credible set with desired coverage of the CV</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>corrected_cs</span>(<span class='no'>z</span>, <span class='no'>f</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='no'>Sigma</span>, <span class='kw'>W</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>lower</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>upper</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='no'>desired.cov</span>, <span class='kw'>acc</span> <span class='kw'>=</span> <span class='fl'>0.005</span>, <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>pp0min</span> <span class='kw'>=</span> <span class='fl'>0.001</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -188,15 +187,13 @@
       <td><p>Only average over SNPs with pp0 &gt; pp0min</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>List of variants in credible set, required threshold, the corrected coverage and the size of the credible set</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
- <span class='co'># this is a long running example</span>
+    <pre class="examples"><div class='input'> <span class='co'># this is a long running example</span>
 
 <span class='co'># In this example, the function is used to find a corrected 95% credible set</span>
 <span class='co'># using Z-scores and MAFs, that is the smallest set of variants</span>
@@ -230,19 +227,31 @@
 
 <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>z_scores</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>1</span>,<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>z_scores</span>))
 
-<span class='fu'>corrected_cs</span>(<span class='kw'>z</span> <span class='kw'>=</span> <span class='no'>z_scores</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>, <span class='kw'>desired.cov</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>1</span>)
-<span class='co'># max.iter set low for speed, should be set to at least</span>
-<span class='co'># the default to ensure convergence to desired coverage</span>
-<span class='co'># }</span><div class='input'>
+<span class='fu'>corrected_cs</span>(<span class='kw'>z</span> <span class='kw'>=</span> <span class='no'>z_scores</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>maf</span>, <span class='no'>N0</span>, <span class='no'>N1</span>, <span class='kw'>Sigma</span> <span class='kw'>=</span> <span class='no'>LD</span>, <span class='kw'>desired.cov</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>max.iter</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; [1] "thr:  0.5 , cov:  0.471664648318262"</div><div class='output co'>#&gt; $credset
+#&gt;  [1] "26"  "16"  "85"  "139" "168" "21"  "167" "52"  "106" "62"  "134" "108"
+#&gt; [13] "67"  "46"  "9"   "56"  "42"  "97"  "24"  "44"  "86"  "61"  "15"  "130"
+#&gt; [25] "129" "37"  "123" "82"  "92"  "60"  "180" "91"  "23"  "3"   "95"  "140"
+#&gt; [37] "80"  "84"  "114" "94"  "156" "193" "165" "77"  "155" "191" "54"  "182"
+#&gt; [49] "169" "121"
+#&gt; 
+#&gt; $req.thr
+#&gt; [1] 0.5
+#&gt; 
+#&gt; $corr.cov
+#&gt; [1] 0.4716646
+#&gt; 
+#&gt; $size
+#&gt; [1] 0.5004184
+#&gt; </div><div class='input'># max.iter set low for speed, should be set to at least
+# the default to ensure convergence to desired coverage
+</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

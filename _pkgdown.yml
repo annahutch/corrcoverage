@@ -31,30 +31,32 @@ articles:
 
 reference:
 - title: "Corrected Coverage Estimate"
-  desc:  Functions to find the corrected coverage estimate
+  desc:  Functions to find the corrected coverage estimate of a credible set
   contents:
   - corrcov
   - corrcov_bhat
-  - corrected_cov
 - title: "Corrected Credible Set"
-  desc: Functions to find the corrected credible set
+  desc: Functions to find a corrected credible set
   contents:
   - corrected_cs
   - corrected_cs_bhat
-- title: "Confidence Interval for Coverage Estimate"
+- title: "Confidence interval for coverage estimate"
+  desc: Functions to find a confidence interval for the corrected coverage estimate
   contents:
   - corrcov_CI
   - corrcov_CI_bhat
-- title: "Corrected Coverage Estimate Fixing nvar"
-  desc: Only use these functions with prior knowledge of how many variants should be in the credible set
+- title: "Corrected coverage estimate fixing nvar"
+  desc: Functions to find a corrected coverage estimate when fixing the number of variants in the credible set
   contents:
   - corrcov_nvar
   - corrcov_nvar_bhat
-- title: "Estimate True Effect at Causal Variant"
+- title: "Estimate true effect at the causal variant"
+  desc: Functions to estimate the joint Z score at the causal variant
   contents:
   - est_mu
   - est_mu_bhat
-- title: "Conversion Functions"
+- title: "Conversion functions"
+  desc: Functions to convert between p-values, Z-scores, ABFs and PPs
   contents:
   - approx.bf.p
   - ppfunc
@@ -62,7 +64,7 @@ reference:
   - z0_pp
   - z_sim
   - zj_pp
-- title: "Other Functions"
+- title: "Miscellaneous functions"
   contents:
   - Var.data.cc
   - cor2

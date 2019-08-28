@@ -22,4 +22,6 @@ corrcoverage.Rproj
 inst/*
 ^cran-comments.md$
 ^cran-comments\.md$
-
+R.Rproj
+codecov.yml
+inst/

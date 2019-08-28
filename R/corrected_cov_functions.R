@@ -79,7 +79,7 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr, W = 0.2, nrep = 1000, pp0min =
 #'
 #' This function only requires the marginal summary statistics from GWAS
 #' @rdname corrcov
-#' @title Corrected coverage estimate using Z-scores and mafs
+#' @title Corrected coverage estimate using Z-scores and MAFs
 #' @param z Marginal Z-scores
 #' @param f Minor allele frequencies
 #' @param N0 Number of controls
@@ -190,9 +190,9 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000, pp0m
 
 #' Obtain corrected coverage estimate using Z-scores and mafs (limiting simulations used for estimation to those with correct nvar)
 #'
-#' This function requires the marginal summary statistics from GWAS and an nvar value. It should only be used when nvar is very low ($<3$) and there is some evidence to suggest that only simulated credible sets with this nvar value should be used to derive the corrected coverage estimate.
+#' This function requires the marginal summary statistics from GWAS and an nvar value. It should only be used when nvar is very low (<3) and there is some evidence to suggest that only simulated credible sets with this nvar value should be used to derive the corrected coverage estimate.
 #' @rdname corrcov_nvar
-#' @title Corrected coverage estimate using Z-scores and mafs (fixing nvar)
+#' @title Corrected coverage estimate using Z-scores and MAFs (fixing nvar)
 #' @param z Marginal Z-scores
 #' @param f Minor allele frequencies
 #' @param N0 Number of controls
@@ -384,7 +384,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr, W = 0.2, nrep =
 #' Obtain confidence interval for corrected coverage estimate using Z-scores and mafs
 #'
 #' @rdname corrcov_CI
-#' @title Confidence interval for corrected coverage estimate using Z-scores and mafs
+#' @title Confidence interval for corrected coverage estimate using Z-scores and MAFs
 #' @param z Marginal Z-scores
 #' @param f Minor allele frequencies
 #' @param N0 Number of controls

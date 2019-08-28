@@ -23,10 +23,9 @@ The package only requires GWAS summary statistics and can be used to:
     function)
   - Obtain an accurate coverage estimate that the causal variant 
     is contained within a credible set, the corrected coverage estimate
-    (see `corrcov` function and Corrected Coverage vignette)
+    (see [Corrected Coverage vignette](https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html))
   - Find a new corrected credible set with the desired coverage of the
-    true causal variant (see `corrected_cs` function and 
-    Corrected Credible Set vignette)
+    true causal variant (see [Corrected Credible Set vignette](https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html))
 
 We've strived to make our R package as easy to use as possible. 
 Please see the flowchart below to decide which function is best to solve
@@ -39,13 +38,21 @@ here](https://annahutch.github.io/PhD/package_flowchart.html).
 
 ## Installation
 
-You can install the released version of `corrcoverage` from
+This package can be installed from CRAN with:
+
+```r
+install.packages("corrcoverage")
+```
+
+Alternatively, you can install the released version of `corrcoverage` from
 [github](https://github.com/) with:
 
 ``` r
 install.packages("devtools") # if not already installed
 devtools::install_github("annahutch/corrcoverage")
 ```
+
+Windows users are required to download the package from github rather than CRAN.
 
 -----
 
@@ -82,12 +89,12 @@ are normalised by that variant’s posterior probability of causality.
 
 ## Abstract
 
-Genome Wide Association Studies (GWAS) have successfully identified thousands of loci associated with human diseases. Bayesian genetic fine-mapping studies aim to identify the specific causal variants within GWAS loci responsible for the disease, reporting credible sets of plausible causal variants, which are interpreted as containing the causal variant with some ‘coverage probability’.
+Genome Wide Association Studies (GWAS) have successfully identified thousands of loci associated with human diseases. Bayesian genetic fine-mapping studies aim to identify the specific causal variants within GWAS loci responsible for each association, reporting credible sets of plausible causal variants, which are interpreted as containing the causal variant with some "coverage probability".
 
-Here, we investigate the coverage probabilities of credible sets through simulations and find them to be systematically biased. We present a method to re-estimate the coverage of credible sets using rapid simulations based on the observed, or estimated, SNP correlation structure, we call this re-estimation the “corrected coverage estimate”. This is extended to find “corrected credible sets”, which are the smallest set of variants such that the corrected coverage probability is accurate. 
+Here, we investigate the coverage probabilities of credible sets through simulations and find that these are systematically biased. We present a method to re-estimate the coverage of credible sets using rapid simulations based on the observed, or estimated, SNP correlation structure, we call this the “corrected coverage estimate”. This is extended to find “corrected credible sets”, which are the smallest set of variants such that their corrected coverage estimate meets the target coverage. 
 
-We show that our method can be used to improve the resolution of fine-mapping studies using empirical type 1 diabetes data. Specifically, we found that in 29 out of 39 associated genomic regions, our method could be used to reduce the number of potentially causal variants to consider for follow-up – leading to more powerful and reliable follow up studies. 
+We use our method to improve the resolution of a fine-mapping study of type 1 diabetes. We found that in 27 out of 39 associated genomic regions our method could reduce the number of potentially causal variants to consider for follow-up, and found that none of the 95% or 99% credible sets required the inclusion of more variants – a pattern matched in simulations of well powered GWAS.
 
-Crucially, our correction method requires only genetic association summary test statistics and remains accurate when SNP correlations are estimated from a large reference panel. Using our method to improve the resolution of fine-mapping experiments will enable more efficient expenditure of resources in the follow-up process of annotating the variants in the credible set to determine the implicated genes and pathways. 
+Crucially, our correction method requires only GWAS summary statistics and remains accurate when SNP correlations are estimated from a large reference panel. Using our method to improve the resolution of fine-mapping studies will enable more efficient expenditure of resources in the follow-up process of annotating the variants in the credible set to determine the implicated genes and pathways in human diseases. 
 
 -----

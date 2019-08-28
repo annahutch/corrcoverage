@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_cov_functions.R
 \name{corrcov_nvar}
 \alias{corrcov_nvar}
-\title{Corrected coverage estimate using Z-scores and mafs (fixing nvar)}
+\title{Corrected coverage estimate using Z-scores and MAFs (fixing nvar)}
 \usage{
 corrcov_nvar(z, f, N0, N1, Sigma, nvar, thr, W = 0.2, nrep = 10000,
   pp0min = 0.001)
@@ -35,7 +35,7 @@ Corrected coverage estimate
 Obtain corrected coverage estimate using Z-scores and mafs (limiting simulations used for estimation to those with correct nvar)
 }
 \details{
-This function requires the marginal summary statistics from GWAS and an nvar value. It should only be used when nvar is very low ($<3$) and there is some evidence to suggest that only simulated credible sets with this nvar value should be used to derive the corrected coverage estimate.
+This function requires the marginal summary statistics from GWAS and an nvar value. It should only be used when nvar is very low (<3) and there is some evidence to suggest that only simulated credible sets with this nvar value should be used to derive the corrected coverage estimate.
 }
 \examples{
 

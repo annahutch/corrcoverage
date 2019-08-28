@@ -2,7 +2,7 @@
 % Please edit documentation in R/corrected_credset.R
 \name{corrected_cs}
 \alias{corrected_cs}
-\title{Corrected credible set with desired coverage of the CV}
+\title{Corrected credible set using Z-scores and MAFs}
 \usage{
 corrected_cs(z, f, N0, N1, Sigma, W = 0.2, lower = 0, upper = 1,
   desired.cov, acc = 0.005, max.iter = 20, pp0min = 0.001)
@@ -36,7 +36,7 @@ corrected_cs(z, f, N0, N1, Sigma, W = 0.2, lower = 0, upper = 1,
 List of variants in credible set, required threshold, the corrected coverage and the size of the credible set
 }
 \description{
-Corrected credible set with desired coverage of the CV
+Corrected credible set using Z-scores and MAFs
 }
 \examples{
 \donttest{

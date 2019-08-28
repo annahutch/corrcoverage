@@ -1,4 +1,4 @@
-#' @title Corrected credible set with desired coverage of the CV
+#' @title Corrected credible set using Z-scores and MAFs
 #'
 #' @param z Z-scores
 #' @param f Minor allele frequencies
@@ -124,7 +124,7 @@ corrected_cs <- function(z, f, N0, N1, Sigma, W = 0.2, lower = 0, upper = 1, des
   list(credset = names(pp)[o[1:wh]], req.thr = c, corr.cov = desired.cov + fc, size = size)
 }
 
-#' @title Corrected credible set with desired coverage of the CV
+#' @title Corrected credible set using estimated effect sizes and their standard errors
 #'
 #' @param bhat Estimated effect sizes
 #' @param V Prior variance of estimated effect sizes

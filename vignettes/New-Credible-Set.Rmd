@@ -25,6 +25,8 @@ This vignette will show users how the `corrcoverage` R package can be used to ob
 As in the [corrected coverage vignette](https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html), let's begin by simulating some GWAS data using the `simGWAS` package.
 
 ```{r}
+set.seed(18)
+library(corrcoverage)
 library(simGWAS)
 
 #  Simulate reference haplotypes
@@ -174,13 +176,13 @@ true.cov.est2 <- mean(new.cs.sims)
 ```
 
 Original 90% credible set:
-```{r echo=FALSE}
+```{r}
 df1 <- data.frame(claimed.cov = round(cs$claimed.cov, 3), corr.cov =  round(corrcov, 3), true.cov = round(true.cov.est, 3), nvar = cs$nvar)
 print(df1, row.names = FALSE)
 ```
 
 New 90% credible set:
-```{r echo=FALSE}
+```{r}
 df2 <- data.frame(claimed.cov = round(res$size, 3), corr.cov = round(res$corr.cov, 3), true.cov = round(true.cov.est2, 3), nvar = length(res$credset))
 print(df2, row.names = FALSE)
 ```

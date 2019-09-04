@@ -6,9 +6,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Correcting the Coverage of Credible Sets • corrcoverage</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Correcting the Coverage of Credible Sets">
 <meta property="og:description" content="">
 <meta property="og:image" content="/logo.png">
@@ -84,13 +91,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Correcting the Coverage of Credible Sets</h1>
                         <h4 class="author">Anna Hutchinson</h4>
             
-            <h4 class="date">2019-09-03</h4>
+            <h4 class="date">2019-09-04</h4>
       
       
       <div class="hidden name"><code>corrected-coverage.Rmd</code></div>
@@ -104,53 +112,53 @@
 <p>The <code>corrcoverage</code> R package requires only GWAS summary statistics to provide users with a corrected coverage estimate that the true causal variant is contained within the credible set, for example calculating that a 90% credible set actually has 99% probability of containing the true causal variant. In this vignette, we walk-through how the <code>corrcoverage</code> R package can be used to perform single causal variant Bayesian fine-mapping and to derive a corrected coverage estimate.</p>
 <hr>
 <p>Firstly, load the library.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(corrcoverage)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(corrcoverage)</a></code></pre></div>
 <hr>
 <div id="simulate-gwas-summary-statistics" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simulate-gwas-summary-statistics" class="anchor"></a>1. Simulate GWAS summary statistics</h3>
 <hr>
 <p><strong>This package is intended for use on summary statistics obtained from GWAS, such as observed <span class="math inline">\(Z\)</span>-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the <a href="https://github.com/chr1swallace/simGWAS">simGWAS</a> package. Please refer to the walkthrough guide <a href="https://chr1swallace.github.io/simGWAS/articles/intro.html">here</a> from which the following is taken.</strong></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(simGWAS)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(simGWAS)</a></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># simulate reference haplotypes</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">nsnps &lt;-<span class="st"> </span><span class="dv">200</span></a>
 <a class="sourceLine" id="cb3-4" data-line-number="4">nhaps &lt;-<span class="st"> </span><span class="dv">1000</span></a>
 <a class="sourceLine" id="cb3-5" data-line-number="5">lag &lt;-<span class="st"> </span><span class="dv">6</span> <span class="co"># genotypes are correlated between neighbouring variants</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">maf &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(nsnps<span class="op">+</span>lag,<span class="fl">0.05</span>,<span class="fl">0.5</span>) <span class="co"># common SNPs</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">maf &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(nsnps<span class="op">+</span>lag,<span class="fl">0.05</span>,<span class="fl">0.5</span>) <span class="co"># common SNPs</span></a>
 <a class="sourceLine" id="cb3-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">laghaps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(maf, <span class="cf">function</span>(f) <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(nhaps,<span class="dv">1</span>,f)))</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">laghaps &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="st">"cbind"</span>, <span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(maf, <span class="cf">function</span>(f) <span class="kw"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span>(nhaps,<span class="dv">1</span>,f)))</a>
 <a class="sourceLine" id="cb3-9" data-line-number="9">haps &lt;-<span class="st"> </span>laghaps[,<span class="dv">1</span><span class="op">:</span>nsnps]</a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>lag) </a>
 <a class="sourceLine" id="cb3-11" data-line-number="11">    haps &lt;-<span class="st"> </span>haps <span class="op">+</span><span class="st"> </span>laghaps[,(<span class="dv">1</span><span class="op">:</span>nsnps)<span class="op">+</span>j]</a>
-<a class="sourceLine" id="cb3-12" data-line-number="12">haps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(haps<span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(haps,<span class="dv">2</span>,max),nhaps,nsnps,<span class="dt">byrow=</span><span class="ot">TRUE</span>))</a>
-<a class="sourceLine" id="cb3-13" data-line-number="13">snps &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(haps) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"s"</span>,<span class="dv">1</span><span class="op">:</span>nsnps)</a>
-<a class="sourceLine" id="cb3-14" data-line-number="14">freq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(haps<span class="op">+</span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb3-15" data-line-number="15">freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(freq)</a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(freq<span class="op">$</span>Probability)</a></code></pre></div>
+<a class="sourceLine" id="cb3-12" data-line-number="12">haps &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Round.html">round</a></span>(haps<span class="op">/</span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(haps,<span class="dv">2</span>,max),nhaps,nsnps,<span class="dt">byrow=</span><span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">snps &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(haps) &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"s"</span>,<span class="dv">1</span><span class="op">:</span>nsnps)</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">freq &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(haps<span class="op">+</span><span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">freq<span class="op">$</span>Probability &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(freq)</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(freq<span class="op">$</span>Probability)</a></code></pre></div>
 <pre><code>## [1] 1</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">MAF &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(freq[,snps]<span class="op">-</span><span class="dv">1</span>)</a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">MAF &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span>(freq[,snps]<span class="op">-</span><span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co"># SNP correlation matrix</span></a>
 <a class="sourceLine" id="cb5-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb5-5" data-line-number="5">LD &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cor2.html">cor2</a></span>(haps)</a></code></pre></div>
 <p>We specify the causal variant (CV) and it’s effect on disease, as an odds ratio. One causal variant is chosen since the Bayesian approach to fine-mapping relies on the assumption of one causal variant per region, which has been typed in the study.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">CV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(snps[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colSums">colMeans</a></span>(haps)<span class="op">&gt;</span><span class="fl">0.1</span>)],<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV) <span class="co"># index of cv</span></a>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">CV &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(snps[<span class="kw"><a href="https://rdrr.io/r/base/which.html">which</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/colSums.html">colMeans</a></span>(haps)<span class="op">&gt;</span><span class="fl">0.1</span>)],<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">iCV &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/grep.html">sub</a></span>(<span class="st">"s"</span>, <span class="st">""</span>, CV) <span class="co"># index of cv</span></a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">OR &lt;-<span class="st"> </span><span class="fl">1.1</span></a></code></pre></div>
 <p>Then, we simulate marginal <span class="math inline">\(Z\)</span>-scores. Here, we consider a (relatively small) GWAS with 5000 cases and 5000 controls.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span></a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">z0 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/simGWAS/man/simulated_z_score.html">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">              <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">              <span class="dt">snps=</span>snps, <span class="co"># column names in freq of SNPs</span></a>
 <a class="sourceLine" id="cb7-4" data-line-number="4">              <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">              <span class="dt">gamma.W=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">              <span class="dt">gamma.W=</span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(OR), <span class="co"># log odds ratios</span></a>
 <a class="sourceLine" id="cb7-6" data-line-number="6">              <span class="dt">freq=</span>freq <span class="co"># reference haplotypes</span></a>
 <a class="sourceLine" id="cb7-7" data-line-number="7">              )</a>
-<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(z0)</a></code></pre></div>
+<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(z0)</a></code></pre></div>
 <pre><code>## [1] 200</code></pre>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">z0[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>]</a></code></pre></div>
-<pre><code>## [1] -1.730825 -2.398744 -3.099309 -3.554752 -1.842284</code></pre>
+<pre><code>## [1] -1.889831 -2.534196 -3.139531 -3.753833 -1.821278</code></pre>
 <p><code>z0</code> is a vector of marginal Z scores for the SNPs in our genomic region.</p>
 <hr>
 </div>
@@ -167,8 +175,8 @@
 <a class="sourceLine" id="cb11-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb11-7" data-line-number="7">postprobs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.html">ppfunc</a></span>(<span class="dt">z =</span> z0, <span class="dt">V =</span> varbeta)</a>
 <a class="sourceLine" id="cb11-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(postprobs, <span class="dt">xlab =</span> <span class="st">"SNP index"</span>, <span class="dt">ylab =</span> <span class="st">"Posterior probability"</span>)</a>
-<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> iCV, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(postprobs, <span class="dt">xlab =</span> <span class="st">"SNP index"</span>, <span class="dt">ylab =</span> <span class="st">"Posterior probability"</span>)</a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="kw"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span>(<span class="dt">v =</span> iCV, <span class="dt">col =</span> <span class="dv">2</span>)</a></code></pre></div>
 <p><img src="corrected-coverage_files/figure-html/unnamed-chunk-6-1.png" width="384"></p>
 <p>The posterior probability plot shows the location of the causal variant (red line).</p>
 <hr>
@@ -191,15 +199,14 @@
 <a class="sourceLine" id="cb12-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb12-5" data-line-number="5">credibleset</a></code></pre></div>
 <pre><code>## $credset
-##  [1]  24   4  25   3 128  69 127   2 152  42 125  53 124 126  51 145 197
-## [18]  41  52  47 156  95 151  50 103 123   6   5 186   1 138  36  16 153
-## [35]  46 150  54 149 136 102 170  61  26  60 169 131 137 104 144 146
+##  [1]   4 160  24   3 158  25 156 157 128  69 127   2  53  42 124 162 126
+## [18] 152  51 123 171  52 145
 ## 
 ## $claimed.cov
-## [1] 0.9001601
+## [1] 0.9007093
 ## 
 ## $nvar
-## [1] 50</code></pre>
+## [1] 23</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># is the true CV contained within the credible set?</span></a>
 <a class="sourceLine" id="cb14-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb14-3" data-line-number="3">thresh &lt;-<span class="st"> </span><span class="fl">0.9</span></a>
@@ -208,18 +215,17 @@
 <a class="sourceLine" id="cb14-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb14-7" data-line-number="7">credibleset</a></code></pre></div>
 <pre><code>## $credset
-##  [1]  24   4  25   3 128  69 127   2 152  42 125  53 124 126  51 145 197
-## [18]  41  52  47 156  95 151  50 103 123   6   5 186   1 138  36  16 153
-## [35]  46 150  54 149 136 102 170  61  26  60 169 131 137 104 144 146
+##  [1]   4 160  24   3 158  25 156 157 128  69 127   2  53  42 124 162 126
+## [18] 152  51 123 171  52 145
 ## 
 ## $claimed.cov
-## [1] 0.9001601
+## [1] 0.9007093
 ## 
 ## $covered
 ## [1] 1
 ## 
 ## $nvar
-## [1] 50</code></pre>
+## [1] 23</code></pre>
 <p>The 90% credible set has a claimed coverage of ~90% and contains the true causal variant. In the literature, authors would typically report that they have found a 90% credible set which they are at least 90% confident contains the true causal variant.</p>
 <p>Note that if the variants are named in the <code>pp</code> vector, then the <code>$credset</code> output would contain variant names rather than their indices.</p>
 <hr>
@@ -241,10 +247,10 @@
 <li>
 <code>thr</code> (threshold used to derive the credible set)</li>
 </ul>
-<p><strong>Note that if the estimated effect size coefficients (<code>bhat</code>) and their standard errors (<code><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt(V)</a></code>) are known instead of <span class="math inline">\(Z\)</span>-scores and minor allele frequencies, then the <code>corrcov_bhat</code> function can be used analogously.</strong></p>
+<p><strong>Note that if the estimated effect size coefficients (<code>bhat</code>) and their standard errors (<code><a href="https://rdrr.io/r/base/MathFun.html">sqrt(V)</a></code>) are known instead of <span class="math inline">\(Z\)</span>-scores and minor allele frequencies, then the <code>corrcov_bhat</code> function can be used analogously.</strong></p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">corrected_cov_estimate &lt;-<span class="st"> </span><span class="kw"><a href="../reference/corrcov.html">corrcov</a></span>(<span class="dt">z =</span> z0, <span class="dt">f =</span> MAF, N0, N1, <span class="dt">Sigma =</span> LD, <span class="dt">thr =</span> thresh)</a></code></pre></div>
 <pre><code>##  Corrected.Coverage Claimed.Coverage Threshold
-##            0.986091        0.9001601       0.9</code></pre>
+##           0.9832236        0.9007093       0.9</code></pre>
 <p>In our example, the 90% credible set may have nearer to 98% coverage of the causal variant in the credible set.</p>
 <hr>
 </div>
@@ -253,23 +259,23 @@
 <a href="#evaluate-accuracy-of-estimate" class="anchor"></a>5. Evaluate accuracy of estimate</h3>
 <hr>
 <p>For the purpose of this vignette and to assess the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">z0.tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/simGWAS/topics/simulated_z_score">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span></a>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">z0.tmp &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/simGWAS/man/simulated_z_score.html">simulated_z_score</a></span>(<span class="dt">N0=</span><span class="dv">5000</span>, <span class="co"># number of controls</span></a>
 <a class="sourceLine" id="cb18-2" data-line-number="2">                            <span class="dt">N1=</span><span class="dv">5000</span>, <span class="co"># number of cases</span></a>
 <a class="sourceLine" id="cb18-3" data-line-number="3">                            <span class="dt">snps=</span>snps, <span class="co"># column names in freq</span></a>
 <a class="sourceLine" id="cb18-4" data-line-number="4">                            <span class="dt">W=</span>CV, <span class="co"># causal variants, subset of snps</span></a>
-<a class="sourceLine" id="cb18-5" data-line-number="5">                            <span class="dt">gamma.W=</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(OR), <span class="co"># log odds ratios</span></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">                            <span class="dt">gamma.W=</span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">log</a></span>(OR), <span class="co"># log odds ratios</span></a>
 <a class="sourceLine" id="cb18-6" data-line-number="6">                            <span class="dt">freq=</span>freq, <span class="co"># reference haplotypes</span></a>
 <a class="sourceLine" id="cb18-7" data-line-number="7">                            <span class="dt">nrep =</span> <span class="dv">5000</span> <span class="co"># 5000 simulations</span></a>
 <a class="sourceLine" id="cb18-8" data-line-number="8">)</a>
 <a class="sourceLine" id="cb18-9" data-line-number="9"></a>
 <a class="sourceLine" id="cb18-10" data-line-number="10">pps &lt;-<span class="st"> </span><span class="kw"><a href="../reference/ppfunc.mat.html">ppfunc.mat</a></span>(<span class="dt">zstar =</span> z0.tmp, <span class="dt">V =</span> varbeta) <span class="co"># find pps</span></a>
-<a class="sourceLine" id="cb18-11" data-line-number="11">cs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)<span class="op">$</span>cov)</a>
-<a class="sourceLine" id="cb18-12" data-line-number="12">true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(cs)</a>
+<a class="sourceLine" id="cb18-11" data-line-number="11">cs &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(pps, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="../reference/credset.html">credset</a></span>(x, <span class="dt">CV =</span> iCV, <span class="dt">thr =</span> thresh)<span class="op">$</span>cov)</a>
+<a class="sourceLine" id="cb18-12" data-line-number="12">true.cov.est &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(cs)</a>
 <a class="sourceLine" id="cb18-13" data-line-number="13">true.cov.est</a></code></pre></div>
-<pre><code>## [1] 0.9832</code></pre>
+<pre><code>## [1] 0.981</code></pre>
 <p>The estimated empirical coverage is found to be approximately 98%, showing that our corrected coverage estimate was indeed accurate - far more so than the standard claimed coverage of ~90%.</p>
 <pre><code>##  Empirical.Coverage Corrected.Coverage Claimed.Coverage Threshold
-##              0.9832           0.986091        0.9001601       0.9</code></pre>
+##               0.981          0.9832236        0.9007093       0.9</code></pre>
 <hr>
 </div>
 <div id="so-what" class="section level3">
@@ -301,17 +307,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Anna Hutchinson, Chris Wallace.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

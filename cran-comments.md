@@ -5,7 +5,7 @@ This is a resubmission. In this version I have:
 
 * Removed simGWAS dependency
 
-* Removed zj_pp_alma function which was throwing errors on solaris check
+* Removed C++ zj_pp_alma function which was throwing errors on solaris check
 
 ## Test environments
 
@@ -14,18 +14,19 @@ This is a resubmission. In this version I have:
 -   Ubuntu (on travis-ci, release), R 3.6.1
 -   Ubuntu (on travis-ci, devel), “R Under development (unstable)
     (2019-08-19 r77038)”
--   windows (using Win-Builder)
+-   Windows Server 2008
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs.
+There were no ERRORs or WARNINGs or NOTEs.
 
-There was 1 NOTE:
+## rhub check results
 
-Possibly mis-spelled words in DESCRIPTION:
-  Maller (19:5)
-  Wakefield (20:5)
-  al (19:15)
-  et (19:12)
-  
-These are from my citations.
+One NOTE:
+
+checking installed package size ... NOTE
+  installed size is  5.1Mb
+  sub-directories of 1Mb or more:
+      extdata   3.2Mb
+
+This data is required for the vignettes. In the previous version submitted to cran, the simGWAS package was used in the vignettes to simulate GWAS summary stats. simGWAS has errors on cran so this data must be stored in the package directly.

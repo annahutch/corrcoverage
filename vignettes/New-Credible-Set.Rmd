@@ -22,12 +22,11 @@ This vignette will show users how the `corrcoverage` R package can be used to ob
 
 ---
 
-As in the [corrected coverage vignette](https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html), let's begin by simulating some GWAS data using the `simGWAS` package.
+As in the [corrected coverage vignette](https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html), we begin by simulating GWAS summary statistics.
 
 ```{r}
 set.seed(18)
 library(corrcoverage)
-library(simGWAS)
 
 #  Simulate reference haplotypes
 nsnps <- 200
@@ -46,13 +45,26 @@ MAF <- colMeans(freq[, snps] - 1)  # minor allele frequencies
 CV <- sample(snps[which(colMeans(haps) > 0.1)], 1)
 iCV <- sub("s", "", CV)  # index of cv
 LD <- cor2(haps) # correlation between SNPs
-```
 
-```{r}
 OR <- 1.1 # odds ratios
 N0 <- 10000 # number of controls
 N1 <- 10000 # number of cases
-  
+```
+
+The [simGWAS](https://github.com/chr1swallace/simGWAS) package has been used to simulate marginal $Z$-scores from the parameters derived above. These $Z$-scores are avaliable in the package. 
+
+```{r}
+z02_file <- system.file("extdata", "z-scores2.RDS", package="corrcoverage")
+z0 <- readRDS(z02_file)
+
+length(z0)
+z0[1:5]
+```
+
+Alternatively, the following code can be used to calculate these $Z$-scores.
+
+```{r eval = FALSE}
+library(simGWAS)
 z0 <- simulated_z_score(N0 = N0, # number of controls
                         N1 = N1, # number of cases
                         snps = snps, # column names in freq
@@ -107,18 +119,29 @@ Using the Bayesian approach for statistical fine-mapping we obtain a 90% credibl
 
 ---
 
-Again, for the purpose of this vignette we can investigate how accurate this estimate is by simulating many credible sets from the same system, and finding the proportion of these that contain the true causal variant.
+Again, for the purpose of this vignette we can investigate how accurate this estimate is by simulating many credible sets from the same system, and finding the proportion of these that contain the true causal variant. 
+
+A matrix of $Z$-scores for the 200 SNPs in 5000 replicate GWAS can be downloaded.
 
 ```{r}
-z0.tmp <- simulated_z_score(N0 = N0, # number of controls
+z02_rep_file <- system.file("extdata", "rep-z-scores2.RDS", package="corrcoverage")
+z0.rep <- readRDS(z02_rep_file)
+```
+
+Or calculated directly, using:
+
+```{r eval = FALSE}
+z0.rep <- simulated_z_score(N0 = N0, # number of controls
                             N1 = N1, # number of cases
                             snps = snps, # column names in freq
                             W = CV, # causal variants, subset of snps
                             gamma.W = log(OR), # log odds ratios
                             freq = freq, # reference haplotypes
-                            nrep = 5000) 
+                            nrep = 1000) 
+```
 
-pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta)  # find pps 
+```{r}
+pps <- ppfunc.mat(zstar = z0.rep, V = varbeta)  # find pps 
 cs.cov <- apply(pps, 1, function(x) credset(x, CV = iCV, thr = thr)$cov)
 true.cov.est <- mean(cs.cov)
 data.frame(claimed.cov = cs$claimed.cov, corr.cov =  corrcov, 

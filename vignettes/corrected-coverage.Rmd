@@ -35,11 +35,7 @@ library(corrcoverage)
 
 ---
 
-**This package is intended for use on summary statistics obtained from GWAS, such as observed $Z$-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the [simGWAS](https://github.com/chr1swallace/simGWAS) package. Please refer to the walkthrough guide [here](https://chr1swallace.github.io/simGWAS/articles/intro.html) from which the following is taken.** 
-
-```{r message = FALSE}
-library(simGWAS)
-```
+**This package is intended for use on summary statistics obtained from GWAS, such as $Z$-scores and MAFs. For the purpose of this vignette, we can simulate this data.**
 
 ```{r}
 # simulate reference haplotypes
@@ -65,17 +61,30 @@ MAF <- colMeans(freq[,snps]-1)
 LD <- cor2(haps)
 ```
 
-We specify the causal variant (CV) and it's effect on disease, as an odds ratio. One causal variant is chosen since the Bayesian approach to fine-mapping relies on the assumption of one causal variant per region, which has been typed in the study.
+We specify the causal variant (CV) and it's effect on disease, as an odds ratio. One causal variant is chosen since the Bayesian approach to fine-mapping relies on the assumption of one causal variant per region, which has been typed in the study. The sample sizes are set to 5000 for the number of cases and the number of controls.
 
 ```{r}
 CV <- sample(snps[which(colMeans(haps)>0.1)],1)
 iCV <- sub("s", "", CV) # index of cv
 OR <- 1.1
+N0 <- 5000 # cases
+N1 <- 5000 # controls
 ```
 
-Then, we simulate marginal $Z$-scores. Here, we consider a (relatively small) GWAS with 5000 cases and 5000 controls. 
+The [simGWAS](https://github.com/chr1swallace/simGWAS) package has been used to simulate marginal $Z$-scores from the parameters derived above. These $Z$-scores are avaliable in the package. 
 
 ```{r}
+z0_file <- system.file("extdata", "z-scores.RDS", package="corrcoverage")
+z0 <- readRDS(z0_file)
+
+length(z0)
+z0[1:5]
+```
+
+Alternatively, the following code can be used to calculate these $Z$-scores.
+
+```{r eval = FALSE}
+library(simGWAS)
 z0 <- simulated_z_score(N0=5000, # number of controls
               N1=5000, # number of cases
               snps=snps, # column names in freq of SNPs
@@ -83,11 +92,9 @@ z0 <- simulated_z_score(N0=5000, # number of controls
               gamma.W=log(OR), # log odds ratios
               freq=freq # reference haplotypes
               )
-length(z0)
-z0[1:5]
 ```
 
-`z0` is a vector of marginal Z scores for the SNPs in our genomic region.
+Thus, `z0` is a vector of marginal Z scores for the SNPs in our genomic region.
 
 ----
 
@@ -98,9 +105,6 @@ z0[1:5]
 The `ppfunc` function is used to convert the marginal $Z$-scores to posterior probabilities of causality. The `ppfunc` function also requires a value for $V$, the variance of the estimated effect size, which can be calculated using the `Var.data.cc` function. The prior standard deviation of the effect size, $W$, is an optional parameter with a default value of 0.2, which is shown to be a robust choice through our analyses.
 
 ```{r warning=FALSE, error=FALSE, fig.width=4}
-N0 <- 5000 # number of controls
-N1 <- 5000 # number of cases
-
 varbeta <- Var.data.cc(f = MAF, N = N1+N0, s = N1/(N0+N1)) # variance of 
                                                          # estimated effect size
 
@@ -186,17 +190,28 @@ In our example, the 90% credible set may have nearer to 98% coverage of the caus
 
 For the purpose of this vignette and to assess the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant.
 
+A matrix of $Z$-scores for the 200 SNPs in 1000 replicate GWAS can be downloaded.
+
 ```{r}
-z0.tmp <- simulated_z_score(N0=5000, # number of controls
+z0_rep_file <- system.file("extdata", "rep-z-scores.RDS", package="corrcoverage")
+z0.rep <- readRDS(z0_rep_file)
+```
+
+Or simulated directly using the simGWAS package:
+
+```{r eval = FALSE}
+z0.rep <- simulated_z_score(N0=5000, # number of controls
                             N1=5000, # number of cases
                             snps=snps, # column names in freq
                             W=CV, # causal variants, subset of snps
                             gamma.W=log(OR), # log odds ratios
                             freq=freq, # reference haplotypes
-                            nrep = 5000 # 5000 simulations
+                            nrep = 1000 # 1000 simulations
 )
+```
 
-pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta) # find pps
+```{r}
+pps <- ppfunc.mat(zstar = z0.rep, V = varbeta) # find pps
 cs <- apply(pps, 1, function(x) credset(x, CV = iCV, thr = thresh)$cov)
 true.cov.est <- mean(cs)
 true.cov.est

@@ -1,7 +1,7 @@
 Package: corrcoverage
 Type: Package
-Title: Corrected the Coverage of Credible Sets from Bayesian Genetic Fine Mapping
-Version: 1.0.9000
+Title: Correcting the Coverage of Credible Sets from Bayesian Genetic Fine Mapping
+Version: 1.1.0
 Authors@R: c(
         person("Anna", "Hutchinson", role = c("aut", "cre"), email = "anna.hutchinson@mrc-bsu.cam.ac.uk"),
         person("Chris", "Wallace", role = c("aut")),
@@ -21,7 +21,6 @@ Description: Using a computationally efficient method, the package can
 URL: https://annahutch.github.io/corrcoverage
 License: MIT + file LICENSE
 BugReports: https://github.com/annahutch/corrcoverage/issues
-OS_type: unix
 Encoding: UTF-8
 LazyData: true
 Suggests: 
@@ -31,14 +30,12 @@ Suggests:
     mvtnorm,
     rmarkdown,
     testthat,
-    simGWAS,
     pkgdown
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 LinkingTo: 
-    Rcpp, RcppArmadillo
+    Rcpp
 Imports: 
-    data.table,
     magrittr,
     stats,
     matrixStats,

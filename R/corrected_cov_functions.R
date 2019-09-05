@@ -60,7 +60,7 @@ corrected_cov <- function(pp0, mu, V, Sigma, thr, W = 0.2, nrep = 1000, pp0min =
   r = W^2/(W^2 + V)
 
   # simulate pp systems
-  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY =     FALSE)
+  pps = mapply(.zj_pp, Zj = zj, MoreArgs = list(int.Sigma = Sigma, int.nrep = nrep, int.ERR = ERR, int.r = r), SIMPLIFY = FALSE)
 
   # consider different CV as causal in each list
   n_pps <- length(pps)

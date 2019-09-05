@@ -24,3 +24,4 @@ Index.Rmd
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+corrcoverage.Rproj

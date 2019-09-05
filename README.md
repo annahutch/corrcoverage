@@ -38,21 +38,18 @@ here](https://annahutch.github.io/PhD/package_flowchart.html).
 
 ## Installation
 
-This package can be installed from CRAN with:
-
-```r
-install.packages("corrcoverage")
-```
-
-Alternatively, you can install the released version of `corrcoverage` from
-[github](https://github.com/) with:
+We recommend that all users (except those on the solaris operating system) download the package straight from github, as this contains a more complete version of the package:
 
 ``` r
 install.packages("devtools") # if not already installed
 devtools::install_github("annahutch/corrcoverage")
 ```
 
-Windows users are required to download the package from github rather than CRAN.
+Alternatively (and if using a solaris operating system) then download straight from cran using:
+
+```r
+install.packages("corrcoverage")
+```
 
 -----
 

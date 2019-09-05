@@ -54,7 +54,7 @@ N1 <- 10000 # number of cases
 The [simGWAS](https://github.com/chr1swallace/simGWAS) package has been used to simulate marginal $Z$-scores from the parameters derived above. These $Z$-scores are avaliable in the package. 
 
 ```{r}
-z02_file <- system.file("extdata", "z-scores2.RDS", package="corrcoverage")
+z02_file <- system.file('extdata', 'z-scores2.RDS', package='corrcoverage')
 z0 <- readRDS(z02_file)
 
 length(z0)
@@ -124,7 +124,7 @@ Again, for the purpose of this vignette we can investigate how accurate this est
 A matrix of $Z$-scores for the 200 SNPs in 5000 replicate GWAS can be downloaded.
 
 ```{r}
-z02_rep_file <- system.file("extdata", "rep-z-scores2.RDS", package="corrcoverage")
+z02_rep_file <- system.file('extdata', 'rep-z-scores2.RDS', package='corrcoverage')
 z0.rep <- readRDS(z02_rep_file)
 ```
 

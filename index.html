@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Corrected the Coverage of Credible Sets from Bayesian Genetic Fine Mapping • corrcoverage</title>
+<title>Correcting the Coverage of Credible Sets from Bayesian Genetic Fine Mapping • corrcoverage</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -16,7 +16,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Corrected the Coverage of Credible Sets from Bayesian Genetic Fine Mapping">
+<script src="pkgdown.js"></script><meta property="og:title" content="Correcting the Coverage of Credible Sets from Bayesian Genetic Fine Mapping">
 <meta property="og:description" content="Using a computationally efficient method, the package can
     be used to find the corrected coverage estimate of a credible set 
     of putative causal variants from Bayesian genetic fine-mapping. 
@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">corrcoverage</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.9000</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@
 <ul>
 <li>Perform single causal variant Bayesian fine-mapping</li>
 <li>Estimate the true genetic effect at the causal variant (see <code>est_mu</code> function)</li>
-<li>Obtain an accurate coverage estimate that the causal variant is contained within a credible set, the corrected coverage estimate (see <a href="https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html">Corrected Coverage vignette</a>)</li>
+<li>Obtain an accurate coverage estimate that the causal variant is contained within a credible set, the “corrected coverage estimate” (see <a href="https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html">Corrected Coverage vignette</a>)</li>
 <li>Find a new corrected credible set with the desired coverage of the true causal variant (see <a href="https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html">Corrected Credible Set vignette</a>)</li>
 </ul>
 <p>We’ve strived to make our R package as easy to use as possible. Please see the flowchart below to decide which function is best to solve your problem. The interactive version (click-to-functions) is <a href="https://annahutch.github.io/PhD/package_flowchart.html">available here</a>.</p>
@@ -123,12 +123,11 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>This package can be installed from CRAN with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"corrcoverage"</span>)</a></code></pre></div>
-<p>Alternatively, you can install the released version of <code>corrcoverage</code> from <a href="https://github.com/">github</a> with:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>) <span class="co"># if not already installed</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"annahutch/corrcoverage"</span>)</a></code></pre></div>
-<p>Windows users are required to download the package from github rather than CRAN.</p>
+<p>We recommend that all users download the package straight from github, as this contains a more complete version of the package:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>) <span class="co"># if not already installed</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">"annahutch/corrcoverage"</span>)</a></code></pre></div>
+<p>Alternatively (and if using a solaris operating system) download straight from cran using:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"corrcoverage"</span>)</a></code></pre></div>
 <hr>
 </div>
 <div id="examples" class="section level2">

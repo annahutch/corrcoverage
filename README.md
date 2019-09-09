@@ -22,7 +22,7 @@ The package only requires GWAS summary statistics and can be used to:
   - Estimate the true genetic effect at the causal variant (see `est_mu`
     function)
   - Obtain an accurate coverage estimate that the causal variant 
-    is contained within a credible set, the corrected coverage estimate
+    is contained within a credible set, the "corrected coverage estimate"
     (see [Corrected Coverage vignette](https://annahutch.github.io/corrcoverage/articles/corrected-coverage.html))
   - Find a new corrected credible set with the desired coverage of the
     true causal variant (see [Corrected Credible Set vignette](https://annahutch.github.io/corrcoverage/articles/New-Credible-Set.html))
@@ -38,21 +38,18 @@ here](https://annahutch.github.io/PhD/package_flowchart.html).
 
 ## Installation
 
-This package can be installed from CRAN with:
-
-```r
-install.packages("corrcoverage")
-```
-
-Alternatively, you can install the released version of `corrcoverage` from
-[github](https://github.com/) with:
+We recommend that all users download the package straight from github, as this contains a more complete version of the package:
 
 ``` r
 install.packages("devtools") # if not already installed
 devtools::install_github("annahutch/corrcoverage")
 ```
 
-Windows users are required to download the package from github rather than CRAN.
+Alternatively (and if using a solaris operating system) download straight from cran using:
+
+```r
+install.packages("corrcoverage")
+```
 
 -----
 

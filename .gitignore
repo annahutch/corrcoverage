@@ -8,7 +8,6 @@ inst/doc
 .RData
 corrcoverage.Rproj
 corrcoverage/corrcoverage_cache
-_pkgdown.yml
 .travis.yml
 /*_cache/
 /cache/
@@ -17,7 +16,6 @@ _pkgdown.yml
 docs/*
 *.so
 pkgdown/favicon
-corrcoverage.Rproj
 *.Rhistory
 inst/*
 ^cran-comments.md$
@@ -25,3 +23,4 @@ inst/*
 R.Rproj
 codecov.yml
 inst/
+_pkgdown.yml

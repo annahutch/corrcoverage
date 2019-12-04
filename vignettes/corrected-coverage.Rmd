@@ -37,8 +37,14 @@ library(corrcoverage)
 
 **This package is intended for use on summary statistics obtained from GWAS, such as observed $Z$-scores. For the purpose of this vignette, we will simulate artificial haplotypes and GWAS data using the [simGWAS](https://github.com/chr1swallace/simGWAS) package. Please refer to the walkthrough guide [here](https://chr1swallace.github.io/simGWAS/articles/intro.html) from which the following is taken.** 
 
+Note that simGWAS is not avaliable on CRAN so the data is stored in the package.
+
 ```{r message = FALSE}
-library(simGWAS)
+# library(simGWAS)
+
+data <- system.file("extdata", "data.RData", package="corrcoverage")
+
+load(data)
 ```
 
 ```{r}
@@ -76,13 +82,14 @@ OR <- 1.1
 Then, we simulate marginal $Z$-scores. Here, we consider a (relatively small) GWAS with 5000 cases and 5000 controls. 
 
 ```{r}
-z0 <- simulated_z_score(N0=5000, # number of controls
-              N1=5000, # number of cases
-              snps=snps, # column names in freq of SNPs
-              W=CV, # causal variants, subset of snps
-              gamma.W=log(OR), # log odds ratios
-              freq=freq # reference haplotypes
-              )
+# z0 <- simulated_z_score(N0=5000, # number of controls
+#               N1=5000, # number of cases
+#              snps=snps, # column names in freq of SNPs
+#              W=CV, # causal variants, subset of snps
+#              gamma.W=log(OR), # log odds ratios
+#              freq=freq # reference haplotypes
+#              )
+
 length(z0)
 z0[1:5]
 ```
@@ -187,14 +194,14 @@ In our example, the 90% credible set may have nearer to 98% coverage of the caus
 For the purpose of this vignette and to assess the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant.
 
 ```{r}
-z0.tmp <- simulated_z_score(N0=5000, # number of controls
-                            N1=5000, # number of cases
-                            snps=snps, # column names in freq
-                            W=CV, # causal variants, subset of snps
-                            gamma.W=log(OR), # log odds ratios
-                            freq=freq, # reference haplotypes
-                            nrep = 5000 # 5000 simulations
-)
+# z0.tmp <- simulated_z_score(N0=5000, # number of controls
+#                            N1=5000, # number of cases
+#                            snps=snps, # column names in freq
+#                            W=CV, # causal variants, subset of snps
+#                            gamma.W=log(OR), # log odds ratios
+#                            freq=freq, # reference haplotypes
+#                            nrep = 5000 # 5000 simulations
+#)
 
 pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta) # find pps
 cs <- apply(pps, 1, function(x) credset(x, CV = iCV, thr = thresh)$cov)

@@ -31,7 +31,6 @@ Suggests:
     mvtnorm,
     rmarkdown,
     testthat,
-    simGWAS,
     pkgdown
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1

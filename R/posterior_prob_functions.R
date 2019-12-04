@@ -200,7 +200,7 @@ z0_pp <- function(z, f, type, N, s, W = 0.2, p1 = 1e-4) {
 #' @export
 #' @return Vector of posterior probabilities
 ppfunc <- function(z, V, W = 0.2) {
-    stopifnot(class(z)=="numeric") # ensure z is not a matrix of simulated z scores
+    stopifnot(inherits(z, "numeric") | inherits(z, "vector"))# ensure z is not a matrix of simulated z scores
     r = W^2/(W^2 + V)
     bf = 0.5 * (log(1 - r) + (r * z^2))
     denom = logsum(bf)
@@ -254,7 +254,7 @@ ppfunc <- function(z, V, W = 0.2) {
 #'
 #' @export
 ppfunc.mat <- function(zstar, V, W = 0.2) {
-    stopifnot(class(zstar)=="matrix") # ensure zstar is a matrix of simulated z scores
+    stopifnot(inherits(zstar,"matrix")) # ensure zstar is a matrix of simulated z scores
     r = W^2/(W^2 + V)
     bf = 0.5 * t(log(1 - r) + (r * t(zstar^2)))
     denom = logsum_matrix(bf) # faster, logsum(x) = max(x) + log(sum(exp(x - max(x)))) so sum is not inf

@@ -8,9 +8,10 @@
 #' @param int.r internal r
 #' @return Matrix of simulated ABFs, one simulation per row
 .zj_abf = function(Zj, int.Sigma, int.nrep, int.ERR, int.r) {
-  stopifnot(class(Zj)=="numeric")
-  stopifnot(class(int.ERR)=="matrix")
-  stopifnot(class(int.r)=="numeric")
+  
+  stopifnot(inherits(Zj, "numeric"))
+  stopifnot(inherits(int.ERR, "matrix"))
+  stopifnot(inherits(int.r, "numeric"))
   exp.zm = Zj %*% int.Sigma
   mexp.zm = matrix(exp.zm, int.nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row
   zstar = mexp.zm + int.ERR
@@ -30,9 +31,9 @@
 #' @return Matrix of simulated posterior probabilties of causality,
 #'     one simulation per row
 .zj_pp = function(Zj, int.Sigma, int.nrep, int.ERR, int.r) {
-  stopifnot(class(Zj)=="numeric")
-  stopifnot(class(int.ERR)=="matrix")
-  stopifnot(class(int.r)=="numeric")
+  stopifnot(inherits(Zj, "numeric"))
+  stopifnot(inherits(int.ERR, "matrix"))
+  stopifnot(inherits(int.r, "numeric"))
   zj_pp_arma(Zj, int.Sigma, int.nrep, int.ERR, int.r)
   # exp.zm = Zj %*% int.Sigma
   # mexp.zm = matrix(exp.zm, int.nrep, length(Zj), byrow = TRUE)  # matrix of Zj replicated in each row

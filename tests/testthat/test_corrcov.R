@@ -80,8 +80,8 @@ test_that("est_mu and est_mu_bhat return single value", {
   bhats <- z*se
 
   mu2 <- est_mu_bhat(bhat = bhats, V = V, N0 = N, N1 = N, W = 0.2)
-  expect_true(class(mu1) == "numeric")
-  expect_true(class(mu2) == "numeric")
+  expect_true(inherits(mu1, "numeric"))
+  expect_true(inherits(mu2, "numeric"))
 })
 
 test_that("corrected_cs reports appropriate list", {

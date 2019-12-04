@@ -83,7 +83,7 @@ prop_cov <- function(x) {
 #'
 #' @author Anna Hutchinson
 est_mu <- function(z, f, N0, N1, W = 0.2) {
-  stopifnot(class(z)=="numeric") # ensure z is not a matrix of simulated z scores
+  stopifnot(inherits(z, "numeric") | inherits(z, "vector")) # ensure z is not a matrix of simulated z scores
   V = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
   r = W^2/(W^2 + V)
   lABF = 0.5 * (log(1 - r) + (r * z^2))
@@ -122,7 +122,7 @@ est_mu <- function(z, f, N0, N1, W = 0.2) {
 #'
 #' @author Anna Hutchinson
 est_mu_bhat <- function(bhat, V, N0, N1, p1 = 1e-4, W = 0.2) {
-    stopifnot(class(bhat)=="numeric") # ensure bhat is not a matrix of simulated z scores
+    stopifnot(inherits(bhat, "numeric") | inherits(bhat, "vector")) # ensure bhat is not a matrix of simulated z scores
     z = bhat/sqrt(V)
     r = W^2/(W^2 + V)
     lABF = 0.5 * (log(1 - r) + (r * z^2))
@@ -242,7 +242,7 @@ credsetC <- function(pp, CV, thr) {
 #'
 #' @export
 bf_func <- function(z, V, W = 0.2){
-  stopifnot(class(z)==class(V))
+  stopifnot(inherits(z, "vector") & inherits(V, "vector") | inherits(z, "numeric") & inherits(V, "numeric"))
   r = W^2/(W^2 + V)
   0.5 * (log(1 - r) + (r * z^2))
 }

@@ -42,9 +42,7 @@ Note that simGWAS is not avaliable on CRAN so the data is stored in the package.
 ```{r message = FALSE}
 # library(simGWAS)
 
-data <- system.file("extdata", "data.RData", package="corrcoverage")
-
-load(data)
+data <- system.file("extdata", "", package="corrcoverage")
 ```
 
 ```{r}
@@ -89,6 +87,8 @@ Then, we simulate marginal $Z$-scores. Here, we consider a (relatively small) GW
 #              gamma.W=log(OR), # log odds ratios
 #              freq=freq # reference haplotypes
 #              )
+
+z0 <- readRDS(paste0(data,"/z0.RDS"))
 
 length(z0)
 z0[1:5]
@@ -191,7 +191,7 @@ In our example, the 90% credible set may have nearer to 98% coverage of the caus
 
 ---
 
-For the purpose of this vignette and to assess the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant.
+For the purpose of this vignette and to assess the accuracy of this corrected coverage estimate, we simulate more credible sets from the same system and calculate what proportion of these contain the true causal variant. Note that nrep is relatively low in this example to keep stored data in the R package within CRAN guidelines. Please increase nrep to increase accuracy of estimated empirical coverage.
 
 ```{r}
 # z0.tmp <- simulated_z_score(N0=5000, # number of controls
@@ -200,8 +200,10 @@ For the purpose of this vignette and to assess the accuracy of this corrected co
 #                            W=CV, # causal variants, subset of snps
 #                            gamma.W=log(OR), # log odds ratios
 #                            freq=freq, # reference haplotypes
-#                            nrep = 5000 # 5000 simulations
+#                            nrep = 200 # 200 simulations
 #)
+
+z0.tmp <- readRDS(paste0(data,"/z0.tmp.RDS"))
 
 pps <- ppfunc.mat(zstar = z0.tmp, V = varbeta) # find pps
 cs <- apply(pps, 1, function(x) credset(x, CV = iCV, thr = thresh)$cov)

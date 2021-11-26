@@ -123,7 +123,7 @@ corrcov <- function(z, f, N0, N1, Sigma, thr, W = 0.2, nrep = 1000, pp0min = 0.0
 
     varbeta = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
 
-    pp = ppfunc(z, V = varbeta, W = 0.2)
+    pp = ppfunc(z, V = varbeta, W)
 
     muhat = sum(abs(z) * pp)
 
@@ -181,7 +181,7 @@ corrcov_bhat <- function(bhat, V, N0, N1, Sigma, thr, W = 0.2, nrep = 1000, pp0m
 
     z = bhat/sqrt(V)
 
-    pp = ppfunc(z, V, W = 0.2)
+    pp = ppfunc(z, V, W)
 
     muhat = sum(abs(z) * pp)
 
@@ -241,7 +241,7 @@ corrcov_nvar <- function(z, f, N0, N1, Sigma, nvar, thr, W = 0.2, nrep = 10000, 
 
   varbeta = 1/(2 * (N0 + N1) * f * (1 - f) * (N1/(N0 + N1)) * (1 - (N1/(N0 + N1))))
 
-  pp = ppfunc(z, V = varbeta, W = 0.2)
+  pp = ppfunc(z, V = varbeta, W)
 
   muhat = sum(abs(z) * pp)
 
@@ -339,7 +339,7 @@ corrcov_nvar_bhat <- function(bhat, V, N0, N1, Sigma, nvar, thr, W = 0.2, nrep =
 
   z = bhat/sqrt(V)
 
-  pp = ppfunc(z, V, W = 0.2)
+  pp = ppfunc(z, V, W)
 
   muhat = sum(abs(z) * pp)
 
